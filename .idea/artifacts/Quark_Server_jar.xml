@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Quark Server:jar">
+    <output-path>$PROJECT_DIR$/../../Quark Server</output-path>
+    <root id="archive" name="Quark Server.jar">
+      <element id="module-output" name="QuarkServer" />
+    </root>
+  </artifact>
+</component>
