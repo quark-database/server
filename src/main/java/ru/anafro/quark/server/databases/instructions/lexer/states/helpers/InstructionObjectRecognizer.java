@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.instructions.lexer.states.helpers;
 
 import ru.anafro.quark.server.databases.instructions.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.instructions.lexer.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.instructions.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.instructions.lexer.states.InstructionLexerState;
 import ru.anafro.quark.server.databases.instructions.lexer.states.ReadingConstructorNameInstructionLexerState;
 import ru.anafro.quark.server.databases.instructions.lexer.states.ReadingNumberInstructionLexerState;

@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ServerConfigurationLoader {
-    public static ServerConfiguration load(String path) {
+    public ServerConfiguration load(String path) {
         Yaml yaml = new Yaml(new Constructor(ServerConfiguration.class));
 
         try(FileInputStream configurationFileInputStream = new FileInputStream(path)) {

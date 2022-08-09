@@ -11,8 +11,8 @@ public class NoSuchInstructionParameterException extends QueryException {
                 .formatted(
                         parameterName,
                         instruction.getName(),
-                        instruction.hasGeneralParameter() ? instruction.getGeneralParameter().getName() : "[No general parameter]",
-                        String.join(", ", Arrays.stream(instruction.getParameters()).map(InstructionParameter::getName).toArray(String[]::new))
+                        instruction.getParameters().hasGeneralParameter() ? instruction.getParameters().getGeneralParameter().getName() : "[No general parameter]",
+                        String.join(", ", instruction.getParameters().map(InstructionParameter::getName).toArray(String[]::new))
                 )
         ); // TODO: Change "try following" to "did you mean X?"
     }

@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.utils.strings.exceptions;
 
-import ru.anafro.quark.server.QuarkException;
+import ru.anafro.quark.server.exceptions.QuarkException;
 
 public class NoMoreCharactersToTokenizeException extends QuarkException {
     public NoMoreCharactersToTokenizeException(String stringToTokenize) {

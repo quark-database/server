@@ -1,32 +1,29 @@
 package ru.anafro.quark.server.databases.instructions.lexer;
 
 import ru.anafro.quark.server.databases.instructions.lexer.exceptions.LexerStateCannotBeRestoredException;
-import ru.anafro.quark.server.databases.instructions.lexer.exceptions.LexingAlreadyPerformedException;
 import ru.anafro.quark.server.databases.instructions.lexer.states.InstructionLexerState;
 import ru.anafro.quark.server.databases.instructions.lexer.states.ReadingInstructionHeaderInstructionLexerState;
+import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.strings.StringBuffer;
 
 import java.util.ArrayList;
 
 public class InstructionLexer {
-     private final String instruction;
-     private final ArrayList<InstructionToken> tokens = new ArrayList<>();
+     private String instruction;
+     private Logger logger = new Logger(this.getClass());
+     private ArrayList<InstructionToken> tokens = new ArrayList<>();
      private final StringBuffer buffer = new StringBuffer();
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);
-     private boolean lexingPerformed = false;
      private int currentCharacterIndex;
      public static Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
 
-
-     public InstructionLexer(String instruction) {
-         this.instruction = instruction;
-     }
-
-     public void performLexing() {
-          if(isLexingPerformed()) {
-               throw new LexingAlreadyPerformedException();
-          }
+     public ArrayList<InstructionToken> lex(String instruction) {
+          this.instruction = instruction;
+          this.tokens = new ArrayList<>();
+          this.buffer.clear();
+          this.state = new ReadingInstructionHeaderInstructionLexerState(this);
+          this.currentCharacterIndex = 0;
 
           while(hasNextCharacter()) {
                System.out.println(instruction);
@@ -67,20 +64,13 @@ public class InstructionLexer {
           }
 
           System.out.println("-- Lexing Complete --");
-          System.out.println("Buffer: " + buffer.getValue());
-          lexingPerformed = true;
+          System.out.println("Buffer: " + buffer.getContent());
+
+          return tokens;
      }
 
      public void pushToken(InstructionToken token) {
           tokens.add(token);
-     }
-
-     public ArrayList<InstructionToken> getTokens() {
-          if(!isLexingPerformed()) {
-               performLexing();
-          }
-
-          return this.tokens;
      }
 
      public String getInstruction() {
@@ -99,9 +89,6 @@ public class InstructionLexer {
           this.currentCharacterIndex++;
      }
 
-     public boolean isLexingPerformed() {
-          return lexingPerformed;
-     }
 
      public boolean hasNextCharacter() {
           return currentCharacterIndex < instruction.length();
@@ -136,7 +123,7 @@ public class InstructionLexer {
      }
 
      public String getBufferContent() {
-          return buffer.getValue();
+          return buffer.getContent();
      }
 
      public String extractBufferContent() {
@@ -145,5 +132,9 @@ public class InstructionLexer {
 
      public boolean currentCharacterShouldBeIgnored() {
           return Arrays.contains(CHARACTERS_SHOULD_BE_IGNORED, getCurrentCharacter());
+     }
+
+     public Logger getLogger() {
+          return logger;
      }
 }

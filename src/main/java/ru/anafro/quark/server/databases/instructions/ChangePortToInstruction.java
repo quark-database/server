@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.instructions;
 
+import ru.anafro.quark.server.databases.InstructionArguments;
 import ru.anafro.quark.server.databases.InstructionResultRecorder;
 import ru.anafro.quark.server.databases.Instruction;
 import ru.anafro.quark.server.databases.InstructionParameter;
@@ -10,16 +11,15 @@ import ru.anafro.quark.server.networking.exceptions.PortIsUnavailableException;
 
 public class ChangePortToInstruction extends Instruction {
     public ChangePortToInstruction() {
-        super("change port to",
-                "server.port.change",
+        super("change port to", "server.port.change",
 
-                InstructionParameter.required("port", InstructionParameter.Types.INT)
+                InstructionParameter.general("port", InstructionParameter.Types.INT)
         );
     }
 
     @Override
-    public void action(Server server, InstructionResultRecorder result) {
-        int newPort = getParameterByName("port").asInt();
+    public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        int newPort = arguments.getArgument("port").asInt(); // TODO
 
         if(Ports.isInvalid(newPort)) {
             throw new QuerySyntaxException("Port should be between %d and %d, not %d".formatted(Ports.FIRST, Ports.LAST, newPort));

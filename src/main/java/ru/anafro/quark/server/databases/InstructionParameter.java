@@ -3,16 +3,30 @@ package ru.anafro.quark.server.databases;
 import ru.anafro.quark.server.databases.exceptions.QuerySyntaxException;
 
 public class InstructionParameter {
-    private String value;
+    private String value; // TODO: remove
     private final String name;
     private final String type;
+    private final boolean general;
     private final boolean optional;
 
-    public InstructionParameter(String name, String type, String defaultValue, boolean optional) {
+    public InstructionParameter(String name, String type, String defaultValue, boolean optional, boolean general) {
+        this.general = general;
         this.name = name;
         this.type = type;
         this.value = defaultValue;
         this.optional = optional;
+    }
+
+    public InstructionParameter(String name, String type, String defaultValue, boolean optional) {
+        this(name, type, defaultValue, optional, false);
+    }
+
+    public static InstructionParameter general(String name, String type) {
+        return new InstructionParameter(name, type, "", false, true);
+    }
+
+    public static InstructionParameter general(String name) {
+        return general(name, Types.STRING);
     }
 
     public static InstructionParameter required(String name, String type, String defaultValue) {
@@ -47,9 +61,6 @@ public class InstructionParameter {
         return type;
     }
 
-    public String getValue() {
-        return value;
-    }
 
     public boolean isOptional() {
         return optional;
@@ -59,8 +70,16 @@ public class InstructionParameter {
         return !isOptional();
     }
 
+    public boolean isGeneral() {
+        return general;
+    }
+
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public int asInt() {

@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.instructions.lexer.states;
 
 import ru.anafro.quark.server.databases.instructions.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.instructions.lexer.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.instructions.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.instructions.lexer.tokens.ColonInstructionToken;
 import ru.anafro.quark.server.databases.instructions.lexer.tokens.SemicolonInstructionToken;
 

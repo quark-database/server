@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.networking.exceptions;
 
-import ru.anafro.quark.server.QuarkException;
+import ru.anafro.quark.server.exceptions.QuarkException;
 
 /**
  * NetworkingException is a base exception for every exception

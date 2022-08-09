@@ -1,10 +1,12 @@
 package ru.anafro.quark.server.logging;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
     private final String label;
-    private String format = "[@level @time, @label] @message";
+    private String format = "@level @time, @label | @message";
+    private LogLevel logFrom = LogLevel.INFO;
 
     public Logger(String label) {
         this.label = label;
@@ -31,11 +33,33 @@ public class Logger {
     }
 
     public void log(LogLevel logLevel, String message) {
-        System.out.println(format
-            .replace("@level", logLevel.name())
-            .replace("@time", new Date().toString())
-            .replace("@label", label)
-            .replace("@message", message)
-        );
+        if(logLevel.ordinal() >= logFrom.ordinal()) {
+            System.out.println(format
+                    .replaceFirst("@level", logLevel.name())
+                    .replaceFirst("@time", new SimpleDateFormat("HH:mm").format(new Date()))
+                    .replaceFirst("@label", label)
+                    .replaceFirst("@message", message)
+            );
+        }
+    }
+
+    public void debug(String message) {
+        log(LogLevel.DEBUG, message);
+    }
+
+    public void info(String message) {
+        log(LogLevel.INFO, message);
+    }
+
+    public void warning(String message) {
+        log(LogLevel.WARNING, message);
+    }
+
+    public void error(String message) {
+        log(LogLevel.ERROR, message);
+    }
+
+    public void logFrom(LogLevel logFrom) {
+        this.logFrom = logFrom;
     }
 }

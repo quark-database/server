@@ -12,11 +12,11 @@ public class StringBuffer {
     }
 
     public boolean valueEquals(String value) {
-        return getValue().equals(value);
+        return getContent().equals(value);
     }
 
     public String extractValue() {
-        String extractedValue = getValue();
+        String extractedValue = getContent();
         clear();
 
         return extractedValue;
@@ -40,13 +40,13 @@ public class StringBuffer {
         return append('\n');
     }
 
-    public String getValue() {
+    public String getContent() {
         return builder.toString();
     }
 
     @Override
     public String toString() {
-        return getValue();
+        return getContent();
     }
 
     public StringBuilder getBuilder() {

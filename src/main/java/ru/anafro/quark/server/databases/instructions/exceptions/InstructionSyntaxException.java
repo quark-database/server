@@ -1,17 +1,17 @@
-package ru.anafro.quark.server.databases.instructions.lexer.exceptions;
+package ru.anafro.quark.server.databases.instructions.exceptions;
 
+import ru.anafro.quark.server.databases.instructions.lexer.exceptions.LexerException;
 import ru.anafro.quark.server.databases.instructions.lexer.states.InstructionLexerState;
+import ru.anafro.quark.server.databases.instructions.parser.states.InstructionParserState;
 import ru.anafro.quark.server.utils.strings.StringBuffer;
 
 public class InstructionSyntaxException extends LexerException {
-    private final InstructionLexerState state;
     private final String instruction, errorMessage, tipToFix;
     private final int errorBeginningCharacterIndex, errorLength;
 
-    public InstructionSyntaxException(InstructionLexerState state, String instruction, String errorMessage, String tipToFix, int errorBeginningCharacterIndex, int errorLength) {
-        super(formatInstructionSyntaxErrorMessage(state, instruction, errorMessage, tipToFix, errorBeginningCharacterIndex, errorLength));
+    public InstructionSyntaxException(Object state, String instruction, String errorMessage, String tipToFix, int errorBeginningCharacterIndex, int errorLength) {
+        super(formatInstructionSyntaxErrorMessage(state.getClass(), instruction, errorMessage, tipToFix, errorBeginningCharacterIndex, errorLength));
 
-        this.state = state;
         this.instruction = instruction;
         this.errorMessage = errorMessage;
         this.tipToFix = tipToFix;
@@ -19,7 +19,11 @@ public class InstructionSyntaxException extends LexerException {
         this.errorLength = errorLength;
     }
 
-    private static String formatInstructionSyntaxErrorMessage(InstructionLexerState state, String instruction, String errorMessage, String tipToFix, int errorBeginningCharacterIndex, int errorLength) {
+    public InstructionSyntaxException(Object state, String errorMessage, String tipToFix) {
+        this(state, "", errorMessage, tipToFix, 0, 1); // TODO: Instruction should be set. Replace "" with instruction somehow.
+    }
+
+    private static String formatInstructionSyntaxErrorMessage(Class<?> stateClass, String instruction, String errorMessage, String tipToFix, int errorBeginningCharacterIndex, int errorLength) {
         if(errorLength <= 0) {
             throw new UnsupportedOperationException("Error length should be greater than 0");
         }
@@ -27,7 +31,7 @@ public class InstructionSyntaxException extends LexerException {
         StringBuffer formattedMessage = new StringBuffer();
 
         formattedMessage.appendLine("Instruction contains a syntax error: " + errorMessage + ".");
-        formattedMessage.appendLine("Lexing state: " + state.getClass().getSimpleName());
+        formattedMessage.appendLine("Lexing state: " + stateClass.getSimpleName()); // TODO: Split class name by words with spaces
         formattedMessage.appendLine("-".repeat(instruction.length()));
         formattedMessage.appendLine(instruction);
         formattedMessage.append(" ".repeat(errorBeginningCharacterIndex));
@@ -36,7 +40,7 @@ public class InstructionSyntaxException extends LexerException {
         formattedMessage.appendLine("-".repeat(instruction.length()));
         formattedMessage.appendLine("TIP: " + tipToFix);
 
-        System.out.println(formattedMessage.getValue());
+        System.out.println(formattedMessage.getContent());
 
         return formattedMessage.extractValue();
     }

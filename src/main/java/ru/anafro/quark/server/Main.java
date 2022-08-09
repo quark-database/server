@@ -1,11 +1,10 @@
 package ru.anafro.quark.server;
 
-
-import ru.anafro.quark.server.debug.ui.LexerDebugFrame;
+import ru.anafro.quark.server.networking.Server;
 
 public class Main {
     public static void main(String[] args) {
-        LexerDebugFrame debug = new LexerDebugFrame();
-        debug.open();
+        Server server = new Server();
+        server.start();
     }
 }

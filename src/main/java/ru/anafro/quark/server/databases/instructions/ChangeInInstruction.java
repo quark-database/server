@@ -1,16 +1,17 @@
 package ru.anafro.quark.server.databases.instructions;
 
+import ru.anafro.quark.server.databases.InstructionArguments;
 import ru.anafro.quark.server.databases.InstructionResultRecorder;
 import ru.anafro.quark.server.databases.Instruction;
 import ru.anafro.quark.server.databases.InstructionParameter;
 import ru.anafro.quark.server.networking.Server;
 
 public class ChangeInInstruction extends Instruction {
-    public ChangeInInstruction(String name, String permission, InstructionParameter generalArgument, InstructionParameter... arguments) {
+    public ChangeInInstruction() {
         super("change in",
                 "table.change",
 
-                InstructionParameter.required("table"),
+                InstructionParameter.general("table"),
 
                 InstructionParameter.required("if", InstructionParameter.Types.CONDITION),
                 InstructionParameter.required("perform", InstructionParameter.Types.CHANGER)
@@ -18,7 +19,7 @@ public class ChangeInInstruction extends Instruction {
     }
 
     @Override
-    public void action(Server server, InstructionResultRecorder result) {
+    public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
 
     }
 }

@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.instructions;
 
+import ru.anafro.quark.server.databases.InstructionArguments;
 import ru.anafro.quark.server.databases.InstructionResultRecorder;
 import ru.anafro.quark.server.databases.Instruction;
 import ru.anafro.quark.server.databases.InstructionParameter;
@@ -10,12 +11,12 @@ public class ClearDatabaseInstruction extends Instruction {
         super("clear database",
                 "database.clear",
 
-                InstructionParameter.required("database")
+                InstructionParameter.general("database")
         );
     }
 
     @Override
-    public void action(Server server, InstructionResultRecorder result) {
+    public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
 
     }
 }

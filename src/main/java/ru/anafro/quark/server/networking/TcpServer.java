@@ -48,54 +48,44 @@ public abstract class TcpServer {
             throw new PortIsUnavailableException(port);
         }
 
-        System.out.println(
-        """
-
-             ______     __  __     ______     ______     __  __        ______     ______     ______     __   __   ______     ______   \s
-            /\\  __ \\   /\\ \\/\\ \\   /\\  __ \\   /\\  == \\   /\\ \\/ /       /\\  ___\\   /\\  ___\\   /\\  == \\   /\\ \\ / /  /\\  ___\\   /\\  == \\  \s
-            \\ \\ \\/\\_\\  \\ \\ \\_\\ \\  \\ \\  __ \\  \\ \\  __<   \\ \\  _"-.     \\ \\___  \\  \\ \\  __\\   \\ \\  __<   \\ \\ \\'/   \\ \\  __\\   \\ \\  __<  \s
-             \\ \\___\\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\     \\/\\_____\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\__|    \\ \\_____\\  \\ \\_\\ \\_\\\s
-              \\/___/_/   \\/_____/   \\/_/\\/_/   \\/_/ /_/   \\/_/\\/_/      \\/_____/   \\/_____/   \\/_/ /_/   \\/_/      \\/_____/   \\/_/ /_/\s
-                                               Quark Server v1.0.0.0 build 539                                                                                      \s
-        """
-        );
-
         try(ServerSocket serverSocket = new ServerSocket(port)) {
+            onStartingCompleted();
+
             while(isStarted()) {
                 Thread.onSpinWait();
 
-                logger.log(LogLevel.INFO, "Waiting for a client...");
+                logger.debug("Waiting for a client...");
 
                 Socket clientSocket = serverSocket.accept();
 
-                logger.log(LogLevel.INFO, "Connection from: " + clientSocket.getInetAddress().getHostAddress());
+                logger.debug("Connection from: " + clientSocket.getInetAddress().getHostAddress());
 
                 ServerClient client = new ServerClient(clientSocket);
 
-                logger.log(LogLevel.INFO, "Starting collecting message...");
+                logger.debug("Starting collecting message...");
 
                 Message clientRequestMessage = Message.collect(clientSocket.getInputStream());
 
-                logger.log(LogLevel.INFO, "Collected client request message: " + clientRequestMessage.getContents());
+                logger.debug("Collected client request message: " + clientRequestMessage.getContents());
 
                 try {
                     Request clientRequest = new Request(new JSONObject(clientRequestMessage.getContents()), clientSocket.getInetAddress());
 
-                    logger.log(LogLevel.INFO, "Made a request...");
+                    logger.debug("Made a request...");
 
                     boolean middlewaresPassed = true;
                     for(Middleware middleware : middlewares) {
-                        logger.log(LogLevel.INFO, "Running middleware...");
+                        logger.debug("Running middleware...");
 
                         MiddlewareResponse middlewareResponse = middleware.filter(clientRequest);
 
-                        logger.log(LogLevel.INFO, "Completed! Passed? " + middlewareResponse.isPassed() + ", reason: " + middlewareResponse.getReason());
+                        logger.debug("Completed! Passed? " + middlewareResponse.isPassed() + ", reason: " + middlewareResponse.getReason());
 
                         if(middlewareResponse.isDenied()) {
                             client.sendError(middlewareResponse.getReason());
                             middlewaresPassed = false;
 
-                            logger.log(LogLevel.INFO, "Sent an error message");
+                            logger.debug("Sent an error message");
 
                             break;
                         }
@@ -105,11 +95,11 @@ public abstract class TcpServer {
                         Response serverResponse = onRequest(clientRequest);
                         client.sendMessage(serverResponse.data());
 
-                        logger.log(LogLevel.INFO, "All the middlewares are passed successfully! Sent a message");
+                        logger.debug("All the middlewares are passed successfully! Sent a message");
                     }
                 } catch(JSONException | MessageHeaderIsTooShortException exception) {
                     client.sendError(exception);
-                    logger.log(LogLevel.INFO, "Woopsie, exception! Sent an error message");
+                    logger.debug("Woopsie, exception! Sent an error message");
                 }
             }
         } catch(IOException exception) {
@@ -130,6 +120,10 @@ public abstract class TcpServer {
 
     public boolean isStarted() {
         return !isStopped();
+    }
+
+    public void onStartingCompleted() {
+        // Override it in super class.
     }
 
     public void reload() {

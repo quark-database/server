@@ -1,4 +1,6 @@
 package ru.anafro.quark.server.databases;
 
-public record InstructionArgument(String parameter, String value) {
+import ru.anafro.quark.server.databases.instructions.entities.InstructionEntity;
+
+public record InstructionArgument(String name, InstructionEntity value) {
 }

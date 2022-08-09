@@ -1,22 +1,23 @@
 package ru.anafro.quark.server.databases.instructions;
 
 import ru.anafro.quark.server.databases.Instruction;
+import ru.anafro.quark.server.databases.InstructionArguments;
 import ru.anafro.quark.server.databases.InstructionParameter;
 import ru.anafro.quark.server.databases.InstructionResultRecorder;
 import ru.anafro.quark.server.networking.Server;
 
 public class RegrandTokenInstruction extends Instruction {
-    public RegrandTokenInstruction(String name, String permission, InstructionParameter generalArgument, InstructionParameter... arguments) {
+    public RegrandTokenInstruction() {
         super("regrand token", "token.regrand",
 
-                InstructionParameter.required("token"),
+                InstructionParameter.general("token"),
 
                 InstructionParameter.required("permissions", "array")
         );
     }
 
     @Override
-    public void action(Server server, InstructionResultRecorder result) {
+    public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
 
     }
 }

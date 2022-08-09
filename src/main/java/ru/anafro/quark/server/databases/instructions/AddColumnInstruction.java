@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.instructions;
 
+import ru.anafro.quark.server.databases.InstructionArguments;
 import ru.anafro.quark.server.databases.InstructionResultRecorder;
 import ru.anafro.quark.server.databases.Instruction;
 import ru.anafro.quark.server.databases.InstructionParameter;
@@ -9,7 +10,7 @@ public class AddColumnInstruction extends Instruction {
     public AddColumnInstruction() {
         super("add column",
             "column.add",
-            InstructionParameter.required("name"),
+            InstructionParameter.general("name"),
 
             InstructionParameter.required("table"),
             InstructionParameter.required("definition", InstructionParameter.Types.COLUMN)
@@ -17,7 +18,7 @@ public class AddColumnInstruction extends Instruction {
     }
 
     @Override
-    public void action(Server server, InstructionResultRecorder result) {
+    public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
         // TODO
     }
 }
