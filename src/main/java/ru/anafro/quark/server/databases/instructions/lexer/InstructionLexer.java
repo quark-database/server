@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class InstructionLexer {
      private String instruction;
-     private Logger logger = new Logger(this.getClass());
+     private final Logger logger = new Logger(this.getClass());
      private ArrayList<InstructionToken> tokens = new ArrayList<>();
      private final StringBuffer buffer = new StringBuffer();
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);

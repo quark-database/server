@@ -1,11 +1,10 @@
 package ru.anafro.quark.server.databases.instructions.entities;
 
-public abstract class InstructionEntityConstructor<T extends InstructionEntity<?>> {
+public abstract class InstructionEntityConstructor {
     private final String name;
     private final InstructionEntityConstructorParameters parameters;
 
     public InstructionEntityConstructor(String name, InstructionEntityConstructorParameter... parameters) {
-        super();
         this.name = name;
         this.parameters = new InstructionEntityConstructorParameters(parameters);
     }
@@ -18,9 +17,5 @@ public abstract class InstructionEntityConstructor<T extends InstructionEntity<?
         return parameters;
     }
 
-    private abstract T evaluate(/* Add arguments here */);
-
-    public T invoke() {
-        //
-    }
+    public abstract InstructionEntity eval(InstructionEntityConstructorArguments arguments);
 }

@@ -71,16 +71,16 @@ public class InstructionParser {
                 "No such instruction with name " + quoted(instructionName),
                 "Did you mean %s?".formatted(
                         quoted(
-                                registeredInstructions
-                                        .asList()
-                                        .stream()
-                                        .sorted((a, b) -> StringSimilarityFinder.compare(instructionName, a.getName(), b.getName()))
-                                        .map(Instruction::getName)
-                                        .findFirst()
-                                        .orElse("<No instruction to suggest>")
+                                registeredInstructions                                                                                  //
+                                        .asList()                                                                                       //  TODO
+                                        .stream()                                                                                       //  TODO
+                                        .sorted((a, b) -> StringSimilarityFinder.compare(instructionName, a.getName(), b.getName()))    //  TODO: Extract this to the utility
+                                        .map(Instruction::getName)                                                                      //  TODO
+                                        .findFirst()                                                                                    //  TODO
+                                        .orElse("<No instruction to suggest>")                                                     //  TODO
                         )
                 )
-        );
+        ); // TODO: ew, replace...
     }
 
     public void parse(ArrayList<InstructionToken> tokens) {
