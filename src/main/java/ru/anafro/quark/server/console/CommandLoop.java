@@ -9,7 +9,7 @@ import ru.anafro.quark.server.networking.Server;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CommandLoop implements AutoCloseable {
+public class CommandLoop {
     private final ArrayList<Command> commands = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
     private final CommandParser parser = new CommandParser();
@@ -83,11 +83,6 @@ public class CommandLoop implements AutoCloseable {
 
     public boolean hasCommand(String commandName) {
         return getCommand(commandName) != null;
-    }
-
-    @Override
-    public void close() throws Exception {
-        scanner.close();
     }
 
     public CommandParser getParser() {

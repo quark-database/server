@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class ChangeLogLevelCommand extends Command {
-    public ChangeLogLevelCommand(CommandLoop loop) {
-        super(loop, new UniqueList<>("change-log-level", "set-log-level"),
+    public ChangeLogLevelCommand() {
+        super(new UniqueList<>("change-log-level", "set-log-level"),
             "Changes the log level for the module",
             "Takes a module with the name passed with 'for' argument and changes it's minimal log level to 'to' argument",
             new CommandParameter("for", "module name", "A module that the minimal logging level should be changed for"),

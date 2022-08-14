@@ -7,15 +7,13 @@ import ru.anafro.quark.server.utils.patterns.Builder;
 import java.util.function.BiConsumer;
 
 public class CommandBuilder implements Builder<Command> {
-    private final CommandLoop loop;
     private final UniqueList<String> names;
     private String shortDescription;
     private String longDescription;
     private final CommandParameters parameters;
     private BiConsumer<CommandLoop, CommandArguments> action;
 
-    public CommandBuilder(CommandLoop loop) {
-        this.loop = loop;
+    public CommandBuilder() {
         this.names = new UniqueList<>();
         this.parameters = new CommandParameters();
     }
@@ -23,6 +21,16 @@ public class CommandBuilder implements Builder<Command> {
     public CommandBuilder name(String newName) {
         names.add(newName);
 
+        return this;
+    }
+
+    public CommandBuilder shortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+        return this;
+    }
+
+    public CommandBuilder longDescription(String longDescription) {
+        this.longDescription = longDescription;
         return this;
     }
 
@@ -92,7 +100,7 @@ public class CommandBuilder implements Builder<Command> {
             throw new CommandMustHaveAtLeastOneNameException();
         }
 
-        return new Command(loop, names, shortDescription, longDescription, parameters) {
+        return new Command(names, shortDescription, longDescription, parameters) {
             @Override
             public void action(CommandArguments arguments) {
                 if(action != null) {

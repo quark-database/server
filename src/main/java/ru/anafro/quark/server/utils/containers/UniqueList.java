@@ -31,7 +31,7 @@ public class UniqueList<T> implements Iterable<T> {
     }
 
     public boolean isEmpty() {
-        return isEmpty();
+        return values.isEmpty();
     }
 
     public ArrayList<T> asList() {

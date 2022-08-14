@@ -7,11 +7,11 @@ import ru.anafro.quark.server.utils.containers.UniqueList;
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class HelpCommand extends Command {
-    public HelpCommand(CommandLoop loop) {
-        super(loop, new UniqueList<>("help", "what", "wtf", "?"),
+    public HelpCommand() {
+        super(new UniqueList<>("help", "what", "wtf", "?"),
                 "Shows the help menu",
                 "Opens up the help menu contains all the commands with descriptions and syntax",
-                new CommandParameter("command", "", "", false)
+                new CommandParameter("command", "A command you need help with", "If you need a help with some command (for example, you don't know the argument names or the command purpose), just add a command name to display the help", false)
         );
     }
 

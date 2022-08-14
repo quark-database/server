@@ -11,7 +11,7 @@ public class TextArea extends JTextArea {
         setFont(font);
     }
 
-    public static TextArea console(Rectangle boundaries) {
-        return new TextArea(boundaries, DefaultInterfaceProperties.CONSOLE_FONT, DefaultInterfaceProperties.COLOR_WHITE, DefaultInterfaceProperties.COLOR_DARKEST_GRAY);
+    public static TextArea console(int locationX, int locationY, int width, int height) {
+        return new TextArea(new Rectangle(locationX, locationY, width, height), DefaultInterfaceProperties.CONSOLE_FONT, DefaultInterfaceProperties.COLOR_WHITE, DefaultInterfaceProperties.COLOR_DARKEST_GRAY);
     }
 }

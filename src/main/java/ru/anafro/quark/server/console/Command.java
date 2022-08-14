@@ -1,12 +1,12 @@
 package ru.anafro.quark.server.console;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.logging.LogLevel;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.UniqueList;
 import ru.anafro.quark.server.utils.strings.StringBuffer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
@@ -19,8 +19,8 @@ public abstract class Command {
     protected final CommandParameters parameters;
     protected final Logger logger;
 
-    public Command(CommandLoop loop, UniqueList<String> names, String shortDescription, String longDescription, CommandParameters parameters) {
-        this.loop = loop;
+    public Command(UniqueList<String> names, String shortDescription, String longDescription, CommandParameters parameters) {
+        this.loop = Quark.commands();
         this.names = names;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
@@ -30,8 +30,8 @@ public abstract class Command {
         logger.logFrom(LogLevel.DEBUG);
     }
 
-    public Command(CommandLoop loop, UniqueList<String> names, String shortDescription, String longDescription, CommandParameter... parameters) {
-        this(loop, names, shortDescription, longDescription, new CommandParameters(parameters));
+    public Command(UniqueList<String> names, String shortDescription, String longDescription, CommandParameter... parameters) {
+        this(names, shortDescription, longDescription, new CommandParameters(parameters));
     }
 
     public boolean named(String name) {

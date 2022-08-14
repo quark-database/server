@@ -1,9 +1,7 @@
 package ru.anafro.quark.server.databases.exceptions;
 
-import ru.anafro.quark.server.databases.Instruction;
-import ru.anafro.quark.server.databases.InstructionParameter;
-
-import java.util.Arrays;
+import ru.anafro.quark.server.databases.ql.Instruction;
+import ru.anafro.quark.server.databases.ql.InstructionParameter;
 
 public class NoSuchInstructionParameterException extends QueryException {
     public NoSuchInstructionParameterException(Instruction instruction, String parameterName) {
@@ -12,7 +10,7 @@ public class NoSuchInstructionParameterException extends QueryException {
                         parameterName,
                         instruction.getName(),
                         instruction.getParameters().hasGeneralParameter() ? instruction.getParameters().getGeneralParameter().getName() : "[No general parameter]",
-                        String.join(", ", instruction.getParameters().map(InstructionParameter::getName).toArray(String[]::new))
+                        String.join(", ", instruction.getParameters().stream().map(InstructionParameter::getName).toArray(String[]::new))
                 )
         ); // TODO: Change "try following" to "did you mean X?"
     }

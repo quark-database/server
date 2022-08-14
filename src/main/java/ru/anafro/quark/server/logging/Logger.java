@@ -35,10 +35,10 @@ public class Logger {
     public void log(LogLevel logLevel, String message) {
         if(logLevel.ordinal() >= logFrom.ordinal()) {
             System.out.println(format
-                    .replaceFirst("@level", logLevel.name())
-                    .replaceFirst("@time", new SimpleDateFormat("HH:mm").format(new Date()))
-                    .replaceFirst("@label", label)
-                    .replaceFirst("@message", message)
+                    .replace("@level", logLevel.name())
+                    .replace("@time", new SimpleDateFormat("HH:mm").format(new Date()))
+                    .replace("@label", label)
+                    .replace("@message", message)
             );
         }
     }

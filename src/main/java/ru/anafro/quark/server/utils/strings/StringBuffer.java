@@ -2,6 +2,7 @@ package ru.anafro.quark.server.utils.strings;
 
 public class StringBuffer {
     private final StringBuilder builder = new StringBuilder();
+    private int tabLevel = 0;
 
     public StringBuffer() {
         //
@@ -32,6 +33,7 @@ public class StringBuffer {
     }
 
     public <T> StringBuffer appendLine(T appendingLine) {
+        append("\t".repeat(getTabLevel()));
         append(appendingLine);
         return nextLine();
     }
@@ -55,5 +57,25 @@ public class StringBuffer {
 
     public boolean isEmpty() {
         return builder.isEmpty();
+    }
+
+    public int getTabLevel() {
+        return tabLevel;
+    }
+
+    public void setTabLevel(int tabLevel) {
+        this.tabLevel = tabLevel;
+    }
+
+    public void increaseTabLevel() {
+        setTabLevel(tabLevel + 1);
+    }
+
+    public void decreaseTabLevel() {
+        setTabLevel(tabLevel - 1);
+    }
+
+    public void resetTabLevel() {
+        setTabLevel(0);
     }
 }

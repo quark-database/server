@@ -1,17 +1,18 @@
 package ru.anafro.quark.server.networking;
 
-import ru.anafro.quark.server.console.CommandLoop;
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.commands.ChangeLogLevelCommand;
 import ru.anafro.quark.server.console.commands.ExitCommand;
 import ru.anafro.quark.server.console.commands.HelpCommand;
 import ru.anafro.quark.server.console.commands.OpenDebugCommand;
-import ru.anafro.quark.server.databases.Instruction;
-import ru.anafro.quark.server.databases.InstructionResult;
-import ru.anafro.quark.server.databases.instructions.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.instructions.parser.InstructionParser;
+import ru.anafro.quark.server.databases.ql.Instruction;
+import ru.anafro.quark.server.databases.ql.InstructionResult;
+import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
+import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.fun.Greeter;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.plugins.events.ServerStarted;
 import ru.anafro.quark.server.security.Token;
 
 import java.util.concurrent.CompletableFuture;
@@ -48,8 +49,8 @@ public class Server extends TcpServer {
 
             exception.printStackTrace();
 
-            logger.error("Because of this error, we need to stop the Quark Server.");
-            logger.error("\tIf you think that it's a bug, please, report it on the project's GitHub: ");
+            logger.error("Because of this error, we have to stop the Quark Server.");
+            logger.error("\tIf you think that it's a bug, please, report it on the project's GitHub: github.com/anafro/quark");
             logger.error("\tIf you can't solve this problem by your own, please, feel free to write me on email: contact@anafro.ru (but please, add 'Quark Help' words to the message's theme, thanks)");
 
             System.exit(-1);
@@ -78,17 +79,19 @@ public class Server extends TcpServer {
     @Override
     public void onStartingCompleted() {
         CompletableFuture.supplyAsync(() -> {
-            CommandLoop loop = new CommandLoop(this);
+            var loop = Quark.commands();
 
-            loop.registerCommand(new ExitCommand(loop));
-            loop.registerCommand(new HelpCommand(loop));
-            loop.registerCommand(new ChangeLogLevelCommand(loop));
-            loop.registerCommand(new OpenDebugCommand(loop));
+            loop.registerCommand(new ExitCommand());
+            loop.registerCommand(new HelpCommand());
+            loop.registerCommand(new ChangeLogLevelCommand());
+            loop.registerCommand(new OpenDebugCommand());
 
             loop.startReadingCommandsAsync();
 
             return null;
         });
+
+        Quark.plugins().fireEvent(new ServerStarted());
     }
 
     public ServerConfiguration getConfiguration() {
@@ -101,5 +104,9 @@ public class Server extends TcpServer {
 
     public InstructionLexer getInstructionLexer() {
         return lexer;
+    }
+
+    public InstructionParser getInstructionParser() {
+        return parser;
     }
 }

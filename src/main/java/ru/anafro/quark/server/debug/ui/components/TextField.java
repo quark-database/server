@@ -34,8 +34,8 @@ public class TextField extends JTextField {
         });
     }
 
-    public static TextField console(Rectangle boundaries, Runnable onEdit) {
-        return new TextField(boundaries, DefaultInterfaceProperties.CONSOLE_FONT, DefaultInterfaceProperties.COLOR_WHITE, DefaultInterfaceProperties.COLOR_BLACK, onEdit);
+    public static TextField console(int locationX, int locationY, int width, int height, Runnable onEdit) {
+        return new TextField(new Rectangle(locationX, locationY, width, height), DefaultInterfaceProperties.CONSOLE_FONT, DefaultInterfaceProperties.COLOR_WHITE, DefaultInterfaceProperties.COLOR_BLACK, onEdit);
     }
 
     public Runnable getOnEdit() {
