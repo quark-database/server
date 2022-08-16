@@ -26,33 +26,34 @@ public class InstructionLexer {
           this.currentCharacterIndex = 0;
 
           while(hasNextCharacter()) {
-               System.out.println(instruction);
-               System.out.print(" ".repeat(getCurrentCharacterIndex()) + "^");
-               System.out.println();
-               System.out.println("Current character: '" + getCurrentCharacter() + "'");
+               logger.debug(instruction);
+               logger.debug(" ".repeat(getCurrentCharacterIndex()) + "^");
+               logger.debug("");
+               logger.debug("Current character: '" + getCurrentCharacter() + "'");
 
-               System.out.print("State line: ");
+               StringBuffer stateStackBuffer = new StringBuffer("State line: ");
 
                InstructionLexerState stateCaret = this.state;
                while(stateCaret.hasPreviousState()) {
-                    System.out.print(stateCaret.getClass().getSimpleName().substring(0, stateCaret.getClass().getSimpleName().length() - "InstructionLexerState".length()) + " -> ");
+                    stateStackBuffer.append(stateCaret.getClass().getSimpleName().substring(0, stateCaret.getClass().getSimpleName().length() - "InstructionLexerState".length()) + " -> ");
                     stateCaret = stateCaret.getPreviousState();
                }
 
-               System.out.println(stateCaret.getClass().getSimpleName().substring(0, stateCaret.getClass().getSimpleName().length() - "InstructionLexerState".length()) + ".");
-
-               System.out.println("Buffer:\t" + getBufferContent());
+               logger.debug(stateStackBuffer.extractContent());
+               logger.debug(stateCaret.getClass().getSimpleName().substring(0, stateCaret.getClass().getSimpleName().length() - "InstructionLexerState".length()) + ".");
+               logger.debug("Buffer:\t" + getBufferContent());
 
                if(tokens.isEmpty()) {
-                    System.out.println("Tokens: <no tokens yet>");
+                    logger.debug("Tokens: <no tokens yet>");
                } else {
-                    System.out.println("Tokens:");
+                    logger.debug("Tokens:");
+
                     for(InstructionToken token : tokens) {
-                         System.out.println("\t" + token.getName() + ": " + token.getValue());
+                         logger.debug("\t" + token.getName() + ": " + token.getValue());
                     }
                }
 
-               System.out.println("_".repeat(50));
+               logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere
 
                if(!(state.lexerIgnoredCharactersShouldBeSkipped() && currentCharacterShouldBeIgnored())) {
                     state.handleCharacter(getCurrentCharacter());
@@ -127,7 +128,7 @@ public class InstructionLexer {
      }
 
      public String extractBufferContent() {
-          return buffer.extractValue();
+          return buffer.extractContent();
      }
 
      public boolean currentCharacterShouldBeIgnored() {

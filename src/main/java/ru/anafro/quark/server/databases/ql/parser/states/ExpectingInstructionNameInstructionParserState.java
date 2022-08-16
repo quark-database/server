@@ -12,6 +12,7 @@ public class ExpectingInstructionNameInstructionParserState extends InstructionP
     @Override
     public void handleToken(InstructionToken token) {
         if(token instanceof InstructionNameInstructionToken instructionNameToken) {
+            parser.getLogger().debug("");
             parser.setInstructionName(instructionNameToken.getValue());
             parser.switchState(new AfterInstructionNameInstructionParserState(parser));
         } else {

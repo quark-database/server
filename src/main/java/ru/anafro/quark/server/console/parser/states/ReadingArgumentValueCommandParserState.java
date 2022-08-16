@@ -17,7 +17,7 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
             if(parser.getBuffer().isEmpty()) {
                 return;
             } else {
-                parser.setCommandName(parser.getBuffer().extractValue());
+                parser.setCommandName(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             }
         }
@@ -30,7 +30,7 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
                     inString = true;
                 }
             } else if(inString) {
-                parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractValue());
+                parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             } else {
                 throw new CommandSyntaxException("You tried to start a string, but you've written something before it.", parser.getCommandString(), parser.getIndex());
@@ -42,6 +42,6 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
 
     @Override
     public void whenParsingCompleteButBufferIsNotEmpty(String bufferContent) {
-        parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractValue());
+        parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractContent());
     }
 }

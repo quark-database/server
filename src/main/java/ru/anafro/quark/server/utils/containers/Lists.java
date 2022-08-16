@@ -2,7 +2,6 @@ package ru.anafro.quark.server.utils.containers;
 
 import ru.anafro.quark.server.utils.strings.StringBuffer;
 
-import java.util.Collection;
 import java.util.List;
 
 public final class Lists {
@@ -21,7 +20,7 @@ public final class Lists {
             }
         }
 
-        return joinedContainer.extractValue();
+        return joinedContainer.extractContent();
     }
 
     public static <T> String join(List<? extends T> collection) {

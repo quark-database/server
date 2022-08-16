@@ -38,7 +38,7 @@ public class Logger {
                     .replace("@level", logLevel.name())
                     .replace("@time", new SimpleDateFormat("HH:mm").format(new Date()))
                     .replace("@label", label)
-                    .replace("@message", message)
+                    .replace("@message", message == null ? "<null message>" : message)
             );
         }
     }

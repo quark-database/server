@@ -1,10 +1,7 @@
 package ru.anafro.quark.server.networking;
 
 import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.console.commands.ChangeLogLevelCommand;
-import ru.anafro.quark.server.console.commands.ExitCommand;
-import ru.anafro.quark.server.console.commands.HelpCommand;
-import ru.anafro.quark.server.console.commands.OpenDebugCommand;
+import ru.anafro.quark.server.console.commands.*;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionResult;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
@@ -12,10 +9,9 @@ import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.fun.Greeter;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.plugins.Plugin;
 import ru.anafro.quark.server.plugins.events.ServerStarted;
 import ru.anafro.quark.server.security.Token;
-
-import java.util.concurrent.CompletableFuture;
 
 public class Server extends TcpServer {
     private final ServerConfiguration configuration = new ServerConfigurationLoader().load("Server Configuration.yaml");
@@ -43,6 +39,7 @@ public class Server extends TcpServer {
         logger.info("Server is being started at port " + configuration.getPort() + "...");
         try {
             super.start(configuration.getPort());
+            Quark.plugins().getLoadedPlugins().forEach(Plugin::onEnable);
         } catch(QuarkException exception) {
             logger.error("Server has crashed, here is why: " + exception.getMessage());
             logger.error("Reading a stacktrace may help you to figure out the reason better:");
@@ -78,18 +75,17 @@ public class Server extends TcpServer {
 
     @Override
     public void onStartingCompleted() {
-        CompletableFuture.supplyAsync(() -> {
-            var loop = Quark.commands();
+        var loop = Quark.commands();
 
-            loop.registerCommand(new ExitCommand());
-            loop.registerCommand(new HelpCommand());
-            loop.registerCommand(new ChangeLogLevelCommand());
-            loop.registerCommand(new OpenDebugCommand());
+        loop.registerCommand(new ExitCommand());
+        loop.registerCommand(new HelpCommand());
+        loop.registerCommand(new ChangeLogLevelCommand());
+        loop.registerCommand(new OpenDebugCommand());
+        loop.registerCommand(new EnableDebugCommand());
+        loop.registerCommand(new DisableDebugCommand());
+//        loop.registerCommand(new ReloadCommand());        TODO: Not working yet
 
-            loop.startReadingCommandsAsync();
-
-            return null;
-        });
+        loop.startReadingCommands();
 
         Quark.plugins().fireEvent(new ServerStarted());
     }
@@ -108,5 +104,10 @@ public class Server extends TcpServer {
 
     public InstructionParser getInstructionParser() {
         return parser;
+    }
+
+    @Override
+    public void run() {
+        start();
     }
 }

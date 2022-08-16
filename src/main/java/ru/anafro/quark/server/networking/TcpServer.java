@@ -2,22 +2,21 @@ package ru.anafro.quark.server.networking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.anafro.quark.server.logging.LogLevel;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.networking.exceptions.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * TcpServer is an abstract class for receiving TCP packets,
  * but not handling - implement 'handle()' method to add
  * handling functionality.
  */
-public abstract class TcpServer {
+public abstract class TcpServer implements AsyncService {
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = new ArrayList<>();
     private final Logger logger = new Logger(this.getClass());
@@ -27,13 +26,6 @@ public abstract class TcpServer {
     }
 
     public abstract Response onRequest(Request request);
-
-    public void startAsync(int port) {
-        CompletableFuture.supplyAsync(() -> {
-            start(port);
-            return null;
-        });
-    }
 
     public void start(int port) {
         if(isStopped()) {
@@ -104,13 +96,11 @@ public abstract class TcpServer {
             }
         } catch(IOException exception) {
             throw new ServerCrashedException(exception);
-        } finally {
-            this.stop();
         }
     }
 
     public void stop() {
-        logger.log(LogLevel.DEBUG, "Server is stopping...");
+        logger.debug("Server is stopping...");
         stopped = false; // TODO: Change so it will stop with no additional request acceptance.
     }
 

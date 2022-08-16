@@ -3,8 +3,9 @@ package ru.anafro.quark.server.databases.ql.entities;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityConstructorParameterAlreadyExistsException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class InstructionEntityConstructorParameters {
+public class InstructionEntityConstructorParameters implements Iterable<InstructionEntityConstructorParameter> {
     private final ArrayList<InstructionEntityConstructorParameter> parameters = new ArrayList<>();
 
     public InstructionEntityConstructorParameters(InstructionEntityConstructorParameter... parameters) {
@@ -37,5 +38,14 @@ public class InstructionEntityConstructorParameters {
 
     public ArrayList<InstructionEntityConstructorParameter> asList() {
         return parameters;
+    }
+
+    @Override
+    public Iterator<InstructionEntityConstructorParameter> iterator() {
+        return parameters.iterator();
+    }
+
+    public InstructionEntityConstructorParameter parameterAt(int parameterIndex) {
+        return parameters.get(parameterIndex);
     }
 }

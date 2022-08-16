@@ -16,7 +16,7 @@ public class StringBuffer {
         return getContent().equals(value);
     }
 
-    public String extractValue() {
+    public String extractContent() {
         String extractedValue = getContent();
         clear();
 

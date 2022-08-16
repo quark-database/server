@@ -7,7 +7,10 @@ import ru.anafro.quark.server.databases.ql.instructions.*;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.states.ExpectingInstructionNameInstructionParserState;
 import ru.anafro.quark.server.databases.ql.parser.states.InstructionParserState;
+import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.utils.objects.Nulls;
+import ru.anafro.quark.server.utils.strings.StringBuffer;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.ArrayList;
@@ -18,9 +21,10 @@ public class InstructionParser {
     private InstructionParserState state = new ExpectingInstructionNameInstructionParserState(this);
     private String instructionName = null;
     private InstructionArguments arguments = new InstructionArguments();
-    private UniqueList<Instruction> registeredInstructions = new UniqueList<>();
+    private final UniqueList<Instruction> registeredInstructions = new UniqueList<>();
     private ArrayList<InstructionToken> tokens = new ArrayList<>();
-    private int index = 0;
+    private final Logger logger = new Logger(this.getClass());
+    private int tokenIndex = 0;
 
     public InstructionParser() {
         registerInstruction(new AddColumnInstruction());
@@ -89,26 +93,51 @@ public class InstructionParser {
         this.state = new ExpectingInstructionNameInstructionParserState(this);
         this.instructionName = null;
         this.arguments = new InstructionArguments();
-        this.registeredInstructions = new UniqueList<>();
         this.tokens = tokens;
-        this.index = 0;
+        this.tokenIndex = 0;
 
-        while(hasNextToken()) {
+        logger.debug("Got %d tokens to parse".formatted(tokens.size()));
+
+        while(hasNextToken()) { // create table @upper("users"): columns = @array(@id(), @str("name"));
+            for(int index = 0; index < tokens.size(); index++) {
+                var token = tokens.get(index);
+                logger.debug((index == tokenIndex ? "  -> " : "    ") + token.getName() + " = " + token.getValue());
+            }
+
+            StringBuffer stateStackBuffer = new StringBuffer("State stack: ");
+
+            var stateCaret = this.state;
+            while(stateCaret != null) {
+                stateStackBuffer.append(stateCaret.getClass().getSimpleName().substring(0, stateCaret.getClass().getSimpleName().length() - "InstructionParserState".length()) + " -> ");
+                stateCaret = stateCaret.getPreviousState();
+            }
+
+            logger.debug(stateStackBuffer.extractContent());
+
+            logger.debug("Instruction name: " + Nulls.nullOrDefault(instructionName, "<unset>"));
+            logger.debug("Arguments: ");
+
+            for(var argument : arguments) {
+                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), () -> argument.value().getName(), "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), () -> argument.value().getValue().toString(), "<null object>"));
+            }
+
+            logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere
+
             state.handleToken(getCurrentToken());
             nextToken();
         }
     }
 
     private InstructionToken getCurrentToken() {
-        return tokens.get(index);
+        return tokens.get(tokenIndex);
     }
 
     private boolean hasNextToken() {
-        return index < arguments.size();
+        return tokenIndex < tokens.size();
     }
 
     private void nextToken() {
-        index++;
+        tokenIndex++;
     }
 
     public void switchState(InstructionParserState state) {
@@ -140,6 +169,10 @@ public class InstructionParser {
     }
 
     public void letTheNextStateStartFromCurrentToken() {
-        index--;
+        tokenIndex--;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

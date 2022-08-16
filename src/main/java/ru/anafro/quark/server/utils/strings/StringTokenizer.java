@@ -41,7 +41,7 @@ public class StringTokenizer {
 
         skipDelimitersAhead();
 
-        return token.extractValue();
+        return token.extractContent();
     }
 
     public String getRemaining() {

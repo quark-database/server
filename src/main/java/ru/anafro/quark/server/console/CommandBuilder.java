@@ -2,6 +2,7 @@ package ru.anafro.quark.server.console;
 
 import ru.anafro.quark.server.console.exceptions.CommandMustHaveAtLeastOneNameException;
 import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.utils.objects.Nulls;
 import ru.anafro.quark.server.utils.patterns.Builder;
 
 import java.util.function.BiConsumer;
@@ -26,11 +27,13 @@ public class CommandBuilder implements Builder<Command> {
 
     public CommandBuilder shortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+
         return this;
     }
 
     public CommandBuilder longDescription(String longDescription) {
         this.longDescription = longDescription;
+
         return this;
     }
 
@@ -100,7 +103,7 @@ public class CommandBuilder implements Builder<Command> {
             throw new CommandMustHaveAtLeastOneNameException();
         }
 
-        return new Command(names, shortDescription, longDescription, parameters) {
+        return new Command(names, Nulls.nullOrDefault(shortDescription, "<No short description provided>"), Nulls.nullOrDefault(longDescription, "<No long description provided>"), parameters) {
             @Override
             public void action(CommandArguments arguments) {
                 if(action != null) {

@@ -1,8 +1,8 @@
 package ru.anafro.quark.server.api;
 
 import ru.anafro.quark.server.console.CommandLoop;
+import ru.anafro.quark.server.multithreading.AsyncServicePool;
 import ru.anafro.quark.server.networking.Server;
-import ru.anafro.quark.server.plugins.Plugin;
 import ru.anafro.quark.server.plugins.PluginManager;
 
 public final class Quark {
@@ -10,6 +10,7 @@ public final class Quark {
     private final static Server server = new Server();
     private final static PluginManager pluginManager = new PluginManager();
     private final static CommandLoop commands = new CommandLoop(server);
+    private final static AsyncServicePool pool = new AsyncServicePool(server, commands);
 
     private Quark() {
         //
@@ -17,8 +18,7 @@ public final class Quark {
 
     public static void init() {
         pluginManager.loadPlugins();
-        server.start();
-        pluginManager.getLoadedPlugins().forEach(Plugin::onEnable);
+        pool.run();
     }
 
     public static Server server() {

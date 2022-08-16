@@ -40,7 +40,7 @@ public class InstructionSyntaxException extends LexerException {
 
         System.out.println(formattedMessage.getContent());
 
-        return formattedMessage.extractValue();
+        return formattedMessage.extractContent();
     }
 
     public String getInstruction() {

@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.console.parser;
 
-import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.exceptions.ParsingFailedException;
-import ru.anafro.quark.server.console.parser.states.CommandParserState;
 import ru.anafro.quark.server.console.parser.states.ReadingCommandNameCommandParserState;
+import ru.anafro.quark.server.console.CommandArguments;
+import ru.anafro.quark.server.console.parser.states.CommandParserState;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.StringBuffer;

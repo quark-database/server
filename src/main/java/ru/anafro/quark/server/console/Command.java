@@ -102,6 +102,6 @@ public abstract class Command {
             syntax.append(parameter.required() ? "]" : ">");
         }
 
-        return syntax.extractValue();
+        return syntax.extractContent();
     }
 }

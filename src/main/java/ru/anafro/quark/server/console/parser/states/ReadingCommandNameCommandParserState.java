@@ -13,7 +13,7 @@ public class ReadingCommandNameCommandParserState extends CommandParserState {
             if(parser.getBuffer().isEmpty()) {
                 return;
             } else {
-                parser.setCommandName(parser.getBuffer().extractValue());
+                parser.setCommandName(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             }
         } else {

@@ -9,7 +9,7 @@ public class FloatEntity extends InstructionEntity {
     }
 
     @Override
-    public Float toObject() {
+    public Float getValue() {
         return value;
     }
 }

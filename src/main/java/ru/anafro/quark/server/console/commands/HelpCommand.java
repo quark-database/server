@@ -1,6 +1,8 @@
 package ru.anafro.quark.server.console.commands;
 
-import ru.anafro.quark.server.console.*;
+import ru.anafro.quark.server.console.Command;
+import ru.anafro.quark.server.console.CommandArguments;
+import ru.anafro.quark.server.console.CommandParameter;
 import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.containers.UniqueList;
 
@@ -26,9 +28,12 @@ public class HelpCommand extends Command {
                     logger.info("You can also use %s name%s instead: %s".formatted(command.aliasCount() == 1 ? "this" : "these", command.aliasCount() == 1 ? "" : "s", Lists.join(command.getAliases())));
                 }
                 logger.info("Syntax: " + command.getSyntax());
-                logger.info("Parameters:");
-                for(var parameter : command.getParameters()) {
-                    logger.info("\t[%s] %s - %s".formatted(parameter.required() ? "Required" : "Optional", quoted(parameter.name()), parameter.longDescription()));
+
+                if(command.getParameters().count() != 0) { // TODO: Change to !.isEmpty()
+                    logger.info("Parameters:");
+                    for(var parameter : command.getParameters()) {
+                        logger.info("\t[%s] %s - %s".formatted(parameter.required() ? "Required" : "Optional", quoted(parameter.name()), parameter.longDescription()));
+                    }
                 }
             } else {
                 error("There is no command with name %s. To open the list of existing commands, write %s command with no arguments.".formatted(quoted(arguments.get("command")), quoted(this.getPrimaryName())));

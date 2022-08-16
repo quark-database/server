@@ -9,7 +9,7 @@ public class StringEntity extends InstructionEntity {
     }
 
     @Override
-    public String toObject() {
+    public String getValue() {
         return value;
     }
 }

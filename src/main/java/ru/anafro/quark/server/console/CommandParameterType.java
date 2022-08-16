@@ -1,7 +1,6 @@
 package ru.anafro.quark.server.console;
 
 import ru.anafro.quark.server.console.exceptions.CommandArgumentTypeDoesNotHaveIsSuitableValueFunctionDefinedException;
-import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.validation.Validators;
 
 import java.util.function.Function;

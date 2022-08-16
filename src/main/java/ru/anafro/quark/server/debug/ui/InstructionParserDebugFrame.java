@@ -40,12 +40,12 @@ public class InstructionParserDebugFrame extends DebugFrame {
                             English.articleFor(parameter.isOptional() ? "optional" : "required"),
                             parameter.isOptional() ? "optional" : "required", quoted(parameter.getName()),
                             parameter.getType(),
-                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).toObject().toString() : "is unset")
+                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).getValue().toString() : "is unset")
                     );
                 }
                 buffer.resetTabLevel();
 
-                parserOutputArea.setText(buffer.extractValue());
+                parserOutputArea.setText(buffer.extractContent());
             } catch(QuarkException exception) {
                 parserOutputArea.setText(exception.getMessage());
             }

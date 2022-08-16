@@ -4,12 +4,14 @@ import ru.anafro.quark.server.console.exceptions.CommandException;
 import ru.anafro.quark.server.console.exceptions.CommandWithThisNameAlreadyExistsException;
 import ru.anafro.quark.server.console.exceptions.NoSuchCommandException;
 import ru.anafro.quark.server.console.parser.CommandParser;
+import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CommandLoop {
+public class CommandLoop implements AsyncService {
     private final ArrayList<Command> commands = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
     private final CommandParser parser = new CommandParser();
@@ -20,12 +22,18 @@ public class CommandLoop {
         this.server = server;
     }
 
-    public void startReadingCommandsAsync() {
+    public void startReadingCommands() {
         while(!isReadingNextCommandsStopped()) {
             System.out.print("> ");
 
             try {
-                parser.parse(scanner.nextLine().strip());
+                String commandLine = scanner.nextLine().strip();
+
+                if(commandLine.isBlank()) {
+                    continue;
+                }
+
+                parser.parse(commandLine);
 
                 String commandName = parser.getCommandName();
                 CommandArguments arguments = parser.getArguments();
@@ -35,7 +43,7 @@ public class CommandLoop {
                     command.run(arguments);
                     System.out.println();
                 } else {
-                    throw new NoSuchCommandException(commandName);
+                    throw new NoSuchCommandException(this, commandName);
                 }
             } catch(CommandException exception) {
                 System.out.println(exception.getMessage());
@@ -49,6 +57,26 @@ public class CommandLoop {
 
     public boolean isReadingNextCommandsStopped() {
         return isReadingNextCommandsStopped;
+    }
+
+    public String suggestCommand(String notExistingCommandName) {
+        if(commands.isEmpty()) {
+            return null;
+        }
+
+        String suggestedCommand = commands.get(0).getPrimaryName();
+        double similarity = Double.NEGATIVE_INFINITY;
+
+        for(var command : commands) {
+            for(var commandName : command.getNames()) {
+                if(similarity <= StringSimilarityFinder.findSimilarity(notExistingCommandName, commandName)) { // TODO: Repeated code
+                    suggestedCommand = commandName;
+                    similarity = StringSimilarityFinder.findSimilarity(notExistingCommandName, commandName);   // TODO: Repeated code
+                }
+            }
+        }
+
+        return suggestedCommand;
     }
 
     public void stopReadingNextCommands() {
@@ -91,5 +119,10 @@ public class CommandLoop {
 
     public ArrayList<Command> getCommands() {
         return commands;
+    }
+
+    @Override
+    public void run() {
+        startReadingCommands();
     }
 }

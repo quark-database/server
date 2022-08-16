@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.console.exceptions;
 
-import ru.anafro.quark.server.console.CommandParameter;
 import ru.anafro.quark.server.console.CommandParameters;
 import ru.anafro.quark.server.utils.containers.Lists;
 

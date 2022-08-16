@@ -77,4 +77,8 @@ public class CommandParameters implements Iterable<CommandParameter> {
             }
         }
     }
+
+    public int count() {
+        return parameters.size();
+    }
 }

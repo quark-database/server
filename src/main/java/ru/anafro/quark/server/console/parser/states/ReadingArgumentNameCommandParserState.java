@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.console.parser.states;
 
-import ru.anafro.quark.server.console.CommandArgument;
 import ru.anafro.quark.server.console.parser.CommandParser;
 
 public class ReadingArgumentNameCommandParserState extends CommandParserState {
@@ -15,7 +14,7 @@ public class ReadingArgumentNameCommandParserState extends CommandParserState {
                 return;
             } else {
                 parser.getArguments().addEmpty(parser.getBufferContent());
-                parser.switchState(new ReadingArgumentValueCommandParserState(parser, parser.getBuffer().extractValue()));
+                parser.switchState(new ReadingArgumentValueCommandParserState(parser, parser.getBuffer().extractContent()));
             }
         } else {
             parser.getBuffer().append(currentCharacter);

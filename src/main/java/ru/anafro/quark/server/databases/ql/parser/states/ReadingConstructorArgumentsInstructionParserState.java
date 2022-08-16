@@ -10,6 +10,7 @@ import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ClosingParenthesisInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
+import ru.anafro.quark.server.utils.objects.Nulls;
 
 public abstract class ReadingConstructorArgumentsInstructionParserState extends InstructionParserState {
     private final Instruction instruction;
@@ -31,13 +32,23 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
 
     @Override
     public void handleToken(InstructionToken token) {
-        if(expectingComma) {                                            // <- TODO: Repeating code!
+        if(expectingComma) {                                            // <- TODO: Repeating code! #1
             if(token.is("comma")) {
                 stopExpectingComma();
+            } else if(token.is("closing parenthesis")) {
+                stopExpectingComma();
+
+                parser.getLogger().debug("Evaluating " + constructor.getSyntax() + " with arguments: ");
+                for(var argument : arguments) {
+                    parser.getLogger().debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), argument.getEntity().getValue()::toString, "<null object>"));
+                }
+
+                computedEntity = constructor.eval(arguments);           // <- TODO: Repeated code! #2
+                afterEntityComputation(computedEntity);
             } else {
                 expectationError("comma", token.getName());
             }
-        } else if(expectingOpeningParenthesis) {                        // <- TODO: Repeating code!
+        } else if(expectingOpeningParenthesis) {                        // <- TODO: Repeating code! #1
             if(token.is("opening parenthesis")) {
                 stopExpectingOpeningParenthesis();
             } else {
@@ -50,7 +61,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
         } else if(token instanceof ConstructorNameInstructionToken constructorToken) {
             parser.switchState(new ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState(parser, this, constructorToken.getConstructor(), instruction, getCurrentConstructorParameterName()));
         } else if(token instanceof ClosingParenthesisInstructionToken) {
-            computedEntity = constructor.eval(arguments);
+            computedEntity = constructor.eval(arguments);               // <- TODO: Repeated code! #2
             afterEntityComputation(computedEntity);
         } else {
             expectationError("object or comma", token.getName()); // TODO: Too ambiguous tip of expected object. Specify clearly.
@@ -58,7 +69,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
     }
 
     public String getCurrentConstructorParameterName() {
-        return instruction.getParameters().parameterAt(parameterIndex).getName();
+        return constructor.getParameters().parameterAt(parameterIndex).name();
     }
 
     public void requireNextTokenToBeComma() {

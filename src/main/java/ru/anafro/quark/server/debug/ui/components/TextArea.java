@@ -9,6 +9,7 @@ public class TextArea extends JTextArea {
         setBackground(background);
         setForeground(foreground);
         setFont(font);
+        setLineWrap(true);
     }
 
     public static TextArea console(int locationX, int locationY, int width, int height) {

@@ -10,7 +10,7 @@ public abstract class InstructionEntity {
     }
 
     public <T> T as(Class<T> clazz) {
-        var object = this.toObject();
+        var object = this.getValue();
 
         if(clazz.isInstance(object)) {
             return clazz.cast(object);
@@ -19,7 +19,7 @@ public abstract class InstructionEntity {
         }
     }
 
-    public abstract Object toObject();
+    public abstract Object getValue();
 
     public String getName() {
         return name;

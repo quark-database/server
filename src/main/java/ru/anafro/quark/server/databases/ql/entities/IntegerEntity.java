@@ -9,7 +9,7 @@ public class IntegerEntity extends InstructionEntity {
     }
 
     @Override
-    public Integer toObject() {
+    public Integer getValue() {
         return value;
     }
 }

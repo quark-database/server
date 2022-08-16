@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.console;
 
-import ru.anafro.quark.server.console.exceptions.NoSuchCommandArgumentException;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
