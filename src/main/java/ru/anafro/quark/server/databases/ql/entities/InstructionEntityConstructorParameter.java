@@ -3,18 +3,31 @@ package ru.anafro.quark.server.databases.ql.entities;
 import java.util.Objects;
 
 public final class InstructionEntityConstructorParameter {
+    public static final String VARARGS_TYPE_MARKER = "...";
     private final String name;
     private final String type;
     private final boolean required;
+    private final boolean varargs;
 
     public InstructionEntityConstructorParameter(String name, String type, boolean required) {
+        if(type.endsWith(VARARGS_TYPE_MARKER)) {
+            this.varargs = true;
+            this.type = type.substring(0, type.length() - VARARGS_TYPE_MARKER.length());
+        } else {
+            this.varargs = false;
+            this.type = type;
+        }
+
         this.name = name;
-        this.type = type;
         this.required = required;
     }
 
     public static InstructionEntityConstructorParameter required(String name, String type) {
         return new InstructionEntityConstructorParameter(name, type, true);
+    }
+
+    public static InstructionEntityConstructorParameter varargs(String name, String varargType) {
+        return InstructionEntityConstructorParameter.required(name, varargType + "...");
     }
 
     public static InstructionEntityConstructorParameter optional(String name, String type) {
@@ -57,4 +70,11 @@ public final class InstructionEntityConstructorParameter {
     }
 
 
+    public boolean isVarargs() {
+        return varargs;
+    }
+
+    public boolean isWildcard() {
+        return type.equals(InstructionEntity.WILDCARD_TYPE);
+    }
 }

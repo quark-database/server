@@ -1,6 +1,9 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.databases.ql.entities.exceptions.ConstructorHasNoVarargsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityConstructorParameterAlreadyExistsException;
+import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterInConstructorAlreadyExistsException;
+import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterMustBeTheLastParameterException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +12,13 @@ public class InstructionEntityConstructorParameters implements Iterable<Instruct
     private final ArrayList<InstructionEntityConstructorParameter> parameters = new ArrayList<>();
 
     public InstructionEntityConstructorParameters(InstructionEntityConstructorParameter... parameters) {
-        for(var parameter : parameters) {
+        for(int index = 0; index < parameters.length; index++) {
+            var parameter = parameters[index];
+
+            if(parameter.isVarargs() && index != parameters.length - 1) {
+                throw new VarargsParameterMustBeTheLastParameterException(parameter, index, parameters.length);
+            }
+
             add(parameter);
         }
     }
@@ -17,6 +26,10 @@ public class InstructionEntityConstructorParameters implements Iterable<Instruct
     public void add(InstructionEntityConstructorParameter parameter) {
         if(has(parameter.name())) {
             throw new InstructionEntityConstructorParameterAlreadyExistsException(parameter.name());
+        }
+
+        if(hasVarargs() && parameter.isVarargs()) {
+            throw new VarargsParameterInConstructorAlreadyExistsException(parameter, getVarargs());
         }
 
         parameters.add(parameter);
@@ -30,6 +43,22 @@ public class InstructionEntityConstructorParameters implements Iterable<Instruct
         }
 
         return null;
+    }
+
+    public boolean hasVarargs() {
+        if(parameters.isEmpty()) {
+            return false;
+        }
+
+        return parameterAt(parameters.size() - 1).isVarargs();
+    }
+
+    public InstructionEntityConstructorParameter getVarargs() {
+        if(!hasVarargs()) {
+            throw new ConstructorHasNoVarargsException();
+        }
+
+        return parameterAt(parameters.size() - 1);
     }
 
     public boolean has(String parameterName) {

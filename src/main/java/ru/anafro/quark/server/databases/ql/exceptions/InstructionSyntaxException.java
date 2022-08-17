@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.ql.exceptions;
 
 import ru.anafro.quark.server.databases.ql.lexer.exceptions.LexerException;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 public class InstructionSyntaxException extends LexerException {
     private final String instruction, errorMessage, tipToFix;
@@ -26,7 +26,7 @@ public class InstructionSyntaxException extends LexerException {
             throw new UnsupportedOperationException("Error length should be greater than 0");
         }
 
-        StringBuffer formattedMessage = new StringBuffer();
+        TextBuffer formattedMessage = new TextBuffer();
 
         formattedMessage.appendLine("Instruction contains a syntax error: " + errorMessage + ".");
         formattedMessage.appendLine("Lexing state: " + stateClass.getSimpleName()); // TODO: Split class name by words with spaces

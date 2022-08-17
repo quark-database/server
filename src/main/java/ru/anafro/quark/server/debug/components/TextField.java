@@ -1,4 +1,4 @@
-package ru.anafro.quark.server.debug.ui.components;
+package ru.anafro.quark.server.debug.components;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

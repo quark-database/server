@@ -25,4 +25,13 @@ public final class English {
             return "a";
         }
     }
+
+    public static String ordinalSuffixFor(int number) {
+        return switch(Math.abs(number % 10)) {
+            case 1 -> "st";
+            case 2 -> "nd";
+            case 3 -> "rd";
+            default -> "th";
+        };
+    }
 }

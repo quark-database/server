@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.utils.containers;
 
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public final class Lists {
     }
 
     public static <T> String join(List<? extends T> collection, String separator) {
-        StringBuffer joinedContainer = new StringBuffer();
+        TextBuffer joinedContainer = new TextBuffer();
 
         for(int index = 0; index < collection.size(); index++) {
             joinedContainer.append(collection.get(index));

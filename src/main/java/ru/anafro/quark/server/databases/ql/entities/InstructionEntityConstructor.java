@@ -3,7 +3,7 @@ package ru.anafro.quark.server.databases.ql.entities;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.ConstructorEvaluationException;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.utils.containers.Lists;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.stream.Collectors;
 
@@ -31,12 +31,14 @@ public abstract class InstructionEntityConstructor {
     public InstructionEntity eval(InstructionEntityConstructorArguments arguments) {
         for(var argument : arguments) {
             if(parameters.has(argument.getName())) {
+                var parameter = parameters.getParameter(argument.getName());
+
                 if(argument.getEntity() == null) {
                     throw new ConstructorEvaluationException(this, "An argument %s must not be null.".formatted(argument.getName()));
                 }
 
-                if(!argument.getEntity().getName().equals(parameters.getParameter(argument.getName()).type())) { // TODO (maybe): TL;DR
-                    throw new ConstructorEvaluationException(this, "An argument you passed has type %s, but must have type %s".formatted(quoted(argument.getEntity().getName()), quoted(parameters.getParameter(argument.getName()).type())));
+                if(!argument.getEntity().getType().equals(parameter.type()) && !parameter.isWildcard()) { // TODO (maybe): TL;DR
+                    throw new ConstructorEvaluationException(this, "An argument you passed has type %s, but must have type %s".formatted(quoted(argument.getEntity().getType()), quoted(parameters.getParameter(argument.getName()).type())));
                 }
             } else {
                 throw new ConstructorEvaluationException(this, "You added an argument %s, but it does not exist in parameter list of this constructor.".formatted(quoted(argument.getName())));
@@ -53,7 +55,7 @@ public abstract class InstructionEntityConstructor {
     }
 
     public String getSyntax() {
-        StringBuffer syntax = new StringBuffer();
+        TextBuffer syntax = new TextBuffer();
 
         syntax.append(ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER);
         syntax.append(name);

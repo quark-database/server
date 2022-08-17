@@ -12,4 +12,9 @@ public class IntegerEntity extends InstructionEntity {
     public Integer getValue() {
         return value;
     }
+
+    @Override
+    public String getValueAsString() {
+        return String.valueOf(value);
+    }
 }

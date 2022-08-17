@@ -1,11 +1,10 @@
-package ru.anafro.quark.server.debug.ui;
+package ru.anafro.quark.server.debug;
 
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-import ru.anafro.quark.server.debug.ui.components.DebugFrame;
-import ru.anafro.quark.server.debug.ui.components.TextArea;
-import ru.anafro.quark.server.debug.ui.components.TextField;
-import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.debug.components.DebugFrame;
+import ru.anafro.quark.server.debug.components.TextArea;
+import ru.anafro.quark.server.debug.components.TextField;
 
 import java.util.stream.Collectors;
 
@@ -15,8 +14,8 @@ public class InstructionLexerDebugFrame extends DebugFrame {
 
 
 
-    public InstructionLexerDebugFrame(Server server) {
-        super("Instruction Lexer", server, 600, 400);
+    public InstructionLexerDebugFrame() {
+        super("Instruction Lexer", 600, 400);
     }
 
     private void updateLexerOutput() {

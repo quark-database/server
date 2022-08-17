@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.databases.ql;
 
+import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+
 public class InstructionParameter {
     private final String name;
     private final String type;
@@ -60,6 +62,10 @@ public class InstructionParameter {
 
     public boolean isGeneral() {
         return general;
+    }
+
+    public boolean isWildcard() {
+        return type.equals(InstructionEntity.WILDCARD_TYPE);
     }
 
     public interface Types {

@@ -73,4 +73,16 @@ public class InstructionParameters implements Iterable<InstructionParameter> {
     public Stream<InstructionParameter> stream() {
         return parameters.stream();
     }
+
+    public Stream<InstructionParameter> getAdditionalParameters() {
+        return stream().filter(InstructionParameter::isGeneral);
+    }
+
+    public int getAdditionalParameterCount() {
+        return (int) getAdditionalParameters().count();
+    }
+
+    public boolean hasAdditionalParameters() {
+        return getAdditionalParameterCount() > 0;
+    }
 }

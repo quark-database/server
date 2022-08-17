@@ -4,6 +4,7 @@ import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArgument;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 
 public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState extends ReadingConstructorArgumentsInstructionParserState {
@@ -16,7 +17,18 @@ public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParse
 
     @Override
     public void afterEntityComputation(InstructionEntity computedEntity) {
-        ((ReadingConstructorArgumentsInstructionParserState) previousState).getArguments().add(InstructionEntityConstructorArgument.computed(argumentName, computedEntity));
+        var arguments = ((ReadingConstructorArgumentsInstructionParserState) previousState).getArguments();
+
+        if(constructor.getParameters().hasVarargs() && constructor.getParameters().getParameter(argumentName).isVarargs()) {
+            if(arguments.has(argumentName)) {
+                arguments.get(argumentName).as(ListEntity.class).add(computedEntity);
+            } else {
+                arguments.add(new InstructionEntityConstructorArgument(argumentName, new ListEntity(computedEntity.getType(), computedEntity)));
+            }
+        } else {
+            arguments.add(InstructionEntityConstructorArgument.computed(argumentName, computedEntity));
+        }
+
         parser.restoreState();
     }
 }

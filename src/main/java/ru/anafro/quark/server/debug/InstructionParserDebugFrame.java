@@ -1,12 +1,11 @@
-package ru.anafro.quark.server.debug.ui;
+package ru.anafro.quark.server.debug;
 
-import ru.anafro.quark.server.debug.ui.components.DebugFrame;
-import ru.anafro.quark.server.debug.ui.components.TextArea;
-import ru.anafro.quark.server.debug.ui.components.TextField;
+import ru.anafro.quark.server.debug.components.DebugFrame;
+import ru.anafro.quark.server.debug.components.TextArea;
+import ru.anafro.quark.server.debug.components.TextField;
 import ru.anafro.quark.server.exceptions.QuarkException;
-import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.utils.strings.English;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
@@ -14,8 +13,8 @@ public class InstructionParserDebugFrame extends DebugFrame {
     private TextArea parserOutputArea;
     private TextField instructionField;
 
-    public InstructionParserDebugFrame(Server server) {
-        super("Instruction Parser", server, 800, 600);
+    public InstructionParserDebugFrame() {
+        super("Instruction Parser", 800, 600);
     }
 
     @Override
@@ -28,7 +27,7 @@ public class InstructionParserDebugFrame extends DebugFrame {
             try {
                 parser.parse(lexer.lex(instructionField.getText()));
                 var instruction = parser.getInstruction();
-                var buffer = new StringBuffer();
+                var buffer = new TextBuffer();
 
                 buffer.appendLine("Instruction name: " + instruction.getName());
                 buffer.appendLine("Instruction permission: " + instruction.getPermission());

@@ -5,7 +5,7 @@ import ru.anafro.quark.server.databases.ql.lexer.states.InstructionLexerState;
 import ru.anafro.quark.server.databases.ql.lexer.states.ReadingInstructionHeaderInstructionLexerState;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.arrays.Arrays;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ public class InstructionLexer {
      private String instruction;
      private final Logger logger = new Logger(this.getClass());
      private ArrayList<InstructionToken> tokens = new ArrayList<>();
-     private final StringBuffer buffer = new StringBuffer();
+     private final TextBuffer buffer = new TextBuffer();
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);
      private int currentCharacterIndex;
      public static Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
@@ -31,7 +31,7 @@ public class InstructionLexer {
                logger.debug("");
                logger.debug("Current character: '" + getCurrentCharacter() + "'");
 
-               StringBuffer stateStackBuffer = new StringBuffer("State line: ");
+               TextBuffer stateStackBuffer = new TextBuffer("State line: ");
 
                InstructionLexerState stateCaret = this.state;
                while(stateCaret.hasPreviousState()) {
@@ -115,7 +115,7 @@ public class InstructionLexer {
           this.state = state.getPreviousState();
      }
 
-     public StringBuffer getBuffer() {
+     public TextBuffer getBuffer() {
           return buffer;
      }
 

@@ -3,10 +3,11 @@ package ru.anafro.quark.server.databases.ql.entities;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityCastException;
 
 public abstract class InstructionEntity {
-    private final String name;
+    public static final String WILDCARD_TYPE = "?";
+    private final String type;
 
-    public InstructionEntity(String name) {
-        this.name = name;
+    public InstructionEntity(String type) {
+        this.type = type;
     }
 
     public <T> T as(Class<T> clazz) {
@@ -21,7 +22,9 @@ public abstract class InstructionEntity {
 
     public abstract Object getValue();
 
-    public String getName() {
-        return name;
+    public abstract String getValueAsString();
+
+    public String getType() {
+        return type;
     }
 }

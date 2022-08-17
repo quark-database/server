@@ -6,7 +6,11 @@ import ru.anafro.quark.server.utils.containers.UniqueList;
 public class RegisteredEntityConstructors {
     private static final UniqueList<InstructionEntityConstructor> list = new UniqueList<>(
             new UpperInstructionEntityConstructor(),
-            new LowerInstructionEntityConstructor()
+            new LowerInstructionEntityConstructor(),
+            new ListInstructionEntityConstructor(),
+            new YesInstructionEntityConstructor(),
+            new NoInstructionEntityConstructor(),
+            new ConcatInstructionEntityConstructor()
     );
 
     public static InstructionEntityConstructor get(String constructorName) {

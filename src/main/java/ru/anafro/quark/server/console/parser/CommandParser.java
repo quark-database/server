@@ -6,7 +6,7 @@ import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.parser.states.CommandParserState;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.Lists;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
@@ -15,11 +15,11 @@ public class CommandParser {
     private String command;
     private String commandName;
     private CommandArguments arguments = new CommandArguments();
-    private final StringBuffer buffer = new StringBuffer();
+    private final TextBuffer buffer = new TextBuffer();
     private final Logger logger = new Logger(this.getClass());
     private int index = 0;
 
-    public StringBuffer getBuffer() {
+    public TextBuffer getBuffer() {
         return buffer;
     }
 

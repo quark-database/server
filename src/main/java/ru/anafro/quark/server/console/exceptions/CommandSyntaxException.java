@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.console.exceptions;
 
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 public class CommandSyntaxException extends CommandException {
     public CommandSyntaxException(String errorMessage, String command, int errorStartingIndex) {
@@ -8,7 +8,7 @@ public class CommandSyntaxException extends CommandException {
     }
 
     private static String makeMessage(String errorMessage, String command, int errorStartingIndex) {
-        StringBuffer message = new StringBuffer("Command contain a syntax error: ");
+        TextBuffer message = new TextBuffer("Command contain a syntax error: ");
 
         message.appendLine(errorMessage);
         message.appendLine("-".repeat(command.length()));

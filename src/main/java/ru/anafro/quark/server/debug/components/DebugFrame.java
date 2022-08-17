@@ -1,6 +1,7 @@
-package ru.anafro.quark.server.debug.ui.components;
+package ru.anafro.quark.server.debug.components;
 
-import ru.anafro.quark.server.debug.ui.exceptions.ImageForDebugFrameIconNotFoundException;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.debug.exceptions.ImageForDebugFrameIconNotFoundException;
 import ru.anafro.quark.server.files.Assets;
 import ru.anafro.quark.server.networking.Server;
 
@@ -16,8 +17,8 @@ public abstract class DebugFrame extends JFrame {
     protected Panel panel;
 
 
-    public DebugFrame(String title, Server server, int width, int height) {
-        this.server = server;
+    public DebugFrame(String title, int width, int height) {
+        this.server = Quark.server();
         this.panel = new Panel(new Rectangle(0, 0, width, height));
 
         setTitle(title + " - Quark Server (Debug)");

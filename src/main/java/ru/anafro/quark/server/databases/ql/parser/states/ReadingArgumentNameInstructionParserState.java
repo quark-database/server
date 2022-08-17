@@ -11,7 +11,7 @@ public class ReadingArgumentNameInstructionParserState extends InstructionParser
 
     @Override
     public void handleToken(InstructionToken token) {
-        if(token.is("comma") || token.is("colon")) {
+        if(token.is("comma") || token.is("colon") || token.is("semicolon")) {
             return;
         }
 

@@ -1,14 +1,14 @@
 package ru.anafro.quark.server.utils.strings;
 
-public class StringBuffer {
+public class TextBuffer {
     private final StringBuilder builder = new StringBuilder();
     private int tabLevel = 0;
 
-    public StringBuffer() {
+    public TextBuffer() {
         //
     }
 
-    public StringBuffer(String initialString) {
+    public TextBuffer(String initialString) {
         append(initialString);
     }
 
@@ -27,18 +27,18 @@ public class StringBuffer {
         builder.setLength(0);
     }
 
-    public <T> StringBuffer append(T appendingValue) {
+    public <T> TextBuffer append(T appendingValue) {
         builder.append(appendingValue);
         return this;
     }
 
-    public <T> StringBuffer appendLine(T appendingLine) {
+    public <T> TextBuffer appendLine(T appendingLine) {
         append("\t".repeat(getTabLevel()));
         append(appendingLine);
         return nextLine();
     }
 
-    public StringBuffer nextLine() {
+    public TextBuffer nextLine() {
         return append('\n');
     }
 

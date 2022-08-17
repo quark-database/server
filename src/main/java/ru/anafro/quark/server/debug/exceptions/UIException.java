@@ -1,4 +1,4 @@
-package ru.anafro.quark.server.debug.ui.exceptions;
+package ru.anafro.quark.server.debug.exceptions;
 
 import ru.anafro.quark.server.exceptions.QuarkException;
 

@@ -5,7 +5,7 @@ import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.logging.LogLevel;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.UniqueList;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.List;
 
@@ -91,7 +91,7 @@ public abstract class Command {
     }
 
     public String getSyntax() {
-        StringBuffer syntax = new StringBuffer(getPrimaryName());
+        TextBuffer syntax = new TextBuffer(getPrimaryName());
 
         for(var parameter : parameters) {
             syntax.append(" ");

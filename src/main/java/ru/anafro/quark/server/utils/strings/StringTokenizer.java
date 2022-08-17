@@ -32,7 +32,7 @@ public class StringTokenizer {
             throw new NoMoreCharactersToTokenizeException(string);
         }
 
-        StringBuffer token = new StringBuffer();
+        TextBuffer token = new TextBuffer();
 
         while(hasCharacters() && !characterShouldBeSkipped()) {
             token.append(getCurrentCharacter());

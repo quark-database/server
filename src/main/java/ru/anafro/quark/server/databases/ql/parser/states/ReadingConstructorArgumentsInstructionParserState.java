@@ -1,10 +1,7 @@
 package ru.anafro.quark.server.databases.ql.parser.states;
 
 import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArgument;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
+import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ClosingParenthesisInstructionToken;
@@ -13,9 +10,9 @@ import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 import ru.anafro.quark.server.utils.objects.Nulls;
 
 public abstract class ReadingConstructorArgumentsInstructionParserState extends InstructionParserState {
-    private final Instruction instruction;
+    protected final Instruction instruction;
 
-    private final InstructionEntityConstructor constructor;
+    protected final InstructionEntityConstructor constructor;
     private final InstructionEntityConstructorArguments arguments = new InstructionEntityConstructorArguments();
     private int parameterIndex = 0;
     private InstructionEntity computedEntity;
@@ -40,7 +37,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
 
                 parser.getLogger().debug("Evaluating " + constructor.getSyntax() + " with arguments: ");
                 for(var argument : arguments) {
-                    parser.getLogger().debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), argument.getEntity().getValue()::toString, "<null object>"));
+                    parser.getLogger().debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), argument.getEntity()::getValueAsString, "<null object>"));
                 }
 
                 computedEntity = constructor.eval(arguments);           // <- TODO: Repeated code! #2
@@ -55,8 +52,17 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
                 expectationError("opening parenthesis", token.getName());
             }
         } else if(token instanceof LiteralInstructionToken literalToken) {
-            arguments.add(InstructionEntityConstructorArgument.computed(getCurrentConstructorParameterName(), literalToken.toEntity()));
-            parameterIndex++;
+            if(getCurrentConstructorParameter().isVarargs()) {
+                if(arguments.has(getCurrentConstructorParameterName())) {
+                    arguments.<ListEntity>get(getCurrentConstructorParameterName()).add(literalToken.toEntity());
+                } else {
+                    arguments.add(new InstructionEntityConstructorArgument(getCurrentConstructorParameterName(), new ListEntity(getCurrentConstructorParameter().type(), literalToken.toEntity())));
+                }
+            } else {
+                arguments.add(InstructionEntityConstructorArgument.computed(getCurrentConstructorParameterName(), literalToken.toEntity()));
+                parameterIndex++;
+            }
+
             requireNextTokenToBeComma();
         } else if(token instanceof ConstructorNameInstructionToken constructorToken) {
             parser.switchState(new ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState(parser, this, constructorToken.getConstructor(), instruction, getCurrentConstructorParameterName()));
@@ -69,7 +75,11 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
     }
 
     public String getCurrentConstructorParameterName() {
-        return constructor.getParameters().parameterAt(parameterIndex).name();
+        return getCurrentConstructorParameter().name();
+    }
+
+    private InstructionEntityConstructorParameter getCurrentConstructorParameter() {
+        return constructor.getParameters().parameterAt(parameterIndex);
     }
 
     public void requireNextTokenToBeComma() {

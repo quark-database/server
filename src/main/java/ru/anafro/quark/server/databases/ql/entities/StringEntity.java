@@ -12,4 +12,9 @@ public class StringEntity extends InstructionEntity {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String getValueAsString() {
+        return getValue();
+    }
 }

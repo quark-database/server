@@ -14,7 +14,7 @@ public class ExitCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        logger.error("Stopping the Quark Server...");
+        logger.info("Stopping the Quark Server...");
         System.exit(0);
     }
 }

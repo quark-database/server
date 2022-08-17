@@ -10,7 +10,7 @@ import ru.anafro.quark.server.databases.ql.parser.states.InstructionParserState;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.containers.UniqueList;
 import ru.anafro.quark.server.utils.objects.Nulls;
-import ru.anafro.quark.server.utils.strings.StringBuffer;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ public class InstructionParser {
         registerInstruction(new DeleteDatabaseInstruction());
         registerInstruction(new DeleteFromInstruction());
         registerInstruction(new DeleteTableInstruction());
+        registerInstruction(new DoNothingInstruction());
         registerInstruction(new FactoryResetInstruction());
         registerInstruction(new GrandTokenInstruction());
         registerInstruction(new InsertIntoInstruction());
@@ -104,7 +105,7 @@ public class InstructionParser {
                 logger.debug((index == tokenIndex ? "  -> " : "    ") + token.getName() + " = " + token.getValue());
             }
 
-            StringBuffer stateStackBuffer = new StringBuffer("State stack: ");
+            TextBuffer stateStackBuffer = new TextBuffer("State stack: ");
 
             var stateCaret = this.state;
             while(stateCaret != null) {
@@ -118,7 +119,7 @@ public class InstructionParser {
             logger.debug("Arguments: ");
 
             for(var argument : arguments) {
-                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), () -> argument.value().getName(), "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), () -> argument.value().getValue().toString(), "<null object>"));
+                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), () -> argument.value().getType(), "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), () -> argument.value().getValueAsString(), "<null object>"));
             }
 
             logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere
