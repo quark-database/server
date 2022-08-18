@@ -10,6 +10,7 @@ public abstract class InstructionEntity {
         this.type = type;
     }
 
+    @Deprecated
     public <T> T as(Class<T> clazz) {
         var object = this.getValue();
 

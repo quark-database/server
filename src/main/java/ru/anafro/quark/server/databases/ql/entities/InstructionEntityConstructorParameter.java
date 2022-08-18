@@ -27,7 +27,7 @@ public final class InstructionEntityConstructorParameter {
     }
 
     public static InstructionEntityConstructorParameter varargs(String name, String varargType) {
-        return InstructionEntityConstructorParameter.required(name, varargType + "...");
+        return InstructionEntityConstructorParameter.required(name, varargType + VARARGS_TYPE_MARKER);
     }
 
     public static InstructionEntityConstructorParameter optional(String name, String type) {
@@ -63,12 +63,13 @@ public final class InstructionEntityConstructorParameter {
 
     @Override
     public String toString() {
-        return "InstructionEntityConstructorParameter[" +
-                "name=" + name + ", " +
-                "type=" + type + ", " +
-                "required=" + required + ']';
+        return "InstructionEntityConstructorParameter{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", required=" + required +
+                ", varargs=" + varargs +
+                '}';
     }
-
 
     public boolean isVarargs() {
         return varargs;

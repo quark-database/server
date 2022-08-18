@@ -2,9 +2,10 @@ package ru.anafro.quark.server.databases.ql.parser;
 
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
+import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.instructions.*;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.states.ExpectingInstructionNameInstructionParserState;
 import ru.anafro.quark.server.databases.ql.parser.states.InstructionParserState;
 import ru.anafro.quark.server.logging.Logger;
@@ -119,7 +120,7 @@ public class InstructionParser {
             logger.debug("Arguments: ");
 
             for(var argument : arguments) {
-                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), () -> argument.value().getType(), "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), () -> argument.value().getValueAsString(), "<null object>"));
+                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), InstructionEntity::getType, "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), InstructionEntity::getValueAsString, "<null object>"));
             }
 
             logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere

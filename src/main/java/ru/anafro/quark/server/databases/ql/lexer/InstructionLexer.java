@@ -3,6 +3,7 @@ package ru.anafro.quark.server.databases.ql.lexer;
 import ru.anafro.quark.server.databases.ql.lexer.exceptions.LexerStateCannotBeRestoredException;
 import ru.anafro.quark.server.databases.ql.lexer.states.InstructionLexerState;
 import ru.anafro.quark.server.databases.ql.lexer.states.ReadingInstructionHeaderInstructionLexerState;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.strings.TextBuffer;

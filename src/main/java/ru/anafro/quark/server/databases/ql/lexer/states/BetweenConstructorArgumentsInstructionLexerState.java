@@ -13,10 +13,12 @@ public class BetweenConstructorArgumentsInstructionLexerState extends Instructio
     @Override
     public void handleCharacter(char currentCharacter) {
         if(currentCharacter == ',') {
+            logger.debug("Found a comma between two constructor arguments. Restoring the state");
             lexer.pushToken(new CommaInstructionToken());
             lexer.restoreState();
         } else if(currentCharacter == ')') {
-            lexer.letTheNextStateStartFromCurrentCharacter();
+            logger.debug("Found a closing parenthesis. Supposing that constructor argument list is ended. Restoring the state");
+            lexer.letTheNextStateStartFromCurrentCharacter(); // TODO: ?
             lexer.restoreState();
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character '" + currentCharacter + "' between constructor arguments", "Did you put extra comma or forgot one? Or just typed an extra letter after argument?", lexer.getCurrentCharacterIndex(), 1);

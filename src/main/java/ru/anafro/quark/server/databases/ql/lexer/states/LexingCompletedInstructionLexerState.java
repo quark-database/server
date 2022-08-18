@@ -11,6 +11,7 @@ public class LexingCompletedInstructionLexerState extends InstructionLexerState 
 
     @Override
     public void handleCharacter(char currentCharacter) {
+        logger.debug("Instruction is completed with ';', but character " + currentCharacter + " is found. Oops");
         throw new InstructionSyntaxException(this, lexer.getInstruction(), "Instruction has finished with a semicolon, but '" + currentCharacter + "' was found", "Remove everything after the ';'", lexer.getCurrentCharacterIndex(), lexer.getInstruction().length() - lexer.getCurrentCharacterIndex());
     }
 }

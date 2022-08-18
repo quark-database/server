@@ -15,12 +15,15 @@ public class ReadingInstructionParametersInstructionLexerState extends Instructi
     @Override
     public void handleCharacter(char currentCharacter) {
         if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
+            logger.debug("Appending this character to the parameter name");
             lexer.pushCurrentCharacterToBuffer();
         } else if(currentCharacter == '=') {
+            logger.debug("Found an equals sign. Let the separate state deal with it. And completing the parameter name reading");
             lexer.pushToken(new ParameterNameInstructionToken(lexer.extractBufferContent()));
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new ReadingEqualsSignInstructionLexerState(lexer));
         } else if(currentCharacter == ';') {
+            logger.debug("Semicolon found. Instruction is completed");
             lexer.pushToken(new SemicolonInstructionToken());
             lexer.switchState(new LexingCompletedInstructionLexerState(lexer));
         } else {

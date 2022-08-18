@@ -61,7 +61,7 @@ public abstract class InstructionEntityConstructor {
         syntax.append(name);
         syntax.append('(');
 
-        syntax.append(Lists.join(parameters.asList().stream().map(parameter -> parameter.name() + " is " + parameter.type() + (parameter.required() ? "" : " optional" )).collect(Collectors.toList()), ", "));
+        syntax.append(Lists.join(parameters.asList().stream().map(parameter -> parameter.name() + " is " + parameter.type() + (parameter.required() ? "" : " optional" ) + (parameter.isVarargs() ? InstructionEntityConstructorParameter.VARARGS_TYPE_MARKER : "")).collect(Collectors.toList()), ", "));
 
         syntax.append(')');
 

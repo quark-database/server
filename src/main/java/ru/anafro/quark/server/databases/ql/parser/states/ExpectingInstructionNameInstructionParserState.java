@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql.parser.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionNameInstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 
@@ -12,11 +12,11 @@ public class ExpectingInstructionNameInstructionParserState extends InstructionP
     @Override
     public void handleToken(InstructionToken token) {
         if(token instanceof InstructionNameInstructionToken instructionNameToken) {
-            parser.getLogger().debug("");
+            logger.debug("Found an instruction name token. Setting an instruction name and switching state");
             parser.setInstructionName(instructionNameToken.getValue());
             parser.switchState(new AfterInstructionNameInstructionParserState(parser));
         } else {
-            expectationError("instruction name", token.getName());
+            throwExcectationError("instruction name", token.getName());
         }
     }
 }

@@ -2,8 +2,8 @@ package ru.anafro.quark.server.databases.ql.parser.states;
 
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.entities.*;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.LiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ClosingParenthesisInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
@@ -27,50 +27,58 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
         requireNextTokenToBeOpeningParenthesis();
     }
 
+    // TODO: Rewrite this, because it's too hard to read. Probably split to multiple states
     @Override
     public void handleToken(InstructionToken token) {
         if(expectingComma) {                                            // <- TODO: Repeating code! #1
             if(token.is("comma")) {
+                logger.debug("Stopping expecting comma, because this token is comma");
                 stopExpectingComma();
             } else if(token.is("closing parenthesis")) {
-                stopExpectingComma();
-
-                parser.getLogger().debug("Evaluating " + constructor.getSyntax() + " with arguments: ");
+                logger.debug("Evaluating " + constructor.getSyntax() + " with arguments: ");
                 for(var argument : arguments) {
-                    parser.getLogger().debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), argument.getEntity()::getValueAsString, "<null object>"));
+                    logger.debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), InstructionEntity::getValueAsString, "<null object>"));
                 }
 
                 computedEntity = constructor.eval(arguments);           // <- TODO: Repeated code! #2
                 afterEntityComputation(computedEntity);
             } else {
-                expectationError("comma", token.getName());
+                throwExcectationError("comma", token.getName());
             }
         } else if(expectingOpeningParenthesis) {                        // <- TODO: Repeating code! #1
             if(token.is("opening parenthesis")) {
+                logger.debug("Stopping expecting opening parenthesis");
                 stopExpectingOpeningParenthesis();
             } else {
-                expectationError("opening parenthesis", token.getName());
+                throwExcectationError("opening parenthesis", token.getName());
             }
         } else if(token instanceof LiteralInstructionToken literalToken) {
             if(getCurrentConstructorParameter().isVarargs()) {
                 if(arguments.has(getCurrentConstructorParameterName())) {
+                    logger.debug("Pushing this literal to varargs");
                     arguments.<ListEntity>get(getCurrentConstructorParameterName()).add(literalToken.toEntity());
                 } else {
+                    logger.debug("Creating varargs list with this literal");
                     arguments.add(new InstructionEntityConstructorArgument(getCurrentConstructorParameterName(), new ListEntity(getCurrentConstructorParameter().type(), literalToken.toEntity())));
                 }
             } else {
+                logger.debug("Assigning this value to a parameter and switching to the next parameter");
                 arguments.add(InstructionEntityConstructorArgument.computed(getCurrentConstructorParameterName(), literalToken.toEntity()));
                 parameterIndex++;
             }
 
+            logger.debug("Expecting comma next time");
             requireNextTokenToBeComma();
         } else if(token instanceof ConstructorNameInstructionToken constructorToken) {
+            logger.debug("Constructor name found. Starting reading its arguments");
+            requireNextTokenToBeComma();
             parser.switchState(new ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState(parser, this, constructorToken.getConstructor(), instruction, getCurrentConstructorParameterName()));
         } else if(token instanceof ClosingParenthesisInstructionToken) {
+            logger.debug("')' found. Evaluating the constructor");
             computedEntity = constructor.eval(arguments);               // <- TODO: Repeated code! #2
             afterEntityComputation(computedEntity);
         } else {
-            expectationError("object or comma", token.getName()); // TODO: Too ambiguous tip of expected object. Specify clearly.
+            throwExcectationError("object or comma", token.getName()); // TODO: Too ambiguous tip of expected object. Specify clearly.
         }
     }
 
@@ -114,5 +122,9 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
 
     public InstructionEntityConstructorArguments getArguments() {
         return arguments;
+    }
+
+    public InstructionEntityConstructor getConstructor() {
+        return constructor;
     }
 }

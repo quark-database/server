@@ -1,4 +1,4 @@
-package ru.anafro.quark.server.databases.ql.lexer;
+package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
 public abstract class InstructionToken {
     private final String name, value;

@@ -1,9 +1,6 @@
 package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
 import ru.anafro.quark.server.databases.ql.entities.IntegerEntity;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
 import ru.anafro.quark.server.utils.strings.Converter;
 import ru.anafro.quark.server.utils.validation.Validators;
 

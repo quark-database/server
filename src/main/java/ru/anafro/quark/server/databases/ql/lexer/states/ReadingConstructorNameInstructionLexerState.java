@@ -20,10 +20,13 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
         }
 
         if(currentCharacter == ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER) {
+            logger.debug("Found '@', it's a constructor marker. Expecting the instruction name next time");
             cameAcrossWithMarker();
         } else if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
+            logger.debug("Appending this character to the constructor name");
             lexer.pushCurrentCharacterToBuffer();
         } else if(currentCharacter == '(') {
+            logger.debug("Reading the constructor name is completed. Reading it's arguments");
             lexer.pushToken(new ConstructorNameInstructionToken(lexer.extractBufferContent()));
             lexer.pushToken(new OpeningParenthesisInstructionToken());
             lexer.switchState(new ReadingNextConstructorArgumentInstructionLexerState(lexer, getPreviousState()));
@@ -34,6 +37,7 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
         return markerFound;
     }
 
+    // TODO: Rename this.
     public void cameAcrossWithMarker() {
         markerFound = true;
     }

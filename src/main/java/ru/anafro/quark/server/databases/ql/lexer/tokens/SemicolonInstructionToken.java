@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-
 public class SemicolonInstructionToken extends InstructionToken {
     public SemicolonInstructionToken() {
         super("semicolon", ";");

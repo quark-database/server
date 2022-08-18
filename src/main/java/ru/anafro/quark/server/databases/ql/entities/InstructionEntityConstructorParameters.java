@@ -1,9 +1,11 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.ConstructorHasNoVarargsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityConstructorParameterAlreadyExistsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterInConstructorAlreadyExistsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterMustBeTheLastParameterException;
+import ru.anafro.quark.server.utils.strings.English;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -75,6 +77,10 @@ public class InstructionEntityConstructorParameters implements Iterable<Instruct
     }
 
     public InstructionEntityConstructorParameter parameterAt(int parameterIndex) {
+        if(parameterIndex >= parameters.size()) {
+            throw new DatabaseException("Cannot get the %d%s parameter, because there are only %d parameters".formatted(parameterIndex, English.ordinalSuffixFor(parameterIndex), parameters.size())); // TODO: Create a new exception type
+        }
+
         return parameters.get(parameterIndex);
     }
 }

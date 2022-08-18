@@ -16,6 +16,7 @@ public class ReadingConstructorArgumentsAsInstructionArgumentInstructionParserSt
 
     @Override
     public void afterEntityComputation(InstructionEntity computedEntity) {
+        logger.debug("Computation of constructor is completed. Assigning the computed value to an argument");
         parser.getArguments().add(new InstructionArgument(argumentName, computedEntity));
         parser.restoreState();
     }

@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-
 public class CommaInstructionToken extends InstructionToken {
     public CommaInstructionToken() {
         super("comma", ",");

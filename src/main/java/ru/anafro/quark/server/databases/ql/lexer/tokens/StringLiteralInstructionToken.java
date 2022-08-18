@@ -2,8 +2,6 @@ package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
 import ru.anafro.quark.server.databases.ql.entities.StringEntity;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
 
 public class StringLiteralInstructionToken extends LiteralInstructionToken {
     public static final char STRING_LITERAL_QUOTE = '"';

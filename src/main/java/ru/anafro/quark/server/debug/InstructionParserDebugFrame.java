@@ -38,8 +38,8 @@ public class InstructionParserDebugFrame extends DebugFrame {
                     buffer.appendLine("%s %s parameter %s with type %s %s".formatted(
                             English.articleFor(parameter.isOptional() ? "optional" : "required"),
                             parameter.isOptional() ? "optional" : "required", quoted(parameter.getName()),
-                            parameter.getType(),
-                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).getValue().toString() : "is unset")
+                            parser.getArguments().get(parameter.getName()).getType(),
+                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).getValueAsString() : "is unset")
                     );
                 }
                 buffer.resetTabLevel();

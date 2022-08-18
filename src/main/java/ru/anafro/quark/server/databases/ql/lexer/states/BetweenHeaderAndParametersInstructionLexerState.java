@@ -14,9 +14,11 @@ public class BetweenHeaderAndParametersInstructionLexerState extends Instruction
     @Override
     public void handleCharacter(char currentCharacter) {
         if(currentCharacter == ':') {
+            logger.debug("Found ':', supposing that there's no general parameter. Switching to the state of reading instruction parameter");
             lexer.pushToken(new ColonInstructionToken());
             lexer.switchState(new ReadingInstructionParametersInstructionLexerState(lexer));
         } else if(currentCharacter == ';') {
+            logger.debug("Found ';', supposing that instruction is ended");
             lexer.pushToken(new SemicolonInstructionToken());
             lexer.switchState(new LexingCompletedInstructionLexerState(lexer));
         } else {

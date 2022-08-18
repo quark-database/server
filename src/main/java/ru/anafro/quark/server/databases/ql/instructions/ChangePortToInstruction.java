@@ -5,6 +5,7 @@ import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionParameter;
 import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.ql.entities.IntegerEntity;
 import ru.anafro.quark.server.networking.Ports;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.networking.exceptions.PortIsUnavailableException;
@@ -19,7 +20,7 @@ public class ChangePortToInstruction extends Instruction {
 
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        int newPort = arguments.getArgument("port").value().as(Integer.class);
+        int newPort = arguments.<IntegerEntity>get("port").getValue();
 
         if(Ports.isInvalid(newPort)) {
             throw new QuerySyntaxException("Port should be between %d and %d, not %d".formatted(Ports.FIRST, Ports.LAST, newPort));

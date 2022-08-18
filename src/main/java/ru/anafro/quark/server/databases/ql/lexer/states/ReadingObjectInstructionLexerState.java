@@ -11,6 +11,7 @@ public class ReadingObjectInstructionLexerState extends InstructionLexerState {
 
     @Override
     public void handleCharacter(char currentCharacter) {
+        logger.debug("Expecting an object, so let's an instruction recognizer deal with it");
         stopSkippingLexerIgnoredCharacters();
         lexer.letTheNextStateStartFromCurrentCharacter();
         lexer.switchState(new InstructionObjectRecognizer().recognizeObjectAndMakeLexerState(lexer, getPreviousState(), currentCharacter));

@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.debug;
 
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.debug.components.DebugFrame;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;

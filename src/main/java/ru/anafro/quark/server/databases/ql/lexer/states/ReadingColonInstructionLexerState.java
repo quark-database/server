@@ -4,6 +4,7 @@ import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ColonInstructionToken;
 
+@Deprecated
 public class ReadingColonInstructionLexerState extends InstructionLexerState {
     public ReadingColonInstructionLexerState(InstructionLexer lexer) {
         super(lexer);

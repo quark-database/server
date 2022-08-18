@@ -14,9 +14,11 @@ public class BetweenInstructionParametersInstructionLexerState extends Instructi
     @Override
     public void handleCharacter(char currentCharacter) {
         if(currentCharacter == ',') {
+            logger.debug("Found ',', expecting an instruction parameter next time");
             lexer.pushToken(new CommaInstructionToken());
             lexer.switchState(new ReadingInstructionParametersInstructionLexerState(lexer));
         } else if(currentCharacter == ';') {
+            logger.debug("Found ';', the instruction is ended");
             lexer.pushToken(new SemicolonInstructionToken());
             lexer.switchState(new LexingCompletedInstructionLexerState(lexer));
         } else {

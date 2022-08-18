@@ -12,9 +12,11 @@ public class ReadingNextConstructorArgumentInstructionLexerState extends Instruc
     @Override
     public void handleCharacter(char currentCharacter) {
         if(currentCharacter == ')') {
+            logger.debug("Closing parenthesis is found. Restoring the state");
             lexer.pushToken(new ClosingParenthesisInstructionToken());
-            lexer.switchState(getPreviousState());
+            lexer.restoreState();
         } else {
+            logger.debug("Found something other that an opening parenthesis. Let a 'reading object' state deal with it");
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new ReadingObjectInstructionLexerState(lexer, new BetweenConstructorArgumentsInstructionLexerState(lexer, this)));
         }

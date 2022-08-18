@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.ql.parser.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionToken;
-import ru.anafro.quark.server.databases.ql.lexer.LiteralInstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
+import ru.anafro.quark.server.databases.ql.lexer.tokens.LiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ColonInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
@@ -15,17 +15,19 @@ public class AfterInstructionNameInstructionParserState extends InstructionParse
     public void handleToken(InstructionToken token) {
         if(token instanceof ColonInstructionToken colonToken) {
             if(parser.getInstruction().getParameters().hasGeneralParameter()) {
-                expectationError("object", colonToken.getName());
+                throwExcectationError("object", colonToken.getName());
             }
 
+            logger.debug("Found a colon, starting reading arguments");
             parser.switchState(new ReadingArgumentNameInstructionParserState(parser));
         } else if(!parser.getInstruction().getParameters().hasGeneralParameter()) {
-            expectationError("colon", token.getName());
+            throwExcectationError("colon", token.getName());
         } else if(token instanceof LiteralInstructionToken || token instanceof ConstructorNameInstructionToken) {
+            logger.debug("Found an object. It means that it's a general parameter. Let the 'reading argument value' deal with it");
             parser.letTheNextStateStartFromCurrentToken();
             parser.switchState(new ReadingArgumentValueInstructionParserState(parser, new ReadingArgumentNameInstructionParserState(parser), parser.getInstruction().getParameters().getGeneralParameter().getName()));
         } else {
-            expectationError("colon or object", token.getName());
+            throwExcectationError("colon or object", token.getName());
         }
     }
 }

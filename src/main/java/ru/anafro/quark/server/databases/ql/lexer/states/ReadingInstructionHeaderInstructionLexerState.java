@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.states.helpers.InstructionObjectRecognizer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionNameInstructionToken;
@@ -17,62 +18,23 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
         stopSkippingLexerIgnoredCharacters();
 
         if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
+            logger.debug("Appending this character to the instruction name");
             lexer.pushCurrentCharacterToBuffer();
         } else if(lexer.currentCharacterShouldBeIgnored() && !lexer.getBufferContent().endsWith(" ")) {
+            logger.debug("Appending one space to the instruction name. Next spaces will be ignored");
             lexer.getBuffer().append(' ');
         } else if(currentCharacter == ';' || currentCharacter == ':') {
+            logger.debug("Found " + currentCharacter + ". Reading of instruction name is completed. Switching to 'between header and parameters' state");
             lexer.pushToken(new InstructionNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new BetweenHeaderAndParametersInstructionLexerState(lexer));
         } else if (!Validators.validate(currentCharacter, Validators.IS_LATIN)) {
+            logger.debug("Found a non-latin character. Expecting that this is an object for a general parameter");
             lexer.pushToken(new InstructionNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new InstructionObjectRecognizer().recognizeObjectAndMakeLexerState(lexer, new BetweenHeaderAndParametersInstructionLexerState(lexer), currentCharacter));
+        } else {
+            throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character " + currentCharacter, "You have a typo somewhere around this character.", lexer.getCurrentCharacterIndex(), 1);
         }
-
-
-
-
-
-//        if(currentCharacter == ':' || currentCharacter == ';') { // TODO: These characters can be in string argument. Like: 'run command "quark:custom_response status ok"'
-//            String instructionHeader = lexer.extractBufferContent();
-//            StringTokenizer headerTokenizer = new StringTokenizer(instructionHeader, InstructionLexer.CHARACTERS_SHOULD_BE_IGNORED);
-//
-//            StringBuffer instructionName = new StringBuffer();
-//
-//            while(headerTokenizer.hasTokens()) {
-//                String word = headerTokenizer.nextToken();
-//
-//                if(Validators.validate(word, Validators.ALPHA)) {
-//                    if(!instructionName.isEmpty()) {
-//                        instructionName.append(' ');
-//                    }
-//
-//                    instructionName.append(word);
-//                } else {
-//                    String remaining = headerTokenizer.getRemaining();
-//
-//                    // TODO
-//
-//                    break;
-//                }
-//            }
-//
-//            if(instructionName.isEmpty()) {
-//                throw new InstructionSyntaxException(lexer.getInstruction(), "Instruction name is missing", "Did you forget to add an instruction name? E. g. in instruction: create database 'shop'; the instruction name would be 'create database'. Ensure that your instruction name contains only lowercase latin characters!", 0, 1);
-//            }
-//
-//            lexer.pushToken(new InstructionNameInstructionToken(instructionName.extractValue()));
-//
-//            if(currentCharacter == ':') {
-//                lexer.pushToken(new ColonInstructionToken());
-//                lexer.switchState(new ReadingInstructionParametersInstructionLexerState(lexer));
-//            } else {
-//                lexer.pushToken(new ColonInstructionToken());
-//                lexer.switchState(new LexingEndedInstructionLexerState(lexer));
-//            }
-//        } else {
-//            lexer.pushCurrentCharacterToBuffer();
-//        }
     }
 }

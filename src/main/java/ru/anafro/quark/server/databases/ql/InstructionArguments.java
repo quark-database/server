@@ -33,12 +33,12 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return getArgument(argumentName) != null;
     }
 
-    public InstructionEntity get(String argumentName) {
+    public <T extends InstructionEntity> T get(String argumentName) {
         if(!has(argumentName)) {
             throw new InstructionSyntaxException(this, "Argument %s is requested, but wasn't provided".formatted(quoted(argumentName)), "Please, add this argument when you use the instruction");
         }
 
-        return getArgument(argumentName).value();
+        return (T) getArgument(argumentName).value();
     }
 
     public InstructionArgument getArgument(String argumentName) {
