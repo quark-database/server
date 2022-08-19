@@ -24,8 +24,10 @@
 <hr/>
 <br/>
 
-{% note %}
+> ℹ️ **Important:** 
+> 
+> To read about the Quark itself (not only the server), please visit <a href="https://github.com/anafro/quark/">the general project's GitHub</a>. Thank you!
 
-**Important:** to read about the Quark itself (not only the server), please visit <a href="https://github.com/anafro/quark/">the general project's GitHub</a>.
+<hr>
 
-{% endnote %}
+<em>The README content will be added very soon. Thank you for being interesting in Quark!</em>
