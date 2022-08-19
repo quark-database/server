@@ -13,8 +13,10 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
         skipLexerIgnoredCharacters();
     }
 
+
     @Override
     public void handleCharacter(char currentCharacter) {
+        // TODO: Rewrite this, because it's too hard to read. Split to multiple states if needed
         stopSkippingLexerIgnoredCharacters();
 
         if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
