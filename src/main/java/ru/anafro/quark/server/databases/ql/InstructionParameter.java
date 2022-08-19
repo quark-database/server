@@ -68,6 +68,10 @@ public class InstructionParameter {
         return type.equals(InstructionEntity.WILDCARD_TYPE);
     }
 
+    public boolean isAdditional() {
+        return !isGeneral();
+    }
+
     public interface Types {
         String STRING = "str";
         String INT = "int";

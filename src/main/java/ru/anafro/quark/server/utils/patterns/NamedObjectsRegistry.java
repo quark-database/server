@@ -1,21 +1,27 @@
 package ru.anafro.quark.server.utils.patterns;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.anafro.quark.server.utils.patterns.exceptions.ObjectAlreadyExistsInRegistryException;
 
-public abstract class NamedObjectsRegistry<T> {
-    protected final ArrayList<? extends T> registeredObjects;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
+    protected final ArrayList<E> registeredObjects;
 
     @SafeVarargs
-    public NamedObjectsRegistry(T... objectToRegister) {
-        registeredObjects = new ArrayList<T>(List.of(objectToRegister));
+    public NamedObjectsRegistry(E... objectsToRegister) {
+        registeredObjects = new ArrayList<>();
+
+        for(var objectToRegister : objectsToRegister) {
+            add(objectToRegister);
+        }
     }
 
-    protected abstract String getNameOfObject(T object);
+    protected abstract String getNameOf(E object);
 
-    public final T get(String name) {
+    public E get(String name) {
         for(var object : registeredObjects) {
-            if(getNameOfObject(object).equals(name)) {
+            if(getNameOf(object).equals(name)) {
                 return object;
             }
         }
@@ -27,9 +33,24 @@ public abstract class NamedObjectsRegistry<T> {
         return get(name) != null;
     }
 
-    public void add(T object) {
-        if(has(getNameOfObject(object))) {
-            throw new ObjectAlreadyExistsInRegistryException(); // TODO: Start from here
+    public void add(E object) {
+        if(has(getNameOf(object))) {
+            throw new ObjectAlreadyExistsInRegistryException(getNameOf(object), object.getClass());
         }
+
+        registeredObjects.add(object);
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return registeredObjects.iterator();
+    }
+
+    public int count() {
+        return registeredObjects.size();
+    }
+
+    public ArrayList<E> asList() {
+        return registeredObjects;
     }
 }

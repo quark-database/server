@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.views.TableView;
 import ru.anafro.quark.server.exceptions.QuarkException;
@@ -19,7 +20,7 @@ public abstract class Instruction {
 
     public abstract void action(InstructionArguments arguments, Server server, InstructionResultRecorder result);
 
-    public InstructionResult execute(InstructionArguments arguments, Server server) {
+    public InstructionResult execute(InstructionArguments arguments) {
         for(var argument : arguments) {
             if(!parameters.has(argument.name())) {
                 throw new DatabaseException("There's no instruction parameter %s. Follow this instruction syntax: %s".formatted(argument.name(), getSyntax()));
@@ -39,7 +40,7 @@ public abstract class Instruction {
         try {
             InstructionResultRecorder resultRecorder = new InstructionResultRecorder();
 
-            this.action(arguments, server, resultRecorder);
+            this.action(arguments, Quark.server(), resultRecorder);
 
             return resultRecorder.collectResult();
         } catch(QuarkException exception) {
@@ -59,7 +60,7 @@ public abstract class Instruction {
         }
 
         if(parameters.hasAdditionalParameters()) {
-            syntax.append(":");
+            syntax.append(": ");
 
             var additionalParameters = parameters.getAdditionalParameters().toList();
             for(int index = 0; index < parameters.getAdditionalParameterCount(); index++) {
@@ -70,8 +71,6 @@ public abstract class Instruction {
                     syntax.append(", ");
                 }
             }
-
-            parameters.getAdditionalParameters().forEachOrdered(parameter -> syntax.append(" <" + parameter.getName() + " is " + parameter.getType()));
         }
 
         syntax.append(";");

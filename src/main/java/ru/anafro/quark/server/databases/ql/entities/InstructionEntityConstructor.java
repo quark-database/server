@@ -29,6 +29,10 @@ public abstract class InstructionEntityConstructor {
     protected abstract InstructionEntity invoke(InstructionEntityConstructorArguments arguments);
 
     public InstructionEntity eval(InstructionEntityConstructorArguments arguments) {
+        if(parameters.hasVarargs() && !arguments.has(parameters.getVarargs().name())) {
+            arguments.add(new InstructionEntityConstructorArgument(parameters.getVarargs().name(), new ListEntity(parameters.getVarargs().type())));
+        }
+
         for(var argument : arguments) {
             if(parameters.has(argument.getName())) {
                 var parameter = parameters.getParameter(argument.getName());

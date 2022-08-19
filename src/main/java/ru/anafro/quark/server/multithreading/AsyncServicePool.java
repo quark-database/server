@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.multithreading;
 
+import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.exceptions.MultithreadingException;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 public class AsyncServicePool {
     private final List<AsyncService> services;
     private final List<Thread> pool;
+    private final Logger logger = new Logger();
 
     public AsyncServicePool(AsyncService... services) {
         this.services = Collections.synchronizedList(List.of(services));
@@ -21,8 +23,11 @@ public class AsyncServicePool {
         }
 
         for(var thread : pool) {
+            thread.start();
+        }
+
+        for(var thread : pool) {
             try {
-                thread.start();
                 thread.join();
             } catch(InterruptedException exception) {
                 throw new MultithreadingException("%s occurred on thread joining: %s".formatted(exception.getClass().getSimpleName(), exception.getMessage()));

@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.lexer;
 
+import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.lexer.exceptions.LexerStateCannotBeRestoredException;
 import ru.anafro.quark.server.databases.ql.lexer.states.InstructionLexerState;
 import ru.anafro.quark.server.databases.ql.lexer.states.ReadingInstructionHeaderInstructionLexerState;
@@ -65,8 +66,11 @@ public class InstructionLexer {
                }
           }
 
-          System.out.println("-- Lexing Complete --");
-          System.out.println("Buffer: " + buffer.getContent());
+          if(!buffer.isEmpty()) {
+               throw new InstructionSyntaxException(state, instruction, "Instruction syntax is invalid", "Please, read this instruction carefully again to figure out, what is wrong. Your instruction should look like this: instruction name <general parameter (sometimes there's no general parameter in an instruction)>: firstparameter = <first parameter value>, secondparameter = <second parameter value>, ...; (sometimes there are no parameters at all).", 0, instruction.length());
+          }
+
+          logger.debug("-- Lexing Completed --");
 
           return tokens;
      }

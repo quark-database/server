@@ -20,7 +20,7 @@ public abstract class Command {
     protected final Logger logger;
 
     public Command(UniqueList<String> names, String shortDescription, String longDescription, CommandParameters parameters) {
-        this.loop = Quark.commands();
+        this.loop = Quark.commandLoop();
         this.names = names;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;

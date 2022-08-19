@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
-import ru.anafro.quark.server.databases.ql.entities.constructors.RegisteredEntityConstructors;
 import ru.anafro.quark.server.databases.ql.exceptions.NoSuchEntityConstructorException;
 import ru.anafro.quark.server.utils.validation.Validators;
 
@@ -23,10 +23,10 @@ public class ConstructorNameInstructionToken extends InstructionToken {
     }
 
     public InstructionEntityConstructor getConstructor() {
-        if(!RegisteredEntityConstructors.has(getValue())) {
+        if(!Quark.constructors().has(getValue())) {
             throw new NoSuchEntityConstructorException(getValue());
         }
 
-        return RegisteredEntityConstructors.get(getValue());
+        return Quark.constructors().get(getValue());
     }
 }

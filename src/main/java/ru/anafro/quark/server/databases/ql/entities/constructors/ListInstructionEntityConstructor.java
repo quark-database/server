@@ -10,6 +10,11 @@ public class ListInstructionEntityConstructor extends InstructionEntityConstruct
     @Override
     protected InstructionEntity invoke(InstructionEntityConstructorArguments arguments) {
         ListEntity wildcardList = arguments.get("values");
+
+        if(wildcardList.isEmpty()) {
+            return wildcardList;
+        }
+
         ListEntity typedList = new ListEntity(wildcardList.getValue().get(0).getType());
 
         for(var element : wildcardList) {

@@ -32,7 +32,7 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
             logger.debug("Found a non-latin character. Expecting that this is an object for a general parameter");
             lexer.pushToken(new InstructionNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.letTheNextStateStartFromCurrentCharacter();
-            lexer.switchState(new InstructionObjectRecognizer().recognizeObjectAndMakeLexerState(lexer, new BetweenHeaderAndParametersInstructionLexerState(lexer), currentCharacter));
+            lexer.switchState(new InstructionObjectRecognizer().recognizeObjectAndMakeLexerState(lexer, new BetweenHeaderAndParametersInstructionLexerState(lexer)));
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character " + currentCharacter, "You have a typo somewhere around this character.", lexer.getCurrentCharacterIndex(), 1);
         }

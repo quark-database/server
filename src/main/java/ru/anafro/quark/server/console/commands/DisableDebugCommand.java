@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.console.commands;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.Command;
-import ru.anafro.quark.server.console.CommandArgument;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
 import ru.anafro.quark.server.logging.LogLevel;
@@ -19,6 +19,6 @@ public class DisableDebugCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        loop.getCommand("change-log-level").run(new CommandArguments(arguments.getArgument("for"), new CommandArgument("to", LogLevel.INFO.name())));
+        Quark.runCommand("change-log-level for \"%s\" to \"%s\"".formatted(arguments.get("for"), LogLevel.INFO.name()));
     }
 }

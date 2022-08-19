@@ -65,4 +65,12 @@ public class ListEntity extends InstructionEntity implements Iterable<Instructio
     public Iterator<InstructionEntity> iterator() {
         return values.iterator();
     }
+
+    public int size() {
+        return values.size();
+    }
+
+    public boolean isEmpty() {
+        return values.isEmpty();
+    }
 }

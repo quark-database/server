@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.console.commands;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
@@ -20,8 +21,8 @@ public class HelpCommand extends Command {
     @Override
     public void action(CommandArguments arguments) {
         if(arguments.has("command")) {
-            if(loop.hasCommand(arguments.get("command"))) {
-                var command = loop.getCommand(arguments.get("command"));
+            if(Quark.commands().has(arguments.get("command"))) {
+                var command = Quark.commands().get(arguments.get("command"));
                 logger.info("Command %s's help".formatted(command.getPrimaryName()));
                 logger.info(command.getLongDescription());
                 if(command.hasAliases()) {
@@ -39,7 +40,7 @@ public class HelpCommand extends Command {
                 error("There is no command with name %s. To open the list of existing commands, write %s command with no arguments.".formatted(quoted(arguments.get("command")), quoted(this.getPrimaryName())));
             }
         } else {
-            for(var command : loop.getCommands()) {
+            for(var command : Quark.commands()) {
                 logger.info(command.getShortDescription());
                 logger.info(command.getSyntax());
                 for(var parameter : command.getParameters()) {
