@@ -35,7 +35,7 @@ public final class StringSimilarityFinder {
 
     public static double findSimilarity(String firstString, String secondString) {
         if (firstString == null || secondString == null) {
-            throw new QuarkException("findSimilarity(String, String) requires two not-null strings, but one or two of them is/are null");
+            throw new UtilityException("findSimilarity(String, String) requires two not-null strings, but one or two of them is/are null");
         }
 
         double maxLength = Double.max(firstString.length(), secondString.length());
