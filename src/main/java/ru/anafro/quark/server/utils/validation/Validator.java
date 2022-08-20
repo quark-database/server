@@ -41,7 +41,7 @@ public interface Validator<T> {
      * rules this validator sets, <code>true</code> will be returned.
      * Otherwise, if object fails the validation, <code>false</code> will be returned.
      *
-     * @param  value an object o validate
+     * @param  value an object to validate
      * @return a boolean represents the validation result (see the description above).
      *
      * @since  Quark 1.1
