@@ -1,12 +1,14 @@
 package ru.anafro.quark.server.utils.arrays;
 
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+
 import java.util.Random;
 
 public final class Arrays {
     private static final Random random = new Random();
 
     private Arrays() {
-        // Preventing creating utility class instance.
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     public static <T> T random(T[] array) {
