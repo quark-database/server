@@ -2,12 +2,13 @@ package ru.anafro.quark.server.utils.strings;
 
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.utils.arrays.Arrays;
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
 import java.util.Objects;
 
 public final class English {
     private English() {
-
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     public static String articleFor(String noun) {
