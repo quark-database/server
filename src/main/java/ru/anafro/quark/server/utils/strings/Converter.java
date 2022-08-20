@@ -1,10 +1,11 @@
 package ru.anafro.quark.server.utils.strings;
 
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 import ru.anafro.quark.server.utils.strings.exceptions.ObjectFormatException;
 
 public final class Converter {
     private Converter() {
-        // Preventing creating utility class instance.
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     public static int toInteger(String string) {
