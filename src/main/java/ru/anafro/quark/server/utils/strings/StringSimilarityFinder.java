@@ -1,10 +1,11 @@
 package ru.anafro.quark.server.utils.strings;
 
-import ru.anafro.quark.server.exceptions.QuarkException;
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityException;
 
 public final class StringSimilarityFinder {
     private StringSimilarityFinder() {
-        //
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     public static int getLevenshteinDistance(String firstString, String secondString)

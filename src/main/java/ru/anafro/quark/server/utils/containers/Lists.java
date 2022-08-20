@@ -1,12 +1,13 @@
 package ru.anafro.quark.server.utils.containers;
 
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.List;
 
 public final class Lists {
     private Lists() {
-        // Preventing creating utility class instance.
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     public static <T> String join(List<? extends T> collection, String separator) {

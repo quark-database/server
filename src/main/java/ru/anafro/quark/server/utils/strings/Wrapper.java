@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.utils.strings;
 
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+
 /**
  * The string wrapper utility, which can help you to surround
  * your strings with a string wrapper without repeating it.
@@ -16,7 +18,7 @@ public final class Wrapper {
      * @see Wrapper
      */
     private Wrapper() {
-        //
+        throw new CallingUtilityConstructorException(getClass());
     }
 
     /**
