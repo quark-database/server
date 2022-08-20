@@ -3,6 +3,29 @@ package ru.anafro.quark.server.utils.validation;
 import ru.anafro.quark.server.utils.validation.validators.IsFloatValidator;
 import ru.anafro.quark.server.utils.validation.validators.IsIntegerValidator;
 
+// TODO:
+//  Probably there's a better syntax can be built for validation,
+//  because "Validators.XXX.isValid()" looks a bit verbose.
+
+/**
+ * Validators class contains default value validators for
+ * simple types, such as strings, characters and numbers.
+ * Use validator constants inside this class.
+ *
+ * <pre>
+ * {@code
+ * Validators.LOWER_ALPHA.isValid("anafro");    // true
+ * Validators.LOWER_ALPHA.isValid("Anafro");    // false
+ * }
+ * </pre>
+ *
+ * @since  Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see    Validators#validate(Object, Validator)
+ * @see    Validators#ALPHA
+ * @see    Validators#ALPHANUMERIC
+ * @see    Validators#INTEGER_STRING
+ */
 public interface Validators {
     Validator<String> LOWER_ALPHA = new RegexValidator("^[a-z]*$");
     Validator<String> ALPHA = new RegexValidator("^[a-zA-Z]*$");
@@ -19,6 +42,35 @@ public interface Validators {
     Validator<String> INTEGER_STRING = new IsIntegerValidator();
     Validator<Character> IS_LATIN = character -> (character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z');
 
+    /**
+     * Provides a better syntax for validation system. Pass the validation object
+     * and the validator to this method to validate the object.
+     *
+     * <pre>
+     * {@code
+     * Validator<String> isQuarkDeveloper = developer -> developer.equals("anafro");
+     *
+     * // this:
+     * Validators.validate("anafro", isQuarkDeveloper);
+     *
+     * // is an equivalent to:
+     * isQuarkDeveloper.isValid("anafro");
+     * }
+     * </pre>
+     *
+     * It is recommended to use this method for default validators
+     * stored inside the <code>Validators</code> class.
+     *
+     * @param value     the validating value
+     * @param validator the validator
+     * @return          the validation result
+     * @param <T>       the validation object type
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    Validators
+     * @see    Validator
+     */
     static <T> boolean validate(T value, Validator<T> validator) {
         return validator.isValid(value);
     }
