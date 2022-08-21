@@ -7,6 +7,11 @@ import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorExceptio
  * Main class is a starting point of Quark server. This class
  * must never be used anywhere from code, because it is being
  * handled by Java VM automatically.
+ *
+ * @since  Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see    Main#main(String[])
+ * @see    Quark#init()
  */
 public final class Main {
 
