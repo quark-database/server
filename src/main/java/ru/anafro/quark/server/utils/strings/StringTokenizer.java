@@ -20,10 +20,13 @@ import ru.anafro.quark.server.utils.strings.exceptions.NoMoreCharactersToTokeniz
  *
  * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    StringTokenizer#StringTokenizer(String, char...)
- * @see    StringTokenizer#nextToken()
- * @see    StringTokenizer#hasTokens()
+ * @see        StringTokenizer#StringTokenizer(String, char...)
+ * @see        StringTokenizer#nextToken()
+ * @see        StringTokenizer#hasTokens()
+ * @deprecated String tokenizers were expected to be used inside Quark QL parser, but
+ *             another algorithm (the state-driven one) was chosen.
  */
+@Deprecated
 public class StringTokenizer {
     private final String string;
     private final char[] delimiters;
