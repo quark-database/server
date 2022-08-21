@@ -8,6 +8,8 @@ import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorExceptio
  *
  * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see    Wrapper#wrap(String, String) 
+ * @see    Wrapper#quoted(String)
  */
 public final class Wrapper {
 
@@ -15,7 +17,9 @@ public final class Wrapper {
      * This private constructor of Wrapper class <strong>MUST NOT</strong> be ever
      * called, because Wrapper is a utility class. Use static methods declared inside.
      *
-     * @see Wrapper
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    Wrapper
      */
     private Wrapper() {
         throw new CallingUtilityConstructorException(getClass());
@@ -27,8 +31,10 @@ public final class Wrapper {
      *
      * For example, this code will wrap the string with the wrapper:
      * <pre>
-     *     var happiness = Wrapper.wrap("Happiness", ":)");
-     *     logger.debug(happiness); // :)Happiness:)
+     * {@code
+     * var happiness = Wrapper.wrap("Happiness", ":)");
+     * logger.debug(happiness); // :)Happiness:)
+     * }
      * </pre>
      *
      * <i>Tip: This is useful, e.g. when you don't want to repeat the wrapper twice,
@@ -41,7 +47,7 @@ public final class Wrapper {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see Wrapper#quoted
+     * @see    Wrapper#quoted
      */
     public static String wrap(String string, String wrapper) {
         return wrapper + string + wrapper;
@@ -53,12 +59,14 @@ public final class Wrapper {
      *
      * For example, this method creates quotes:
      * <pre>
-     *     public static String makeQuote(String quote, String author) {
-     *          return "%s -%s".formatted(quoted(quote), author);
-     *     }
+     * {@code
+     * public static String makeQuote(String quote, String author) {
+     *      return "%s -%s".formatted(quoted(quote), author);
+     * }
      *
-     *     // "Doing nothing is better than being busy doing nothing." -Lao Tzu.
-     *     var quote = makeQuote("Doing nothing is better than being busy doing nothing.", "Lao Tzu");
+     * // "Doing nothing is better than being busy doing nothing." -Lao Tzu.
+     * var quote = makeQuote("Doing nothing is better than being busy doing nothing.", "Lao Tzu");
+     * }
      * </pre>
      *
      * <i>Tip: It's also recommended to static-import this method to beautify your code even more.</i>
@@ -68,7 +76,7 @@ public final class Wrapper {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see Wrapper#wrap
+     * @see    Wrapper#wrap
      */
     public static String quoted(String string) {
         return wrap(string, "\"");
