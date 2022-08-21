@@ -29,7 +29,7 @@ public class CallingUtilityConstructorException extends UtilityException {
     /**
      * Creates an exception instance.
      *
-     * @param utilityClass a type of utility class.
+     * @param utilityClass a type of the utility class.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
