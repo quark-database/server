@@ -36,6 +36,7 @@ public final class Main {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    Main
+     * @see    Quark#init()
      */
     public static void main(String[] args) {
         Quark.init();
