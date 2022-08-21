@@ -54,7 +54,7 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    protected void skipDelimitersAhead() {
+    private void skipDelimitersAhead() {
         while(hasCharacters()) {
             if(characterShouldBeSkipped()) {
                 moveToTheNextCharacter();
@@ -162,7 +162,7 @@ public class StringTokenizer {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    StringTokenizer#getRemaining()
      */
-    protected boolean hasCharacters() {
+    private boolean hasCharacters() {
         return currentIndex < string.length() - 1;
     }
 
@@ -174,7 +174,7 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public void moveToTheNextCharacter() {
+    private void moveToTheNextCharacter() {
         if(!hasCharacters()) {
             throw new NoMoreCharactersToTokenizeException(string);
         }
@@ -190,7 +190,7 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public char getCurrentCharacter() {
+    private char getCurrentCharacter() {
         return string.charAt(currentIndex);
     }
 
@@ -202,7 +202,7 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public int getCurrentIndex() {
+    private int getCurrentIndex() {
         return currentIndex;
     }
 
