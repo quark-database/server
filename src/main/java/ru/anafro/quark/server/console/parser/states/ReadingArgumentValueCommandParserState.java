@@ -1,10 +1,12 @@
 package ru.anafro.quark.server.console.parser.states;
 
+import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
 import ru.anafro.quark.server.console.parser.CommandParser;
 
 public class ReadingArgumentValueCommandParserState extends CommandParserState {
     private boolean inString = false;
+    private boolean escapeMode = false;
     private final String argumentName;
     public ReadingArgumentValueCommandParserState(CommandParser parser, String argumentName) {
         super(parser);
@@ -17,12 +19,19 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
             if(parser.getBuffer().isEmpty()) {
                 return;
             } else {
-                parser.setCommandName(parser.getBuffer().extractContent());
+                parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             }
-        }
-
-        if(currentCharacter == '"') {
+        } else if(escapeMode) {
+            if(currentCharacter == '"' || currentCharacter == '\\') {
+                parser.getBuffer().append(currentCharacter);
+            } else {
+                throw new CommandRuntimeException("There is no escaping character \\" + currentCharacter);
+            }
+            escapeMode = false;
+        } else if(currentCharacter == '\\') {
+            escapeMode = true;
+        } else if(currentCharacter == '"') {
             if(parser.getBuffer().isEmpty()) {
                 if(inString) {
                     parser.switchState(new ReadingArgumentNameCommandParserState(parser));
