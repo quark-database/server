@@ -2,6 +2,15 @@ package ru.anafro.quark.server.fun;
 
 import ru.anafro.quark.server.utils.arrays.Arrays;
 
+/**
+ * Compliments are loved by <s>almost</s> everyone! Why don't we
+ * say compliments to users? Quark dealt with this too! You
+ * can use the compliments inside to remind users how cool they are.
+ *
+ * @since  Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see    Compliments#random()
+ */
 public class Compliments {
     private static final String[] COMPLIMENTS = {
             "Lie down, chill out, make yourself at home.",
@@ -46,6 +55,15 @@ public class Compliments {
             "Actions speak louder than words, and yours tell an incredible story.",
     };
 
+    /**
+     * Returns a random compliment.
+     *
+     * @return a compliment.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    Compliments
+     */
     public static String random() {
         return Arrays.random(COMPLIMENTS);
     }
