@@ -1,10 +1,35 @@
 package ru.anafro.quark.server.fun;
 
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+
+/**
+ * Greeter greets a user at the Quark's startup.
+ *
+ * @since  Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see    Greeter#greet()
+ */
 public final class Greeter {
+
+    /**
+     * This private constructor of Greeter class <strong>MUST NOT</strong> be ever
+     * called, because Greeter is a utility class. Use static methods declared inside.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    Greeter
+     */
     private Greeter() {
-        //
+        throw new CallingUtilityConstructorException(getClass());
     }
 
+    /**
+     * Greets the user in the console.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    Greeter
+     */
     public static void greet() {
         System.out.println(
                 """
