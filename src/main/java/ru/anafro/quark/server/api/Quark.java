@@ -135,6 +135,7 @@ public final class Quark {
         commandRegistry.add(new ConstructorsCommand());
         commandRegistry.add(new InstructionsCommand());
         commandRegistry.add(new RunCommand());
+        commandRegistry.add(new TestCommand());
 //        commandRegistry.add(new ReloadCommand());        TODO: Not working yet
 
         pluginManager.loadPlugins();
