@@ -15,7 +15,7 @@ public class DebugInstruction extends Instruction {
 
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        result.tableViewHeader(new TableViewHeader("id", "name", "email", "password"));
+        result.header(new TableViewHeader("id", "name", "email", "password"));
 
         for(int i = 0; i < 100; i++) {
             result.appendRow(new TableViewRow(String.valueOf(i), UUID.randomUUID().toString(), "a".repeat(new Random().nextInt(30)) + "@" + "b".repeat(new Random().nextInt(30)) + ".com", UUID.randomUUID().toString()));
