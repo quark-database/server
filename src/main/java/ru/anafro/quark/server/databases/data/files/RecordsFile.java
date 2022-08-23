@@ -1,18 +1,25 @@
-package ru.anafro.quark.server.databases.data;
+package ru.anafro.quark.server.databases.data.files;
 
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.UntypedTableRecord;
 import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileNotFoundException;
 import ru.anafro.quark.server.databases.data.exceptions.ReadingTheNextLineOfTableFileFailedException;
 
 import java.io.*;
 import java.util.Iterator;
 
-public class TableFile implements Iterable<UntypedTableRecord> {
+public class RecordsFile implements Iterable<UntypedTableRecord> {
+    public static final String NAME = "Table's Records.qrecords";
     private final String filename;
     private final File file;
 
-    public TableFile(String filename) {
+    public RecordsFile(String filename) {
         this.filename = filename;
         this.file = new File(filename);
+    }
+
+    public RecordsFile(Table table) {
+        this(table.getDatabase().getFolder().getAbsolutePath() + File.separator + table.getName() + File.separator + NAME);
     }
 
     public String getFilename() {
@@ -29,22 +36,22 @@ public class TableFile implements Iterable<UntypedTableRecord> {
     }
 
     private static class TableFileRecordIterator implements Iterator<UntypedTableRecord> {
-        private final TableFile tableFile;
+        private final RecordsFile recordsFile;
         private final BufferedReader tableFileBufferedReader;
         private boolean readerNextLineResultStored = false;
         private String bufferedFileLine = null;
 
-        public TableFileRecordIterator(TableFile tableFile) {
+        public TableFileRecordIterator(RecordsFile recordsFile) {
             try {
-                this.tableFile = tableFile;
-                this.tableFileBufferedReader = new BufferedReader(new FileReader(tableFile.getFile()));
+                this.recordsFile = recordsFile;
+                this.tableFileBufferedReader = new BufferedReader(new FileReader(recordsFile.getFile()));
             } catch (FileNotFoundException exception) {
-                throw new DatabaseFileNotFoundException(tableFile);
+                throw new DatabaseFileNotFoundException(recordsFile);
             }
         }
 
-        protected TableFile getTableFile() {
-            return tableFile;
+        protected RecordsFile getTableFile() {
+            return recordsFile;
         }
 
         protected BufferedReader getTableFileBufferedReader() {
@@ -57,7 +64,7 @@ public class TableFile implements Iterable<UntypedTableRecord> {
                     this.bufferedFileLine = tableFileBufferedReader.readLine();
                     this.readerNextLineResultStored = true;
                 } catch (IOException exception) {
-                    throw new ReadingTheNextLineOfTableFileFailedException(tableFile, exception);
+                    throw new ReadingTheNextLineOfTableFileFailedException(recordsFile, exception);
                 }
             }
         }
