@@ -9,7 +9,7 @@ import ru.anafro.quark.server.databases.views.TableViewRow;
 public class InstructionResultRecorder {
     private InstructionExecutionStatus executionStatus;
     private String message;
-    private long startTimeMilliseconds;
+    private final long startTimeMilliseconds;
     private TableViewRecorder viewRecorder;
 
     public InstructionResultRecorder() {
