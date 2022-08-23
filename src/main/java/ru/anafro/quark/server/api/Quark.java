@@ -98,11 +98,12 @@ public final class Quark {
         instructionRegistry.add(new CreateDatabaseInstruction());
         instructionRegistry.add(new CreateTableInstruction());
         instructionRegistry.add(new CreateTokenInstruction());
+        instructionRegistry.add(new DebugInstruction());
         instructionRegistry.add(new DeleteColumnInstruction());
         instructionRegistry.add(new DeleteDatabaseInstruction());
         instructionRegistry.add(new DeleteFromInstruction());
         instructionRegistry.add(new DeleteTableInstruction());
-        instructionRegistry.add(new DebugInstruction());
+        instructionRegistry.add(new EvalInstruction());
         instructionRegistry.add(new FactoryResetInstruction());
         instructionRegistry.add(new GrandTokenInstruction());
         instructionRegistry.add(new InsertIntoInstruction());
