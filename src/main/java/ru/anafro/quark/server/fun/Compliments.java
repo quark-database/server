@@ -12,7 +12,7 @@ import ru.anafro.quark.server.utils.arrays.Arrays;
  * @see    Compliments#random()
  */
 public class Compliments {
-    private static final String[] COMPLIMENTS = {
+    private static final String[] COMPLIMENTS = { 
             "Lie down, chill out, make yourself at home.",
             "Beep-beep. Booting up.",
             "Have a pleasant journey with us!",
