@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.debug;
 
 import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.EntityEvalService;
 import ru.anafro.quark.server.debug.components.DebugFrame;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;
@@ -22,10 +23,8 @@ public class EntityConstructorDebugFrame extends DebugFrame {
             var lexer = Quark.server().getInstructionLexer();
 
             try {
-                parser.parse(lexer.lex("do nothing " + expressionField.getText() + ";"));
-                var result = parser.getArguments().get("general parameter");
-
-                outputArea.setText("(" + result.getType() + ") " + result.getValueAsString());
+                var evaluatedEntity = EntityEvalService.eval(expressionField.getText());
+                outputArea.setText("(" + evaluatedEntity.getType() + ") " + evaluatedEntity.getValueAsString());
             } catch(QuarkException exception) {
                 outputArea.setText(exception.getMessage());
             }
