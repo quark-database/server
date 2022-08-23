@@ -32,7 +32,7 @@ public class InstructionResultRecorder {
         this.message = message;
     }
 
-    public void tableViewHeader(TableViewHeader header) {
+    public void header(TableViewHeader header) {
         this.viewRecorder = new TableViewRecorder(header);
     }
 
