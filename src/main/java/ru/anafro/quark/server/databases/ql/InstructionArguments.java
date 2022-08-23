@@ -1,10 +1,11 @@
 package ru.anafro.quark.server.databases.ql;
 
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
@@ -39,6 +40,22 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         }
 
         return (T) getArgument(argumentName).value();
+    }
+
+    public String getString(String argumentName) {
+        return this.<StringEntity>get(argumentName).getValue();
+    }
+
+    public int getInteger(String argumentName) {
+        return this.<IntegerEntity>get(argumentName).getValue();
+    }
+
+    public boolean getBoolean(String argumentName) {
+        return this.<BooleanEntity>get(argumentName).getValue();
+    }
+
+    public List<InstructionEntity> getList(String argumentName) {
+        return this.<ListEntity>get(argumentName).getValue();
     }
 
     public InstructionArgument getArgument(String argumentName) {
