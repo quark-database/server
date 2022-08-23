@@ -5,6 +5,7 @@ import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
+import ru.anafro.quark.server.databases.ql.parser.exceptions.InstructionParserException;
 import ru.anafro.quark.server.databases.ql.parser.states.ExpectingInstructionNameInstructionParserState;
 import ru.anafro.quark.server.databases.ql.parser.states.InstructionParserState;
 import ru.anafro.quark.server.logging.Logger;
@@ -97,6 +98,10 @@ public class InstructionParser {
     }
 
     public void setInstructionName(String instructionName) {
+        if(!Quark.instructions().has(instructionName)) {
+            throw new InstructionParserException("There is no instruction with name %s.".formatted(instructionName));
+        }
+
         this.instructionName = instructionName;
     }
 
