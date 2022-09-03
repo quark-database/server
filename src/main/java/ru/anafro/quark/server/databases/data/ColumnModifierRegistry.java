@@ -2,7 +2,7 @@ package ru.anafro.quark.server.databases.data;
 
 import ru.anafro.quark.server.utils.patterns.NamedObjectsRegistry;
 
-public class ColumnModifiersRegistry extends NamedObjectsRegistry<ColumnModifier> {
+public class ColumnModifierRegistry extends NamedObjectsRegistry<ColumnModifier> {
 
     @Override
     protected String getNameOf(ColumnModifier modifier) {
