@@ -115,7 +115,19 @@ public final class Quark {
         constructorRegistry.add(new YesInstructionEntityConstructor());
         constructorRegistry.add(new NoInstructionEntityConstructor());
         constructorRegistry.add(new ConcatInstructionEntityConstructor());
-        
+        // ...including column constructors...
+        constructorRegistry.add(new IdColumnConstructor());
+        constructorRegistry.add(new StringColumnConstructor());
+        constructorRegistry.add(new IntegerColumnConstructor());
+        // ...including column modifiers...
+        constructorRegistry.add(new BetweenModifierConstructor());
+        constructorRegistry.add(new ConstantModifierConstructor());
+        constructorRegistry.add(new IncrementingModifierConstructor());
+        constructorRegistry.add(new NegativeModifierConstructor());
+        constructorRegistry.add(new NotNegativeModifierConstructor());
+        constructorRegistry.add(new PositiveModifierConstructor());
+        constructorRegistry.add(new NotPositiveModifierConstructor());
+
         // Instruction registering
         instructionRegistry.add(new AddColumnInstruction());
         instructionRegistry.add(new ChangeInInstruction());
