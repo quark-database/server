@@ -19,7 +19,7 @@ public class InstructionLexer {
      private final TextBuffer buffer = new TextBuffer();
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);
      private int currentCharacterIndex;
-     public static Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
+     public static final Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
 
      public ArrayList<InstructionToken> lex(String instruction) {
           this.instruction = instruction;
