@@ -3,6 +3,7 @@ package ru.anafro.quark.server.utils.containers;
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,5 +76,9 @@ public final class Lists {
      */
     public static <T> String join(List<? extends T> collection) {
         return join(collection, ", ");
+    }
+
+    public static <T> ArrayList<T> empty() {
+        return new ArrayList<>();
     }
 }
