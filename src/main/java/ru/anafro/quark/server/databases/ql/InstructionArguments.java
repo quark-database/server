@@ -2,6 +2,7 @@ package ru.anafro.quark.server.databases.ql;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import java.util.List;
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class InstructionArguments implements Iterable<InstructionArgument> {
-    private final ArrayList<InstructionArgument> arguments = new ArrayList<>();
+    private final ArrayList<InstructionArgument> arguments = Lists.empty();
 
     public InstructionArguments(InstructionArgument... arguments) {
         for(var argument : arguments) {

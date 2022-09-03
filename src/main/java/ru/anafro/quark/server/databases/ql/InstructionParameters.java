@@ -2,14 +2,14 @@ package ru.anafro.quark.server.databases.ql;
 
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.exceptions.InstructionMustHaveOnlyOneGeneralParameterException;
+import ru.anafro.quark.server.utils.containers.Lists;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class InstructionParameters implements Iterable<InstructionParameter> {
-    public final List<InstructionParameter> parameters = new ArrayList<>();
+    public final List<InstructionParameter> parameters = Lists.empty();
 
     public InstructionParameters(InstructionParameter... parameters) {
         for(var parameter : parameters) {

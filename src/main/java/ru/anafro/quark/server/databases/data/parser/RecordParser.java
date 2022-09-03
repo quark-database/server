@@ -3,6 +3,7 @@ package ru.anafro.quark.server.databases.data.parser;
 import ru.anafro.quark.server.databases.data.UntypedTableRecord;
 import ru.anafro.quark.server.databases.data.parser.states.RecordParserState;
 import ru.anafro.quark.server.databases.data.parser.states.ResolvingWrapperTypeRecordParserState;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class RecordParser {
 
     public void parse(String recordLine) {
         this.state = new ResolvingWrapperTypeRecordParserState(this);
-        this.record = new UntypedTableRecord(new ArrayList<>());
+        this.record = new UntypedTableRecord(Lists.empty());
         this.recordLine = recordLine;
         this.index = 0;
 

@@ -1,7 +1,8 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
-import ru.anafro.quark.server.utils.strings.TextBuffer;
+import ru.anafro.quark.server.databases.ql.entities.exceptions.TypeCanNotBeUsedInRecordsException;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +13,7 @@ public class ListEntity extends Entity implements Iterable<Entity> {
 
     public ListEntity(String typeOfValuesInside, Entity... values) {
         super("list of " + typeOfValuesInside);
-        this.values = new ArrayList<>();
+        this.values = Lists.empty();
         this.typeOfValuesInside = typeOfValuesInside;
 
         for(var value : values) {

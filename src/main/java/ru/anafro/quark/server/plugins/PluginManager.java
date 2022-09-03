@@ -4,6 +4,7 @@ import ru.anafro.quark.server.files.Plugins;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.plugins.events.Event;
 import ru.anafro.quark.server.plugins.exceptions.*;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class PluginManager {
-    private final ArrayList<Plugin> loadedPlugins = new ArrayList<>();
+    private final ArrayList<Plugin> loadedPlugins = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
     private boolean isLoaded = false;
     public static final String PLUGIN_CLASS_PATH_FILE_NAME = "Plugin Class Path.txt";

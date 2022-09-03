@@ -5,13 +5,14 @@ import ru.anafro.quark.server.databases.ql.entities.exceptions.ConstructorHasNoV
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityConstructorParameterAlreadyExistsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterInConstructorAlreadyExistsException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.VarargsParameterMustBeTheLastParameterException;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.English;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class InstructionEntityConstructorParameters implements Iterable<InstructionEntityConstructorParameter> {
-    private final ArrayList<InstructionEntityConstructorParameter> parameters = new ArrayList<>();
+    private final ArrayList<InstructionEntityConstructorParameter> parameters = Lists.empty();
 
     public InstructionEntityConstructorParameters(InstructionEntityConstructorParameter... parameters) {
         for(int index = 0; index < parameters.length; index++) {

@@ -9,6 +9,7 @@ import ru.anafro.quark.server.databases.ql.parser.exceptions.InstructionParserEx
 import ru.anafro.quark.server.databases.ql.parser.states.ExpectingInstructionNameInstructionParserState;
 import ru.anafro.quark.server.databases.ql.parser.states.InstructionParserState;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.objects.Nulls;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
@@ -18,7 +19,7 @@ public class InstructionParser {
     private InstructionParserState state = new ExpectingInstructionNameInstructionParserState(this);
     private String instructionName = null;
     private InstructionArguments arguments = new InstructionArguments();
-    private ArrayList<InstructionToken> tokens = new ArrayList<>();
+    private ArrayList<InstructionToken> tokens = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
     private int tokenIndex = 0;
 

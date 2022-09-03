@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.databases.data;
 
 import ru.anafro.quark.server.files.Databases;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +21,7 @@ public class Database {
     }
 
     public static List<Database> all() {
-        var databases = new ArrayList<Database>();
+        var databases = Lists.<Database>empty();
 
         for(var databaseFolder : Objects.requireNonNull(new File(Databases.FOLDER).listFiles())) {
             if(databaseFolder.isDirectory()) {

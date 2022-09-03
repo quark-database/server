@@ -1,10 +1,12 @@
 package ru.anafro.quark.server.databases.views;
 
+import ru.anafro.quark.server.utils.containers.Lists;
+
 import java.util.ArrayList;
 
 public class TableViewRecorder {
     private final TableViewHeader header;
-    private final ArrayList<TableViewRow> rows = new ArrayList<>();
+    private final ArrayList<TableViewRow> rows = Lists.empty();
 
     public TableViewRecorder(TableViewHeader header) {
         this.header = header;

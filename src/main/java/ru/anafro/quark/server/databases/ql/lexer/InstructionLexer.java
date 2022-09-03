@@ -7,6 +7,7 @@ import ru.anafro.quark.server.databases.ql.lexer.states.ReadingInstructionHeader
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.arrays.Arrays;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class InstructionLexer {
      private String instruction;
      private final Logger logger = new Logger(this.getClass());
-     private ArrayList<InstructionToken> tokens = new ArrayList<>();
+     private ArrayList<InstructionToken> tokens = Lists.empty();
      private final TextBuffer buffer = new TextBuffer();
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);
      private int currentCharacterIndex;
@@ -22,7 +23,7 @@ public class InstructionLexer {
 
      public ArrayList<InstructionToken> lex(String instruction) {
           this.instruction = instruction;
-          this.tokens = new ArrayList<>();
+          this.tokens = Lists.empty();
           this.buffer.clear();
           this.state = new ReadingInstructionHeaderInstructionLexerState(this);
           this.currentCharacterIndex = 0;

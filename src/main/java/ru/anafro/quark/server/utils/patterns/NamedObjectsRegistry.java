@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.utils.patterns;
 
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.patterns.exceptions.ObjectAlreadyExistsInRegistryException;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      */
     @SafeVarargs
     public NamedObjectsRegistry(E... objectsToRegister) {
-        registeredObjects = new ArrayList<>();
+        registeredObjects = Lists.empty();
 
         for(var objectToRegister : objectsToRegister) {
             add(objectToRegister);

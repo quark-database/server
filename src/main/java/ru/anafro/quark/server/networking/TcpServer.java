@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.networking.exceptions.*;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  */
 public abstract class TcpServer implements AsyncService {
     private volatile boolean stopped = false;
-    private final ArrayList<Middleware> middlewares = new ArrayList<>();
+    private final ArrayList<Middleware> middlewares = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
 
     public void registerMiddleware(Middleware middleware) {
