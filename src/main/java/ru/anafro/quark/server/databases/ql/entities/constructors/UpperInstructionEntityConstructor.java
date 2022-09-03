@@ -8,7 +8,7 @@ public class UpperInstructionEntityConstructor extends InstructionEntityConstruc
     }
 
     @Override
-    public InstructionEntity invoke(InstructionEntityConstructorArguments arguments) {
+    public Entity invoke(InstructionEntityConstructorArguments arguments) {
         return new StringEntity(arguments.<StringEntity>get("string to uppercase").getValue().toUpperCase());
     }
 }

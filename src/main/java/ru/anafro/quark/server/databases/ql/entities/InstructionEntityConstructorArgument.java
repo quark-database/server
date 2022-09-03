@@ -4,11 +4,11 @@ import ru.anafro.quark.server.databases.ql.entities.exceptions.BadInstructionEnt
 
 public class InstructionEntityConstructorArgument {
     private final String name;
-    private InstructionEntity entity;
+    private Entity entity;
     private InstructionEntityConstructor constructor;
     private final InstructionEntityConstructorArguments arguments;
 
-    public InstructionEntityConstructorArgument(String name, InstructionEntity entity) {
+    public InstructionEntityConstructorArgument(String name, Entity entity) {
         this.name = name;
         this.entity = entity;
         this.constructor = null;
@@ -22,7 +22,7 @@ public class InstructionEntityConstructorArgument {
         this.constructor = constructor;
     }
 
-    public static InstructionEntityConstructorArgument computed(String name, InstructionEntity entity) {
+    public static InstructionEntityConstructorArgument computed(String name, Entity entity) {
         return new InstructionEntityConstructorArgument(name, entity);
     }
 
@@ -42,7 +42,7 @@ public class InstructionEntityConstructorArgument {
         return constructor != null;
     }
 
-    public InstructionEntity getEntity() {
+    public Entity getEntity() {
         if(!hasEntityComputed()) {
             eval();
         }

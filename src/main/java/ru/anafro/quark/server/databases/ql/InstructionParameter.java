@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql;
 
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+import ru.anafro.quark.server.databases.ql.entities.Entity;
 
 public class InstructionParameter {
     private final String name;

@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
-public class IntegerEntity extends InstructionEntity {
+public class IntegerEntity extends Entity {
     private final int value;
 
     public IntegerEntity(int value) {

@@ -8,7 +8,7 @@ public class ListInstructionEntityConstructor extends InstructionEntityConstruct
     }
 
     @Override
-    protected InstructionEntity invoke(InstructionEntityConstructorArguments arguments) {
+    protected Entity invoke(InstructionEntityConstructorArguments arguments) {
         ListEntity wildcardList = arguments.get("values");
 
         if(wildcardList.isEmpty()) {

@@ -1,6 +1,8 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
-public class StringEntity extends InstructionEntity {
+import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
+
+public class StringEntity extends Entity {
     private final String value;
 
     public StringEntity(String value) {

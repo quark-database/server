@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
-public class FloatEntity extends InstructionEntity {
+public class FloatEntity extends Entity {
     private final float value;
 
     public FloatEntity(float value) {

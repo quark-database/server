@@ -14,7 +14,7 @@ public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParse
     }
 
     @Override
-    public void afterEntityComputation(InstructionEntity computedEntity) {
+    public void afterEntityComputation(Entity computedEntity) {
         var arguments = ((ReadingConstructorArgumentsInstructionParserState) previousState).getArguments();
         var constructor = ((ReadingConstructorArgumentsInstructionParserState) previousState).getConstructor();
         logger.debug("Constructor computation inside another constructor is completed.");

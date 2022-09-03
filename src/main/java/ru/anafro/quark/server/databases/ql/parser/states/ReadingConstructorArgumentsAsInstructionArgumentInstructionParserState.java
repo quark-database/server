@@ -2,7 +2,7 @@ package ru.anafro.quark.server.databases.ql.parser.states;
 
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArgument;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
 
@@ -15,7 +15,7 @@ public class ReadingConstructorArgumentsAsInstructionArgumentInstructionParserSt
     }
 
     @Override
-    public void afterEntityComputation(InstructionEntity computedEntity) {
+    public void afterEntityComputation(Entity computedEntity) {
         logger.debug("Computation of constructor is completed. Assigning the computed value to an argument");
         parser.getArguments().add(new InstructionArgument(argumentName, computedEntity));
         parser.restoreState();

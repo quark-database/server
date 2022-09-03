@@ -8,7 +8,7 @@ public class LowerInstructionEntityConstructor extends InstructionEntityConstruc
     }
 
     @Override
-    protected InstructionEntity invoke(InstructionEntityConstructorArguments arguments) {
+    protected Entity invoke(InstructionEntityConstructorArguments arguments) {
         return new StringEntity(arguments.<StringEntity>get("string to lowercase").getValue().toLowerCase());
     }
 }

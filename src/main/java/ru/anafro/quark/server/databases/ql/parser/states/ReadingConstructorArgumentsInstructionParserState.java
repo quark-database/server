@@ -15,7 +15,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
     protected final InstructionEntityConstructor constructor;
     private final InstructionEntityConstructorArguments arguments = new InstructionEntityConstructorArguments();
     private int parameterIndex = 0;
-    private InstructionEntity computedEntity;
+    private Entity computedEntity;
     private boolean expectingOpeningParenthesis = false;
     private boolean expectingComma = false;
 
@@ -37,7 +37,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
             } else if(token.is("closing parenthesis")) {
                 logger.debug("Evaluating " + constructor.getSyntax() + " with arguments: ");
                 for(var argument : arguments) {
-                    logger.debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), InstructionEntity::getValueAsString, "<null object>"));
+                    logger.debug(argument.getName() + " = " + Nulls.evalOrDefault(argument.getEntity(), Entity::toInstructionForm, "<null object>"));
                 }
 
                 computedEntity = constructor.eval(arguments);           // <- TODO: Repeated code! #2
@@ -106,13 +106,13 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
         this.expectingOpeningParenthesis = false;
     }
 
-    public abstract void afterEntityComputation(InstructionEntity computedEntity);
+    public abstract void afterEntityComputation(Entity computedEntity);
 
     public Instruction getInstruction() {
         return instruction;
     }
 
-    public InstructionEntity getComputedEntity() {
+    public Entity getComputedEntity() {
         return computedEntity;
     }
 

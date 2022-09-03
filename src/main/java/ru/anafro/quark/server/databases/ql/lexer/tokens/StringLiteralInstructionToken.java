@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql.lexer.tokens;
 
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 
 public class StringLiteralInstructionToken extends LiteralInstructionToken {
@@ -22,7 +22,7 @@ public class StringLiteralInstructionToken extends LiteralInstructionToken {
 
 
     @Override
-    public InstructionEntity toEntity() {
+    public Entity toEntity() {
         return new StringEntity(getValue());
     }
 }

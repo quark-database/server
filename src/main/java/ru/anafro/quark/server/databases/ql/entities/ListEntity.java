@@ -6,11 +6,11 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ListEntity extends InstructionEntity implements Iterable<InstructionEntity> {
-    private final ArrayList<InstructionEntity> values;
+public class ListEntity extends Entity implements Iterable<Entity> {
+    private final ArrayList<Entity> values;
     private final String typeOfValuesInside;
 
-    public ListEntity(String typeOfValuesInside, InstructionEntity... values) {
+    public ListEntity(String typeOfValuesInside, Entity... values) {
         super("list of " + typeOfValuesInside);
         this.values = new ArrayList<>();
         this.typeOfValuesInside = typeOfValuesInside;
@@ -20,8 +20,8 @@ public class ListEntity extends InstructionEntity implements Iterable<Instructio
         }
     }
 
-    public void add(InstructionEntity entity) {
-        if(entity.getType().equals(typeOfValuesInside) || typeOfValuesInside.equals(InstructionEntity.WILDCARD_TYPE)) {
+    public void add(Entity entity) {
+        if(entity.getExactTypeName().equals(typeOfValuesInside) || typeOfValuesInside.equals(Entity.WILDCARD_TYPE)) {
             this.values.add(entity);
         } else {
             throw new DatabaseException("A list with type %s cannot contain an element %s with type %s".formatted(typeOfValuesInside, entity.getValue().toString(), entity.getType())); // TODO: Create a new exception type
@@ -29,7 +29,7 @@ public class ListEntity extends InstructionEntity implements Iterable<Instructio
     }
 
     @Override
-    public ArrayList<InstructionEntity> getValue() {
+    public ArrayList<Entity> getValue() {
         return values;
     }
 
@@ -57,12 +57,12 @@ public class ListEntity extends InstructionEntity implements Iterable<Instructio
         return typeOfValuesInside;
     }
 
-    public InstructionEntity valueAt(int index) {
+    public Entity valueAt(int index) {
         return values.get(index);
     }
 
     @Override
-    public Iterator<InstructionEntity> iterator() {
+    public Iterator<Entity> iterator() {
         return values.iterator();
     }
 

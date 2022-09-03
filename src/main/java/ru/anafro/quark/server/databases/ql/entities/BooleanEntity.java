@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
-public class BooleanEntity extends InstructionEntity {
+public class BooleanEntity extends Entity {
     private final boolean value;
 
     public BooleanEntity(boolean value) {

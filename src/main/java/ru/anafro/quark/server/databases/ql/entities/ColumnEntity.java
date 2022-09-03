@@ -2,7 +2,7 @@ package ru.anafro.quark.server.databases.ql.entities;
 
 import ru.anafro.quark.server.databases.data.ColumnDescription;
 
-public class ColumnEntity extends InstructionEntity {
+public class ColumnEntity extends Entity {
     private final ColumnDescription columnDescription;
 
     public ColumnEntity(ColumnDescription columnDescription) {

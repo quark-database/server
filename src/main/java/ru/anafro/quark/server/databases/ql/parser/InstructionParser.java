@@ -51,7 +51,7 @@ public class InstructionParser {
             logger.debug("Arguments: ");
 
             for(var argument : arguments) {
-                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), InstructionEntity::getType, "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), InstructionEntity::getValueAsString, "<null object>"));
+                logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), Entity::getType, "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), Entity::toInstructionForm, "<null object>"));
             }
 
             logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere

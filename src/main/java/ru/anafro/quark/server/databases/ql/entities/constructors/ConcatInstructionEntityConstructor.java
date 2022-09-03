@@ -9,7 +9,7 @@ public class ConcatInstructionEntityConstructor extends InstructionEntityConstru
     }
 
     @Override
-    protected InstructionEntity invoke(InstructionEntityConstructorArguments arguments) {
+    protected Entity invoke(InstructionEntityConstructorArguments arguments) {
         TextBuffer concatenated = new TextBuffer();
 
         for(var string : arguments.<ListEntity>get("strings")) {

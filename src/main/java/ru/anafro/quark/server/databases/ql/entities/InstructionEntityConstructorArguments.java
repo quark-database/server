@@ -43,7 +43,7 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
         return arguments.iterator();
     }
 
-    public <T extends InstructionEntity> T get(String argumentName) {
+    public <T extends Entity> T get(String argumentName) {
         if(!has(argumentName)) {
             throw new DatabaseException("Requesting an argument %s, which does not exist".formatted(quoted(argumentName))); // TODO: Make a new exception type
         }

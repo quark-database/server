@@ -76,6 +76,6 @@ public final class InstructionEntityConstructorParameter {
     }
 
     public boolean isWildcard() {
-        return type.equals(InstructionEntity.WILDCARD_TYPE);
+        return type.equals(Entity.WILDCARD_TYPE);
     }
 }

@@ -34,7 +34,7 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return getArgument(argumentName) != null;
     }
 
-    public <T extends InstructionEntity> T get(String argumentName) {
+    public <T extends Entity> T get(String argumentName) {
         if(!has(argumentName)) {
             throw new InstructionSyntaxException(this, "Argument %s is requested, but wasn't provided".formatted(quoted(argumentName)), "Please, add this argument when you use the instruction");
         }
@@ -54,7 +54,7 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return this.<BooleanEntity>get(argumentName).getValue();
     }
 
-    public List<InstructionEntity> getList(String argumentName) {
+    public List<Entity> getList(String argumentName) {
         return this.<ListEntity>get(argumentName).getValue();
     }
 
