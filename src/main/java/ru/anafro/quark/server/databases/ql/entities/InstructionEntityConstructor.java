@@ -41,8 +41,8 @@ public abstract class InstructionEntityConstructor {
                     throw new ConstructorEvaluationException(this, "An argument %s must not be null.".formatted(argument.getName()));
                 }
 
-                if(!argument.getEntity().getType().equals(parameter.type()) && !parameter.isWildcard()) { // TODO (maybe): TL;DR
-                    throw new ConstructorEvaluationException(this, "An argument you passed has type %s, but must have type %s".formatted(quoted(argument.getEntity().getType()), quoted(parameters.getParameter(argument.getName()).type())));
+                if(!argument.getEntity().getTypeName().equals(parameter.type()) && !parameter.isWildcard()) { // TODO (maybe): TL;DR
+                    throw new ConstructorEvaluationException(this, "An argument you passed has type %s, but must have type %s".formatted(quoted(argument.getEntity().getType().getName()), quoted(parameters.getParameter(argument.getName()).type())));
                 }
             } else {
                 throw new ConstructorEvaluationException(this, "You added an argument %s, but it does not exist in parameter list of this constructor.".formatted(quoted(argument.getName())));

@@ -3,7 +3,7 @@ package ru.anafro.quark.server.databases.ql.parser;
 import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntity;
+import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionToken;
 import ru.anafro.quark.server.databases.ql.parser.exceptions.InstructionParserException;
 import ru.anafro.quark.server.databases.ql.parser.states.ExpectingInstructionNameInstructionParserState;

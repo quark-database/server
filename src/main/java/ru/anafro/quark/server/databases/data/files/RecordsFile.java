@@ -1,25 +1,23 @@
 package ru.anafro.quark.server.databases.data.files;
 
-import ru.anafro.quark.server.databases.data.Table;
-import ru.anafro.quark.server.databases.data.UntypedTableRecord;
+import ru.anafro.quark.server.databases.data.*;
 import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileNotFoundException;
 import ru.anafro.quark.server.databases.data.exceptions.ReadingTheNextLineOfTableFileFailedException;
+import ru.anafro.quark.server.databases.data.exceptions.RecordsFileInsertionFailedException;
 
 import java.io.*;
 import java.util.Iterator;
 
-public class RecordsFile implements Iterable<UntypedTableRecord> {
+public class RecordsFile implements Iterable<TableRecord> {
     public static final String NAME = "Table's Records.qrecords";
     private final String filename;
     private final File file;
-
-    public RecordsFile(String filename) {
-        this.filename = filename;
-        this.file = new File(filename);
-    }
+    private final Table table;
 
     public RecordsFile(Table table) {
-        this(table.getDatabase().getFolder().getAbsolutePath() + File.separator + table.getName() + File.separator + NAME);
+        this.filename = table.getDatabase().getFolder().getAbsolutePath() + File.separator + table.getName() + File.separator + NAME;
+        this.file = new File(filename);
+        this.table = table;
     }
 
     public String getFilename() {
@@ -30,12 +28,28 @@ public class RecordsFile implements Iterable<UntypedTableRecord> {
         return file;
     }
 
+    public Table getTable() {
+        return table;
+    }
+
+    public void change(TableRecordChanger changer, TableRecordSelector selector) {
+        // TODO
+    }
+
     @Override
-    public Iterator<UntypedTableRecord> iterator() {
+    public Iterator<TableRecord> iterator() {
         return new TableFileRecordIterator(this);
     }
 
-    private static class TableFileRecordIterator implements Iterator<UntypedTableRecord> {
+    public void insert(TableRecord record) {
+        try(var bufferedWriter = new BufferedWriter(new FileWriter(file, true))){
+            bufferedWriter.write(record.toTableLine());
+        } catch(IOException exception) {
+            throw new RecordsFileInsertionFailedException(this, record, exception);
+        }
+    }
+
+    private static class TableFileRecordIterator implements Iterator<TableRecord> {
         private final RecordsFile recordsFile;
         private final BufferedReader tableFileBufferedReader;
         private boolean readerNextLineResultStored = false;
@@ -85,12 +99,11 @@ public class RecordsFile implements Iterable<UntypedTableRecord> {
         }
 
         @Override
-        public UntypedTableRecord next() {
+        public TableRecord next() {
             readNextLineToBufferIfDidNot();
             requireBufferUpdateNextTime();
 
-            return UntypedTableRecord.fromString(getBufferedFileLine());
+            return UntypedTableRecord.fromString(getBufferedFileLine()).applyTypesFrom(recordsFile.getTable().getHeader());
         }
     }
-
 }

@@ -65,7 +65,7 @@ public class InstructionParameter {
     }
 
     public boolean isWildcard() {
-        return type.equals(InstructionEntity.WILDCARD_TYPE);
+        return type.equals(Entity.WILDCARD_TYPE);
     }
 
     public boolean isAdditional() {

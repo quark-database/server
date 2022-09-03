@@ -1,20 +1,34 @@
 package ru.anafro.quark.server.databases.data;
 
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
+import ru.anafro.quark.server.databases.ql.types.EntityType;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public abstract class ColumnModifier {
+    public static final ArrayList<EntityType> ANY_TYPE_ALLOWED = null;
     private final ColumnModifierApplicationPriority applicationPriority;
-    private final ArrayList<String> allowedTypes;
+    private final ArrayList<EntityType> allowedTypes;
+    private final boolean valuesShouldBeGenerated;
     private final String name;
 
-    public ColumnModifier(ColumnModifierApplicationPriority applicationPriority, String name, String... allowedTypes) {
+    public ColumnModifier(ColumnModifierApplicationPriority applicationPriority, String name, boolean valuesShouldBeGenerated, String... allowedTypes) {
         this.applicationPriority = applicationPriority;
         this.name = name;
-        this.allowedTypes = new ArrayList<>(List.of(allowedTypes));
+        this.valuesShouldBeGenerated = valuesShouldBeGenerated;
+        this.allowedTypes = new ArrayList<>(Arrays.stream(allowedTypes).map(Quark.types()::get).toList());
     }
 
-    public ArrayList<String> getAllowedTypes() {
+    public ColumnModifier(ColumnModifierApplicationPriority applicationPriority, String name, boolean valuesShouldBeGenerated) {
+        this.applicationPriority = applicationPriority;
+        this.name = name;
+        this.valuesShouldBeGenerated = valuesShouldBeGenerated;
+        this.allowedTypes = ANY_TYPE_ALLOWED;
+    }
+
+    public ArrayList<EntityType> getAllowedTypes() {
         return allowedTypes;
     }
 
@@ -26,8 +40,23 @@ public abstract class ColumnModifier {
         return applicationPriority;
     }
 
-    public abstract boolean areValuesOfColumnShouldBeGenerated();
-    public abstract boolean checkValidity(Table table, TableRecord record);
-    public abstract void beforeRecordInsertion(Table table, TableRecord record);
-    public abstract boolean isColumnDeletionAllowed(Table table);
+    public boolean areValuesShouldBeGenerated() {
+        return valuesShouldBeGenerated;
+    }
+
+    public boolean isAnyTypeAllowed() {
+        return allowedTypes == ANY_TYPE_ALLOWED;
+    }
+
+    public boolean isTypeAllowed(EntityType type) {
+        if(isAnyTypeAllowed()) {
+            return true;
+        }
+
+        return allowedTypes.stream().anyMatch(type::equals);
+    }
+
+    public abstract boolean isFieldSuitable(Table table, RecordField field, InstructionEntityConstructorArguments arguments);
+    public abstract void beforeRecordInsertion(Table table, RecordField field, InstructionEntityConstructorArguments arguments);
+    public abstract boolean isColumnDeletionAllowed(Table table, String columnName, InstructionEntityConstructorArguments arguments);
 }

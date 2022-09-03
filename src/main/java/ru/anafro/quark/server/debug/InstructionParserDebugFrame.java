@@ -39,7 +39,7 @@ public class InstructionParserDebugFrame extends DebugFrame {
                             English.articleFor(parameter.isOptional() ? "optional" : "required"),
                             parameter.isOptional() ? "optional" : "required", quoted(parameter.getName()),
                             parser.getArguments().get(parameter.getName()).getType(),
-                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).getValueAsString() : "is unset")
+                            parser.getArguments().has(parameter.getName()) ? "= " + parser.getArguments().get(parameter.getName()).toInstructionForm() : "is unset")
                     );
                 }
                 buffer.resetTabLevel();

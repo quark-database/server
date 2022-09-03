@@ -32,8 +32,14 @@ public abstract class Instruction {
                 throw new DatabaseException("The instruction parameter %s is required, but you didn't provide it".formatted(parameter.getName()));
             }
 
-            if(arguments.has(parameter.getName()) && !parameter.isWildcard() && !arguments.get(parameter.getName()).getType().equals(parameter.getType())) {
-                throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s".formatted(parameter.getName(), parameter.getType(), arguments.get(parameter.getName()).getValueAsString(), arguments.get(parameter.getName()).getType()));
+            if(arguments.has(parameter.getName()) && !parameter.isWildcard() && !arguments.get(parameter.getName()).getExactTypeName().equals(parameter.getType())) {
+                throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s"
+                        .formatted(
+                                parameter.getName(),
+                                parameter.getType(),
+                                arguments.get(parameter.getName()).toInstructionForm(),
+                                arguments.get(parameter.getName()).getType())
+                );
             }
         }
 

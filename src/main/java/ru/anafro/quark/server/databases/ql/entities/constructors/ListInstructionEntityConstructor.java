@@ -15,7 +15,7 @@ public class ListInstructionEntityConstructor extends InstructionEntityConstruct
             return wildcardList;
         }
 
-        ListEntity typedList = new ListEntity(wildcardList.getValue().get(0).getType());
+        ListEntity typedList = new ListEntity(wildcardList.getValue().get(0).getExactTypeName());
 
         for(var element : wildcardList) {
             typedList.add(element);

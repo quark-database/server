@@ -29,7 +29,7 @@ public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParse
                 arguments.<ListEntity>get(argumentName).add(computedEntity);
             } else {
                 logger.debug("Constructor has varargs, current parameter is varargs, but arguments does not have an instructor parameter. Creating a list for varargs with a computed entity");
-                arguments.add(new InstructionEntityConstructorArgument(argumentName, new ListEntity(computedEntity.getType(), computedEntity)));
+                arguments.add(new InstructionEntityConstructorArgument(argumentName, new ListEntity(computedEntity.getExactTypeName(), computedEntity)));
             }
         } else {
             logger.debug("Current parameter is not varargs. Just assigning it to a regular parameter");
