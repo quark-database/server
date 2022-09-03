@@ -87,6 +87,27 @@ public final class Quark {
             throw new QuarkException("You cannot call Quark.init() twice. If you are writing a plugin, please do not call Quark.init() by yourself - it is called automatically on Quark Server start up.");
         }
 
+        // Entity type registering
+        typeRegistry.add(new BooleanType());
+        typeRegistry.add(new ChangerType());
+        typeRegistry.add(new ColumnModifierType());
+        typeRegistry.add(new ColumnType());
+        typeRegistry.add(new FloatType());
+        typeRegistry.add(new IntegerType());
+        typeRegistry.add(new ListType());
+        typeRegistry.add(new SelectorType());
+        typeRegistry.add(new StringType());
+
+        // Modifier registering
+        modifierRegistry.add(new UniqueColumnModifier());
+        modifierRegistry.add(new IncrementingColumnModifier());
+        modifierRegistry.add(new PositiveColumnModifier());
+        modifierRegistry.add(new NotPositiveColumnModifier());
+        modifierRegistry.add(new NegativeColumnModifier());
+        modifierRegistry.add(new NotNegativeColumnModifier());
+        modifierRegistry.add(new BetweenColumnModifier());
+        modifierRegistry.add(new ConstantColumnModifier());
+
         // Entity constructor registering
         constructorRegistry.add(new UpperInstructionEntityConstructor());
         constructorRegistry.add(new LowerInstructionEntityConstructor());
