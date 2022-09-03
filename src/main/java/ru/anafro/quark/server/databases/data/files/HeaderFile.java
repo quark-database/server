@@ -4,8 +4,8 @@ import ru.anafro.quark.server.databases.data.ColumnDescription;
 import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.data.TableRecord;
-import ru.anafro.quark.server.databases.data.exceptions.HeaderFileReadingFailedException;
-import ru.anafro.quark.server.databases.ql.EntityEvalService;
+import ru.anafro.quark.server.databases.data.exceptions.*;
+import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.databases.ql.entities.ColumnEntity;
 import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
 
@@ -31,8 +31,8 @@ public class HeaderFile {
             this.ownerTable = table;
 
             var lines = Files.readAllLines(Path.of(filename));
-            this.columns = ((ArrayList<ColumnEntity>) EntityEvalService.eval(lines.get(0)).getValue()).stream().map(ColumnEntity::getValue).collect(Collectors.toList());
-            this.modifiers = ((ArrayList<ColumnModifierEntity>) EntityEvalService.eval(lines.get(1)).getValue()).stream().map(ColumnModifierEntity::getValue).collect(Collectors.toList());
+            this.columns = ((ArrayList<ColumnEntity>) ConstructorEvaluator.eval(lines.get(0)).getValue()).stream().map(ColumnEntity::getValue).collect(Collectors.toList());
+            this.modifiers = ((ArrayList<ColumnModifierEntity>) ConstructorEvaluator.eval(lines.get(1)).getValue());
 
             modifiers.sort(Comparator.comparing(ColumnModifier::getApplicationPriority));
         } catch (Exception exception) {
