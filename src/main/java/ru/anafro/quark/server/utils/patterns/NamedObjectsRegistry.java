@@ -110,6 +110,24 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
     }
 
     /**
+     * Returns <code>true</code> if this registry has no objects
+     * with <code>name</code> name. Otherwise, if there is an object
+     * with such name, <code>false</code> will be returned.
+     *
+     * @param name a name of finding object.
+     * @return     a boolean representing the object existence.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    NamedObjectsRegistry#get(String)
+     * @see    NamedObjectsRegistry#has(String)
+     * @see    NamedObjectsRegistry#asList()
+     */
+    public boolean missing(String name) {
+        return !has(name);
+    }
+
+    /**
      * Adds a new object to the registry. If any object has the same
      * name as the passed object do, ObjectAlreadyExistsInRegistryException will be thrown.
      *
