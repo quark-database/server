@@ -7,6 +7,7 @@ import ru.anafro.quark.server.utils.patterns.Builder;
 
 import java.util.function.BiConsumer;
 
+@Deprecated
 public class CommandBuilder implements Builder<Command> {
     private final UniqueList<String> names;
     private String shortDescription;

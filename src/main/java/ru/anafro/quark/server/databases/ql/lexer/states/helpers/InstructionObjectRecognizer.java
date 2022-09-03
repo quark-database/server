@@ -10,12 +10,9 @@ import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructi
 import ru.anafro.quark.server.databases.ql.lexer.tokens.StringLiteralInstructionToken;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 
+@Deprecated
 public class InstructionObjectRecognizer {
     public InstructionLexerState recognizeObjectAndMakeLexerState(InstructionLexer lexer, InstructionLexerState previousState) {
-        while(lexer.currentCharacterShouldBeIgnored()) {
-            lexer.moveToTheNextCharacter();
-        }
-
         var firstCharacter = lexer.getCurrentCharacter();
 
         if(firstCharacter == ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER) {
