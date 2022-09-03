@@ -8,6 +8,8 @@ import ru.anafro.quark.server.console.commands.*;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
 import ru.anafro.quark.server.console.exceptions.NoSuchCommandException;
+import ru.anafro.quark.server.databases.data.ColumnModifierRegistry;
+import ru.anafro.quark.server.databases.data.modifiers.*;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
@@ -15,8 +17,13 @@ import ru.anafro.quark.server.databases.ql.InstructionRegistry;
 import ru.anafro.quark.server.databases.ql.InstructionResult;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
 import ru.anafro.quark.server.databases.ql.entities.constructors.*;
+import ru.anafro.quark.server.databases.ql.entities.constructors.columns.IdColumnConstructor;
+import ru.anafro.quark.server.databases.ql.entities.constructors.columns.IntegerColumnConstructor;
+import ru.anafro.quark.server.databases.ql.entities.constructors.columns.StringColumnConstructor;
+import ru.anafro.quark.server.databases.ql.entities.constructors.modifiers.*;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.instructions.*;
+import ru.anafro.quark.server.databases.ql.types.*;
 import ru.anafro.quark.server.databases.views.TableView;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.exceptions.QuarkExceptionHandler;
@@ -29,7 +36,7 @@ import ru.anafro.quark.server.plugins.PluginManager;
 /**
  * Provides the easiest way of communicating with the Quark Server by having
  * all Quark Server components in one place. Quark class also contains some
- * static methods to do the most frequent things a simpler way, such as
+ * static methods to do the most frequent things a simpler way, such valueAs
  * running console commands or database instructions.
  *
  * @since  Quark 1.1
@@ -42,6 +49,8 @@ public final class Quark {
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final EntityConstructorRegistry constructorRegistry = new EntityConstructorRegistry();
     private static final InstructionRegistry instructionRegistry = new InstructionRegistry();
+    private static final ColumnModifierRegistry modifierRegistry = new ColumnModifierRegistry();
+    private static final TypeRegistry typeRegistry = new TypeRegistry();
     private static final CommandLoop commandLoop = new CommandLoop(server);
     private static final AsyncServicePool pool = new AsyncServicePool(commandLoop, server);
     private static boolean initialized = false;
@@ -329,5 +338,13 @@ public final class Quark {
      */
     public static Logger logger() {
         return logger;
+    }
+
+    public static TypeRegistry types() {
+        return typeRegistry;
+    }
+
+    public static ColumnModifierRegistry modifiers() {
+        return modifierRegistry;
     }
 }
