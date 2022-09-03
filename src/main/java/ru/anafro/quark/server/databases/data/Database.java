@@ -37,7 +37,7 @@ public class Database {
     }
 
     public List<Table> allTables() {
-        var tables = new ArrayList<Table>();
+        var tables = Lists.<Table>empty();
 
         for(var tableFolder : Objects.requireNonNull(folder.listFiles())) {
             if(tableFolder.isDirectory()) {
