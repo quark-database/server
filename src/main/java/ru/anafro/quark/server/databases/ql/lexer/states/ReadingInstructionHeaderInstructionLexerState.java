@@ -2,7 +2,6 @@ package ru.anafro.quark.server.databases.ql.lexer.states;
 
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.ql.lexer.states.helpers.InstructionObjectRecognizer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionNameInstructionToken;
 import ru.anafro.quark.server.utils.validation.Validators;
 
@@ -34,7 +33,7 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
             logger.debug("Found a non-latin character. Expecting that this is an object for a general parameter");
             lexer.pushToken(new InstructionNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.letTheNextStateStartFromCurrentCharacter();
-            lexer.switchState(new InstructionObjectRecognizer().recognizeObjectAndMakeLexerState(lexer, new BetweenHeaderAndParametersInstructionLexerState(lexer)));
+            lexer.switchState(new ReadingObjectInstructionLexerState(lexer, new BetweenHeaderAndParametersInstructionLexerState(lexer)));
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character " + currentCharacter, "You have a typo somewhere around this character.", lexer.getCurrentCharacterIndex(), 1);
         }
