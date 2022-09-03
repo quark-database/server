@@ -14,7 +14,12 @@ public class BooleanEntity extends Entity {
     }
 
     @Override
-    public String getValueAsString() {
+    public String getExactTypeName() {
+        return getTypeName();
+    }
+
+    @Override
+    public String toRecordForm() {
         return String.valueOf(value);
     }
 }

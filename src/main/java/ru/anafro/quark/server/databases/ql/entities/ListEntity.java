@@ -35,23 +35,13 @@ public class ListEntity extends Entity implements Iterable<Entity> {
     }
 
     @Override
-    public String getValueAsString() {
-        TextBuffer listAsString = new TextBuffer();
+    public String getExactTypeName() {
+        return getType().getName() + " of " + getTypeOfValuesInside();
+    }
 
-        listAsString.append('[');
-
-        for(int index = 0; index < values.size(); index++) {
-            var entity = valueAt(index);
-            listAsString.append(entity.getValueAsString());
-
-            if(index != values.size() - 1) {
-                listAsString.append(", ");
-            }
-        }
-
-        listAsString.append(']');
-
-        return listAsString.extractContent();
+    @Override
+    public String toRecordForm() {
+        throw new TypeCanNotBeUsedInRecordsException(getType());
     }
 
     public String getTypeOfValuesInside() {

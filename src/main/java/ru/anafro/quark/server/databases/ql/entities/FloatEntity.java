@@ -14,7 +14,21 @@ public class FloatEntity extends Entity {
     }
 
     @Override
-    public String getValueAsString() {
+    public String getExactTypeName() {
+        return getTypeName();
+    }
+
+    private String getValueAsString() {
+        return String.valueOf(value);
+    }
+
+    @Override
+    public String toInstructionForm() {
+        return getValueAsString();
+    }
+
+    @Override
+    public String toRecordForm() {
         return String.valueOf(value);
     }
 }

@@ -16,7 +16,17 @@ public class StringEntity extends Entity {
     }
 
     @Override
-    public String getValueAsString() {
-        return getValue();
+    public String toInstructionForm() {
+        return quoted(value);
+    }
+
+    @Override
+    public String getExactTypeName() {
+        return getType().getName();
+    }
+
+    @Override
+    public String toRecordForm() {
+        return quoted(value);
     }
 }
