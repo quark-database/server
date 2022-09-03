@@ -14,7 +14,7 @@ import java.io.IOException;
 public abstract class DebugFrame extends JFrame {
     private static final int EXTRA_FRAME_HEIGHT = 40;
     protected final Server server;
-    protected Panel panel;
+    protected final Panel panel;
 
 
     public DebugFrame(String title, int width, int height) {
