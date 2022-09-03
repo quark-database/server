@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.data;
 
+import ru.anafro.quark.server.databases.data.files.HeaderFile;
 import ru.anafro.quark.server.databases.data.parser.RecordParser;
 import ru.anafro.quark.server.utils.containers.Lists;
 
@@ -34,5 +35,13 @@ public record UntypedTableRecord(ArrayList<String> values) implements Iterable<S
     @Override
     public String toString() {
         return Lists.join(values); // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't
+    }
+
+    public TableRecord applyTypesFrom(HeaderFile header) {
+        return new TableRecordBuilder().fieldsFrom(this, header).build();
+    }
+
+    public String valueAt(int index) {
+        return values.get(index);
     }
 }
