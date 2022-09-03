@@ -34,8 +34,12 @@ public class UniqueList<T> implements Iterable<T> {
      * @see    UniqueList
      */
     @SafeVarargs
-    public UniqueList(T... values) { // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't
-        this.values = new ArrayList<>(List.of(values)); // TODO: Danger of passing equal objects!
+    public UniqueList(T... values) {
+        this.values = Lists.empty();
+
+        for(var value : values) {
+            add(value);
+        }
     }
 
     /**
@@ -113,7 +117,7 @@ public class UniqueList<T> implements Iterable<T> {
     }
 
     /**
-     * Returns all the values stored in this unique list as an {@link ArrayList}.
+     * Returns all the values stored in this unique list valueAs an {@link ArrayList}.
      * Note that changing the returned list's content <strong>DOES NOT AFFECT</strong>
      * this unique list.
      *
