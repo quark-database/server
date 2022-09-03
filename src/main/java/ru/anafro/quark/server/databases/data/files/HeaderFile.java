@@ -1,7 +1,6 @@
 package ru.anafro.quark.server.databases.data.files;
 
 import ru.anafro.quark.server.databases.data.ColumnDescription;
-import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.data.TableRecord;
 import ru.anafro.quark.server.databases.data.exceptions.*;
@@ -21,7 +20,7 @@ public class HeaderFile {
     public static final String NAME = "Table's Header.qheader";
     private final Table ownerTable;
     private final List<ColumnDescription> columns;
-    private final List<ColumnModifier> modifiers;
+    private final List<ColumnModifierEntity> modifiers;
     private final String filename;
 
     public HeaderFile(Table table) {
@@ -34,7 +33,7 @@ public class HeaderFile {
             this.columns = ((ArrayList<ColumnEntity>) ConstructorEvaluator.eval(lines.get(0)).getValue()).stream().map(ColumnEntity::getValue).collect(Collectors.toList());
             this.modifiers = ((ArrayList<ColumnModifierEntity>) ConstructorEvaluator.eval(lines.get(1)).getValue());
 
-            modifiers.sort(Comparator.comparing(ColumnModifier::getApplicationPriority));
+            modifiers.sort(Comparator.comparing(entity -> entity.getValue().getApplicationPriority()));
         } catch (Exception exception) {
             throw new HeaderFileReadingFailedException(filename, exception);
         }
@@ -49,17 +48,73 @@ public class HeaderFile {
         return columns;
     }
 
-    public List<ColumnModifier> getModifiers() {
+    public List<ColumnModifierEntity> getModifiers() {
         return modifiers;
     }
 
-    public boolean isRecordValid(TableRecord record) {
-        for(var modifier : modifiers) {
-            if(!modifier.checkValidity(ownerTable, record)) {
-                return false;
+    public ColumnDescription getColumn(String columnName) {
+        for(var column : columns) {
+            if(column.getName().equals(columnName)) {
+                return column;
             }
         }
 
-        return true;
+        return null;
+    }
+
+    public boolean hasColumn(String columnName) {
+        return getColumn(columnName) != null;
+    }
+
+    public boolean missingColumn(String columnName) {
+        return !hasColumn(columnName);
+    }
+
+    public void requireValidity(TableRecord record) {
+        if(columnCount() != record.fieldCount()) {
+            throw new RecordFieldCountMismatchesTableHeaderException(ownerTable, record.fieldCount());
+        }
+
+        for(int index = 0; index < columns.size(); index++) {
+            ColumnDescription column = columnAt(index);
+
+            if(record.missingField(column.getName()) && modifiers.stream().noneMatch(modifierEntity -> modifierEntity.getColumnName().equals(column.getName()) && modifierEntity.getModifier().areValuesShouldBeGenerated())) {
+                throw new RecordFieldMissingException(record, column, ownerTable);
+            }
+
+            if(!record.fieldAt(index).getColumnName().equals(column.getName())) {
+                throw new RecordColumnsDisorderedException(record, column, ownerTable);
+            }
+        }
+
+        for(var modifierEntity : modifiers) {
+            if(record.missingField(modifierEntity.getColumnName())) {
+                throw new ColumnModifierColumnMissingException(record, modifierEntity, ownerTable);
+            }
+
+            if(!modifierEntity.getModifier().isFieldSuitable(ownerTable, record.getField(modifierEntity.getColumnName()), modifierEntity.getModifierArguments())) {
+                throw new ColumnModifierValidityCheckFailedException(record, ownerTable, modifierEntity);
+            }
+
+            if(!modifierEntity.getModifier().isTypeAllowed(record.getField(modifierEntity.getColumnName()).getValue().getType())) {
+                throw new ColumnModifierIsNotApplicableForProvidedTypeException(modifierEntity, record.getField(modifierEntity.getColumnName()).getValue());
+            }
+        }
+    }
+
+    public int columnCount() {
+        return columns.size();
+    }
+
+    public ColumnDescription columnAt(int index) {
+        return columns.get(index);
+    }
+
+    public void runBeforeRecordInsertionActionOfModifiers(TableRecord record) {
+        modifiers.sort(Comparator.comparing(modifierEntity -> modifierEntity.getModifier().getApplicationPriority()));
+
+        for(var modifier : modifiers) {
+            modifier.getModifier().beforeRecordInsertion(ownerTable, record.getField(modifier.getColumnName()), modifier.getModifierArguments());
+        }
     }
 }
