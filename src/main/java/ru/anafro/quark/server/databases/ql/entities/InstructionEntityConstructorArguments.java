@@ -12,6 +12,10 @@ import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 public class InstructionEntityConstructorArguments implements Iterable<InstructionEntityConstructorArgument> {
     private final List<InstructionEntityConstructorArgument> arguments;
 
+    public InstructionEntityConstructorArguments(List<InstructionEntityConstructorArgument> arguments) {
+        this.arguments = arguments;
+    }
+
     public InstructionEntityConstructorArguments(InstructionEntityConstructorArgument... arguments) {
         this.arguments = new ArrayList<>(List.of(arguments));
     }
@@ -49,5 +53,9 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
         }
 
         return (T) getArgument(argumentName).getEntity();
+    }
+
+    public List<Entity> toList() {
+        return arguments.stream().map(InstructionEntityConstructorArgument::getEntity).toList();
     }
 }
