@@ -4,6 +4,8 @@ import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.TypeCanNotBeUsedInRecordsException;
 
+import java.util.Objects;
+
 public class ColumnModifierEntity extends Entity {
     private final String columnName;
     private final ColumnModifier modifier;
@@ -11,6 +13,9 @@ public class ColumnModifierEntity extends Entity {
 
     public ColumnModifierEntity(String columnName, ColumnModifier modifier, InstructionEntityConstructorArguments modifierArguments) {
         super("modifier");
+
+        Objects.requireNonNull(modifier, "Modifier should be present when creating ColumnModifierEntity");
+
         this.columnName = columnName;
         this.modifier = modifier;
         this.modifierArguments = modifierArguments;
