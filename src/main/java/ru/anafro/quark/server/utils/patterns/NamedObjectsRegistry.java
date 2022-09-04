@@ -1,13 +1,13 @@
 package ru.anafro.quark.server.utils.patterns;
 
 import ru.anafro.quark.server.utils.containers.Lists;
+import ru.anafro.quark.server.utils.objects.Nulls;
 import ru.anafro.quark.server.utils.patterns.exceptions.ObjectAlreadyExistsInRegistryException;
+import ru.anafro.quark.server.utils.patterns.exceptions.ObjectIsMissingInRegistryException;
+import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-// TODO:
-//  Add suggest(String)
 
 /**
  * A named object registry can be used to store the same object type inside.
@@ -89,6 +89,14 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
         }
 
         return null;
+    }
+
+    public E getOrThrow(String name, String exceptionMessage) {
+        if(missing(name)) {
+            throw new ObjectIsMissingInRegistryException(exceptionMessage);
+        }
+
+        return get(name);
     }
 
     /**
@@ -192,5 +200,21 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      */
     public ArrayList<E> asList() {
         return registeredObjects;
+    }
+
+    public E suggest(String type) {
+        double maximalSimilarity = Double.NEGATIVE_INFINITY;
+        E theMostSimilarObject = null;
+
+        for(var currentObject : this) {
+            double currentSimilarity = StringSimilarityFinder.findSimilarity(type, Nulls.evalOrNull(theMostSimilarObject, this::getNameOf));
+
+            if(currentSimilarity > maximalSimilarity) {
+                maximalSimilarity = currentSimilarity;
+                theMostSimilarObject = currentObject;
+            }
+        }
+
+        return theMostSimilarObject;
     }
 }
