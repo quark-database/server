@@ -78,4 +78,8 @@ public final class Nulls {
             return ifNotNull.apply(nullableObject);
         }
     }
+
+    public static <T, U> U evalOrNull(T nullableObject, Function<T, U> ifNotNull) {
+        return evalOrDefault(nullableObject, ifNotNull, null);
+    }
 }
