@@ -12,7 +12,17 @@ public class ListEntity extends Entity implements Iterable<Entity> {
     private final String typeOfValuesInside;
 
     public ListEntity(String typeOfValuesInside, Entity... values) {
-        super("list of " + typeOfValuesInside);
+        super("list");
+        this.values = Lists.empty();
+        this.typeOfValuesInside = typeOfValuesInside;
+
+        for(var value : values) {
+            add(value);
+        }
+    }
+
+    public ListEntity(String typeOfValuesInside, Iterable<? extends Entity> values) {
+        super("list");
         this.values = Lists.empty();
         this.typeOfValuesInside = typeOfValuesInside;
 
