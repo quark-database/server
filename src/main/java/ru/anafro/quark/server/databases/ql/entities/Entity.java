@@ -9,7 +9,7 @@ public abstract class Entity {
     private final EntityType type;
 
     public Entity(String type) {
-        this.type = Quark.types().get(type);
+        this.type = Quark.types().getOrThrow(type, "Type %s is not exist. Did you mean %s?".formatted(type, Quark.types().suggest(type).getName()));
     }
 
     @Deprecated
