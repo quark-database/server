@@ -2,8 +2,8 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
-public class ListInstructionEntityConstructor extends InstructionEntityConstructor {
-    public ListInstructionEntityConstructor() {
+public class ListConstructor extends InstructionEntityConstructor {
+    public ListConstructor() {
         super("list", InstructionEntityConstructorParameter.varargs("values", "?"));
     }
 

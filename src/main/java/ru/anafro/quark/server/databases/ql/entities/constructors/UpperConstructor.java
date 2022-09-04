@@ -2,8 +2,8 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
-public class UpperInstructionEntityConstructor extends InstructionEntityConstructor {
-    public UpperInstructionEntityConstructor() {
+public class UpperConstructor extends InstructionEntityConstructor {
+    public UpperConstructor() {
         super("upper", InstructionEntityConstructorParameter.required("string to uppercase", "str"));
     }
 

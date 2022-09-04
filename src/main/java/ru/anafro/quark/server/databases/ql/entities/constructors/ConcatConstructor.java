@@ -3,8 +3,8 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
-public class ConcatInstructionEntityConstructor extends InstructionEntityConstructor {
-    public ConcatInstructionEntityConstructor() {
+public class ConcatConstructor extends InstructionEntityConstructor {
+    public ConcatConstructor() {
         super("concat", InstructionEntityConstructorParameter.varargs("strings", "str"));
     }
 
