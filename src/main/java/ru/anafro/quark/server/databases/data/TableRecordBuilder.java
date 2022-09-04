@@ -31,6 +31,6 @@ public class TableRecordBuilder implements Builder<TableRecord> {
 
     @Override
     public TableRecord build() {
-        return null;
+        return new TableRecord(table, fields);
     }
 }
