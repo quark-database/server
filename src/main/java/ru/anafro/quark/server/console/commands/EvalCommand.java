@@ -14,6 +14,6 @@ public class EvalCommand extends Command {
     @Override
     public void action(CommandArguments arguments) {
         var result = ConstructorEvaluator.eval(arguments.get("expression"));
-        logger.info("An expression result: (" + result.getExactTypeName() + ") " + result.getValue());
+        logger.info("An expression result: (" + result.getExactTypeName() + ") " + result.toInstructionForm());
     }
 }
