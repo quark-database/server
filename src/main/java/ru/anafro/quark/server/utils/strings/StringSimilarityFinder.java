@@ -98,7 +98,7 @@ public final class StringSimilarityFinder {
      */
     public static double findSimilarity(String firstString, String secondString) {
         if (firstString == null || secondString == null) {
-            throw new UtilityException("findSimilarity(String, String) requires two not-null strings, but one or two of them is/are null");
+            return 0.0;
         }
 
         double maxLength = Double.max(firstString.length(), secondString.length());
