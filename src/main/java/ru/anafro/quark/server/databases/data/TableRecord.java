@@ -3,6 +3,7 @@ package ru.anafro.quark.server.databases.data;
 import ru.anafro.quark.server.databases.data.exceptions.RecordFieldCountMismatchesTableHeaderException;
 import ru.anafro.quark.server.databases.data.exceptions.RecordTypeMismatchesTableHeaderException;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
+import ru.anafro.quark.server.databases.views.TableViewRow;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
@@ -11,10 +12,11 @@ import java.util.stream.Collectors;
 
 public class TableRecord implements Iterable<RecordField> {
     private final Table table;
-    private final ArrayList<RecordField> fields = Lists.empty();
+    private final ArrayList<RecordField> fields;
 
     public TableRecord(Table table, ListEntity entities) {
         this.table = table;
+        this.fields = Lists.empty();
 
         // TODO: replace with a table.requireValidity();
         if(table.getHeader().getColumns().size() != entities.size()) {
@@ -32,6 +34,11 @@ public class TableRecord implements Iterable<RecordField> {
                 throw new RecordTypeMismatchesTableHeaderException(table, column, value);
             }
         }
+    }
+
+    public TableRecord(Table table, ArrayList<RecordField> fields) {
+        this.table = table;
+        this.fields = fields;
     }
 
     public RecordField getField(String name) {
