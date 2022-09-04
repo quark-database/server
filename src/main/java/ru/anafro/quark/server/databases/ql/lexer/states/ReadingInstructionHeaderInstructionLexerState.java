@@ -8,7 +8,7 @@ import ru.anafro.quark.server.utils.validation.Validators;
 public class ReadingInstructionHeaderInstructionLexerState extends InstructionLexerState {
 
     public ReadingInstructionHeaderInstructionLexerState(InstructionLexer lexer) {
-        super(lexer, null);
+        super(lexer);
         skipLexerIgnoredCharacters();
     }
 
