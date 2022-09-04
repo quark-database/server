@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.debug;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.debug.components.DebugFrame;
 import ru.anafro.quark.server.debug.components.TextArea;
@@ -21,7 +20,7 @@ public class EntityConstructorDebugFrame extends DebugFrame {
         this.expressionField = TextField.console(0, 180, 600, 20, () -> {
             try {
                 var evaluatedEntity = ConstructorEvaluator.eval(expressionField.getText());
-                outputArea.setText("(" + evaluatedEntity.getType() + ") " + evaluatedEntity.toInstructionForm());
+                outputArea.setText("(" + evaluatedEntity.getExactTypeName() + ") " + evaluatedEntity.toInstructionForm());
             } catch(QuarkException exception) {
                 outputArea.setText(exception.getMessage());
             }
