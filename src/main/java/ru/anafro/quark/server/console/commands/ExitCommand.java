@@ -6,7 +6,7 @@ import ru.anafro.quark.server.utils.containers.UniqueList;
 
 public class ExitCommand extends Command {
     public ExitCommand() {
-        super(new UniqueList<>("exit", "stop", "halt", "end", "quit"),
+        super(new UniqueList<>("exit", "stop", "halt", "end", "quit", "q", "x"),
                 "Stops the server",
                 "Stops the server so you will need to start it manually by launching 'Start Server.bat'. Note that ongoing processes will be halted."
         );
