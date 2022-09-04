@@ -32,8 +32,8 @@ public class Database {
         return databases;
     }
 
-    public Table getTable(String name) {
-        return new Table(name, this);
+    public Table getTable(String tableName) {
+        return new Table(tableName, this.getName());
     }
 
     public List<Table> allTables() {
