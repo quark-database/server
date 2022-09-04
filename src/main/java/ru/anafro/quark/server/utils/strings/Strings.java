@@ -2,6 +2,8 @@ package ru.anafro.quark.server.utils.strings;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
+import java.util.stream.Collector;
+
 /**
  * Strings is an uncategorized utility bundle for string manipulations.
  *
@@ -45,5 +47,13 @@ public final class Strings {
         }
 
         return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    public static String invertCase(String string) {
+        return string
+                .chars()
+                .boxed()
+                .map(character -> Character.isLowerCase(character) ? Character.toUpperCase(character) : Character.toLowerCase(character))
+                .collect(Collector.of(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append, StringBuilder::toString));
     }
 }
