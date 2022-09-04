@@ -15,6 +15,9 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
 
     @Override
     public void handleCharacter(char currentCharacter) {
+        // TODO: This is too hard to read. Splitting to multiple states can be a solution
+        stopSkippingLexerIgnoredCharacters();
+
         if(currentCharacter != ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER && !isMarkerFound()) {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Constructor name should start with " + ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER + " symbol", "Didn't you mean constructor, but something else? Or you just missed starting constructor symbol?", lexer.getCurrentCharacterIndex(), 1);
         }
@@ -22,6 +25,9 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
         if(currentCharacter == ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER) {
             logger.debug("Found '@', it's a constructor marker. Expecting the instruction name next time");
             cameAcrossWithMarker();
+        } else if(lexer.currentCharacterShouldBeIgnored() && !lexer.getBufferContent().endsWith(" ")) {
+            logger.debug("Appending one space to the constructor name. Next spaces will be ignored");
+            lexer.getBuffer().append(' ');
         } else if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
             logger.debug("Appending this character to the constructor name");
             lexer.pushCurrentCharacterToBuffer();
