@@ -37,7 +37,6 @@ public class HeaderFile {
         } catch (Exception exception) {
             throw new HeaderFileReadingFailedException(filename, exception);
         }
-
     }
 
     public String getFilename() {
