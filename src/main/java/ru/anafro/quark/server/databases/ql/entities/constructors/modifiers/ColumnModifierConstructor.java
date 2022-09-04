@@ -13,6 +13,6 @@ public abstract class ColumnModifierConstructor extends InstructionEntityConstru
 
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return new ColumnModifierEntity(arguments.<StringEntity>get("column name").getValue(), Quark.modifiers().get(getName()), arguments);
+        return new ColumnModifierEntity(arguments.<StringEntity>get("column name").getValue(), Quark.modifiers().getOrThrow(getName(), "A column modifier with name %s is not found. Did you mean %s?".formatted(getName(), Quark.modifiers().suggest(getName()).getName())), arguments);
     }
 }
