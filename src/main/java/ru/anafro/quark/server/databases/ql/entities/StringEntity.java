@@ -29,4 +29,8 @@ public class StringEntity extends Entity {
     public String toRecordForm() {
         return quoted(value);
     }
+
+    public String getString() {
+        return getValue();
+    }
 }
