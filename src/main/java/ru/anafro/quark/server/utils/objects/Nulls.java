@@ -71,7 +71,7 @@ public final class Nulls {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public static <T, U> T evalOrDefault(U nullableObject, Function<U, T> ifNotNull, T ifNull) {
+    public static <T, U> U evalOrDefault(T nullableObject, Function<T, U> ifNotNull, U ifNull) {
         if(nullableObject == null) {
             return ifNull;
         } else {
