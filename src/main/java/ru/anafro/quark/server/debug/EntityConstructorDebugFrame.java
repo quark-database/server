@@ -19,9 +19,6 @@ public class EntityConstructorDebugFrame extends DebugFrame {
     protected void constructInterface() {
         this.outputArea = TextArea.console(0, 0, 600, 180);
         this.expressionField = TextField.console(0, 180, 600, 20, () -> {
-            var parser = Quark.server().getInstructionParser();
-            var lexer = Quark.server().getInstructionLexer();
-
             try {
                 var evaluatedEntity = ConstructorEvaluator.eval(expressionField.getText());
                 outputArea.setText("(" + evaluatedEntity.getType() + ") " + evaluatedEntity.toInstructionForm());
