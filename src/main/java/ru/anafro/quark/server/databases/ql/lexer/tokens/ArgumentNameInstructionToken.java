@@ -10,7 +10,7 @@ public class ArgumentNameInstructionToken extends InstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return ARGUMENT_NAME_MARKER + getValue();
     }
 
