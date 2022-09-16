@@ -34,4 +34,9 @@ public class BooleanType extends EntityType {
             throw new TypeException("ListType.toInstructionForm(String) received an entity, but it has an unexpected type: %s, but %s required.".formatted(this.getName(), entity.getType()));
         }
     }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
+    }
 }

@@ -36,4 +36,9 @@ public class ColumnModifierType extends EntityType {
             throw new TypeException("ColumnModifierType.toInstructionForm(String) received an entity, but it has an unexpected type: %s, but %s required.".formatted(this.getName(), entity.getType()));
         }
     }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
+    }
 }

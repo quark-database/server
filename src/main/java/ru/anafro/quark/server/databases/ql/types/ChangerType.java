@@ -33,4 +33,9 @@ public class ChangerType extends EntityType {
                 .argument(new StringEntity(changerEntity.getChanger().expression()))
                 .build();
     }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
+    }
 }

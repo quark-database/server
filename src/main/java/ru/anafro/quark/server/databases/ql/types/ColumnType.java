@@ -32,4 +32,9 @@ public class ColumnType extends EntityType {
                 .argument(new StringEntity(columnDescription.getName()))
                 .build();
     }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
+    }
 }

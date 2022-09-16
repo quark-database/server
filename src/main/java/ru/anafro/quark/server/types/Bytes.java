@@ -95,4 +95,23 @@ public final class Bytes {
 
         return longBytesBuffer.array();
     }
+
+    public static int toInteger(byte[] bytes) {
+        if(bytes.length != Integer.BYTES) {
+            throw new WrongByteCountException(Integer.BYTES, bytes.length);
+        }
+
+        ByteBuffer integerBytesBuffer = ByteBuffer.allocate(Integer.BYTES);
+        integerBytesBuffer.put(bytes);
+        integerBytesBuffer.flip();
+
+        return integerBytesBuffer.getInt();
+    }
+
+    public static byte[] fromInteger(int value) {
+        ByteBuffer integerBytesBuffer = ByteBuffer.allocate(Integer.BYTES);
+        integerBytesBuffer.putInt(value);
+
+        return integerBytesBuffer.array();
+    }
 }
