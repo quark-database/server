@@ -7,8 +7,9 @@ import java.util.stream.Collector;
 /**
  * Strings is an uncategorized utility bundle for string manipulations.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
 public final class Strings {
 
@@ -49,6 +50,21 @@ public final class Strings {
         return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
+    /**
+     * Inverts the case of the string.
+     *
+     * <pre>
+     * {@code
+     * String.invertCase("Anafro!"); // aNAFRO!
+     * }
+     * </pre>
+     *
+     * @param string the string to invert.
+     * @return the inverted string.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     */
     public static String invertCase(String string) {
         return string
                 .chars()

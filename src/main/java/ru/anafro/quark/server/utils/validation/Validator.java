@@ -31,15 +31,16 @@ package ru.anafro.quark.server.utils.validation;
  *
  * @param <T> an object type this validator will receive to validate.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    Validator<T>#isValid(T)
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see     Validator<T>#isValid(T)
  */
 public interface Validator<T> {
     /**
      * Validates the passed object. If object passes all the
-     * rules this validator sets, <code>true</code> will be returned.
-     * Otherwise, if object fails the validation, <code>false</code> will be returned.
+     * rules this validator sets, {@code true} will be returned.
+     * Otherwise, if object fails the validation, {@code false} will be returned.
      *
      * @param  value an object to validate
      * @return a boolean represents the validation result (see the description above).

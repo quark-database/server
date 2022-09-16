@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.security;
 
+import ru.anafro.quark.server.api.Quark;
+
 /**
  * Tokens are used for separating the access to Quark databases.
  * Some tokens can do everything, but some can do less - this
@@ -7,19 +9,20 @@ package ru.anafro.quark.server.security;
  * up for an existing token and checking its permissions,
  * not granting them. Use direct queries instead. If token
  * does not exist in the database, all calls of {@link Token#hasPermission(String)}
- * will return <code>false</code>.
+ * will return {@code false}.
  *
  * @param token a token.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
 public record Token(String token) {
 
     /**
-     * Returns <code>true</code> if this token has a permission.
+     * Returns {@code true} if this token has a permission.
      * If token does not exist or permission is not granted,
-     * this method will return <code>false</code>.
+     * this method will return {@code false}.
      *
      * @param  permission a checking permission.
      * @return (see the description)

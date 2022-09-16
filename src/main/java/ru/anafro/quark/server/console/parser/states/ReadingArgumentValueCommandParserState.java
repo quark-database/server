@@ -13,6 +13,14 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
         this.argumentName = argumentName;
     }
 
+    /**
+     * If the character is a space, and we're not in a string, then we're done reading the argument
+     * value, so we switch to the ReadingArgumentNameCommandParserState. If the character is a
+     * backslash, then we're in escape mode. If the character is a quotation mark, then we're either
+     * starting or ending a string. If the character is anything else, then we add it to the buffer
+     * 
+     * @param currentCharacter The current character that is being read.
+     */
     @Override
     public void handleCharacter(char currentCharacter) {
         if(Character.isSpaceChar(currentCharacter) && !inString) {
@@ -23,7 +31,7 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             }
         } else if(escapeMode) {
-            if(currentCharacter == '"' || currentCharacter == '\\') {
+            if(currentCharacter == '\'' || currentCharacter == '\\') {
                 parser.getBuffer().append(currentCharacter);
             } else {
                 throw new CommandRuntimeException("There is no escaping character \\" + currentCharacter);
@@ -31,7 +39,7 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
             escapeMode = false;
         } else if(currentCharacter == '\\') {
             escapeMode = true;
-        } else if(currentCharacter == '"') {
+        } else if(currentCharacter == '\'') {
             if(parser.getBuffer().isEmpty()) {
                 if(inString) {
                     parser.switchState(new ReadingArgumentNameCommandParserState(parser));

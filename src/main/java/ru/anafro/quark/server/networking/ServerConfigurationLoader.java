@@ -10,6 +10,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ServerConfigurationLoader {
+    /**
+     * It loads a YAML file and returns a ServerConfiguration object
+     * 
+     * @param path The path to the configuration file.
+     * @return A ServerConfiguration object.
+     */
     public ServerConfiguration load(String path) {
         Yaml yaml = new Yaml(new Constructor(ServerConfiguration.class));
 
