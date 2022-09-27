@@ -31,7 +31,23 @@ public record Token(String token) {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public boolean hasPermission(String permission) {
-        // TODO: Implement this method
+        var result = Quark.runInstruction("""
+                select from "Quark.Tokens": selector = @selector("@equals(:token, \\"%s\\")");
+        """.formatted(token));
+
+        for(var tokenRecord : result.tableView()) {
+            for(int index = 0; index < result.tableView().header().columnNames().length; index++) {
+                if(result.tableView().header().columnNames()[index].equals("permission")) {
+                    var existingPermission = tokenRecord.cells()[index];
+                    var tokenPermission = new TokenPermission(permission);
+                    Quark.logger().error(tokenPermission.getPermission() + ", " + existingPermission + ", " + tokenPermission.includesPermission(permission));
+                    if (tokenPermission.includesPermission(existingPermission)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 }
