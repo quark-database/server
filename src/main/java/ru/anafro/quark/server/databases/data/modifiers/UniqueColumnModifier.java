@@ -8,6 +8,13 @@ import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Represents the {@code require unique} column modifier.
+ *
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ */
 public class UniqueColumnModifier extends ColumnModifier {
     public UniqueColumnModifier() {
         super(ColumnModifierApplicationPriority.LOWEST, "require unique", false);

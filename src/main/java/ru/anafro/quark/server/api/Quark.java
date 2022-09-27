@@ -451,11 +451,81 @@ public final class Quark {
         return logger;
     }
 
+    /**
+     * Returns the instruction registry that contains all default Quark Server
+     * constructors, and also constructors that was registered by loaded
+     * plugins.
+     *
+     * @return the constructor registry of Quark Server.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see InstructionRegistry
+     * @see Instruction
+     */
     public static TypeRegistry types() {
         return typeRegistry;
     }
 
+    /**
+     * Returns the modifier registry that contains all default Quark Server
+     * column modifiers, and also modifiers that was registered by loaded
+     * plugins.
+     *
+     * @return the modifier registry of Quark Server.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see ColumnModifierRegistry
+     * @see ColumnModifier
+     * @see ColumnModifierType
+     * @see ColumnModifierConstructor
+     */
     public static ColumnModifierRegistry modifiers() {
         return modifierRegistry;
+    }
+
+    /**
+     * Returns the debug frame registry that contains all Quark Server
+     * debug frames, and also debug frames that was registered by loaded
+     * plugins.
+     *
+     * @return the debug frame registry of Quark Server.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see DebugFrame
+     */
+    public static DebugFrameRegistry debugFrames() {
+        return debugFrameRegistry;
+    }
+
+    /**
+     * Stops the server due the error that prevents the normal
+     * runtime process of Quark Server.
+     *
+     * @param message the error that will be printed.
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     */
+    public static void crash(String message) {
+        logger.error("Server has crashed.");
+        logger.error(message);
+
+        System.exit(-1);
+    }
+
+    /**
+     * Runs commands from command arguments. Should be called only once inside
+     * {@link Quark#init(String[])}.
+     *
+     * @param arguments the command arguments.
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     */
+    private static void runCommandsFromCommandLineArguments(String... arguments) {
+        for(String argument : arguments) {
+            runCommand(argument);
+        }
     }
 }

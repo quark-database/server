@@ -7,10 +7,27 @@ import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 import ru.anafro.quark.server.databases.ql.entities.IntegerEntity;
 
+/**
+ * Represents the {@code incrementing} column modifier.
+ *
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ */
 public class IncrementingColumnModifier extends ColumnModifier {
 
+    /**
+     * The variable name that contains the last ID generated.
+     * @since Quark 1.1
+     */
     public static final String INCREMENTING_VARIABLE_NAME_FORMAT = "Last-Generated (%s)";
 
+    /**
+     * Creates a new column modifier instance.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     */
     public IncrementingColumnModifier() {
         super(ColumnModifierApplicationPriority.HIGHEST, "incrementing", true, "int");
     }

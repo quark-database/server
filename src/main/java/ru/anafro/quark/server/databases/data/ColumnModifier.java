@@ -7,6 +7,13 @@ import ru.anafro.quark.server.databases.ql.types.EntityType;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Represents a column modifier.
+ *
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ */
 public abstract class ColumnModifier {
     public static final ArrayList<EntityType> ANY_TYPE_ALLOWED = null;
     private final ColumnModifierApplicationPriority applicationPriority;

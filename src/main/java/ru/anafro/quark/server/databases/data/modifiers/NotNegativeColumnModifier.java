@@ -6,6 +6,13 @@ import ru.anafro.quark.server.databases.data.RecordField;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 
+/**
+ * Represents the {@code require not negative} column modifier.
+ *
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ */
 public class NotNegativeColumnModifier extends ColumnModifier {
     public NotNegativeColumnModifier() {
         super(ColumnModifierApplicationPriority.HIGHEST, "require not negative", false, "int", "float");

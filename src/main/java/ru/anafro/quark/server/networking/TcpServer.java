@@ -18,16 +18,37 @@ import java.util.ArrayList;
  * handling functionality.
  */
 public abstract class TcpServer implements AsyncService {
+    private static final float DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS = 7;
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
 
+    /**
+     * This function adds a middleware to the list of middlewares
+     * 
+     * @param middleware The middleware to be registered.
+     */
     public void registerMiddleware(Middleware middleware) {
         middlewares.add(middleware);
     }
 
+    /**
+     * This function is called when a request is received from the client.
+     *
+     * The function is called with a single argument, a Request object. The Request object contains all
+     * the information about the request.
+     * 
+     * @param request The request object that was sent to the server.
+     * @return A Response object.
+     */
     public abstract Response onRequest(Request request);
 
+    /**
+     * It starts a server on a given port, waits for a client to connect, collects a message from the
+     * client, makes a request, runs middlewares, and sends a response
+     * 
+     * @param port The port number to start the server on.
+     */
     public void start(int port) {
         if(isStopped()) {
             throw new ServerCannotBeRunTwiceException();
@@ -100,23 +121,42 @@ public abstract class TcpServer implements AsyncService {
         }
     }
 
+    /**
+     * The stop() function sets the stopped variable to false.
+     */
     public void stop() {
         logger.debug("Server is stopping...");
         stopped = false; // TODO: Change so it will stop with no additional request acceptance.
     }
 
+    /**
+     * This function returns a boolean value that indicates whether the server is stopped or not
+     * 
+     * @return The boolean value of the stopped variable.
+     */
     public boolean isStopped() {
         return stopped;
     }
 
+    /**
+     * This function returns a boolean value that indicates whether the server is started or not
+     * 
+     * @return The boolean value of the stopped variable.
+     */
     public boolean isStarted() {
         return !isStopped();
     }
 
+    /**
+     * This function is called when the starting of the server is completed.
+     */
     public void onStartingCompleted() {
         // Override it in super class.
     }
 
+    /**
+     * It reloads the server.
+     */
     public void reload() {
         // TODO
     }

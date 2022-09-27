@@ -6,6 +6,13 @@ import ru.anafro.quark.server.databases.data.RecordField;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 
+/**
+ * Represents the {@code require positive} column modifier.
+ *
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ */
 public class PositiveColumnModifier extends ColumnModifier {
     public PositiveColumnModifier() {
         super(ColumnModifierApplicationPriority.HIGHEST, "require positive", false, "int", "float");

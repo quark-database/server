@@ -8,11 +8,16 @@ import java.util.Random;
  * Arrays class contains uncategorized utility methods for
  * arrays manipulating. See static methods descriptions to learn more.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    Arrays#random(Object[])
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @see     Arrays#random(Object[])
  */
 public final class Arrays {
+    /**
+     * The random generator for {@link java.util.Arrays} class.
+     * @since Quark 1.1
+     */
     private static final Random random = new Random();
 
     /**
@@ -21,7 +26,6 @@ public final class Arrays {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Arrays
      */
     private Arrays() {
         throw new CallingUtilityConstructorException(getClass());
@@ -36,15 +40,14 @@ public final class Arrays {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Arrays
      */
     public static <T> T random(T[] array) { // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't
         return array[random.nextInt(array.length)];
     }
 
     /**
-     * Returns <code>true</code> if <code>array</code> contains <code>value</code>.
-     * Otherwise, <code>false</code> is returned.
+     * Returns {@code true} if {@code array} contains {@code value}.
+     * Otherwise, {@code false} is returned.
      *
      * @param array an array where this method will be searching for the value.
      * @param value a value which will be searched in the array.
@@ -52,7 +55,6 @@ public final class Arrays {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Arrays
      */
     public static boolean contains(Object[] array, Object value) {
         for(Object element : array) {
@@ -73,7 +75,6 @@ public final class Arrays {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Arrays
      */
     @SafeVarargs
     public static <T> T[] of(T... objects) {
