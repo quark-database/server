@@ -66,27 +66,20 @@ public abstract class TcpServer implements AsyncService {
             onStartingCompleted();
 
             while(isStarted()) {
-                Thread.onSpinWait();
-
                 logger.debug("Waiting for a client...");
-
                 Socket clientSocket = serverSocket.accept();
 
                 logger.debug("Connection from: " + clientSocket.getInetAddress().getHostAddress());
-
                 ServerClient client = new ServerClient(clientSocket);
 
                 logger.debug("Starting collecting message...");
-
                 Message clientRequestMessage = Message.collect(clientSocket.getInputStream());
 
                 logger.debug("Collected client request message: " + clientRequestMessage.getContents());
-
                 try {
                     Request clientRequest = new Request(new JSONObject(clientRequestMessage.getContents()), clientSocket.getInetAddress());
 
                     logger.debug("Made a request...");
-
                     boolean middlewaresPassed = true;
                     for(Middleware middleware : middlewares) {
                         logger.debug("Running middleware...");
@@ -100,7 +93,6 @@ public abstract class TcpServer implements AsyncService {
                             middlewaresPassed = false;
 
                             logger.debug("Sent an error message");
-
                             break;
                         }
                     }
