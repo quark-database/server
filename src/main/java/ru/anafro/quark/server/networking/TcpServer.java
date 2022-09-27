@@ -98,7 +98,7 @@ public abstract class TcpServer implements AsyncService {
                         logger.debug("Completed! Passed? " + middlewareResponse.isPassed() + ", reason: " + middlewareResponse.getReason());
 
                         if(middlewareResponse.isDenied()) {
-                            client.sendError(middlewareResponse.getReason());
+                            client.sendError(middlewareResponse.getReason(), QueryExecutionStatus.MIDDLEWARE_ERROR);
                             middlewaresPassed = false;
 
                             logger.debug("Sent an error message");
