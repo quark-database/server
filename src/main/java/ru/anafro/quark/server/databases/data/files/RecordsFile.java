@@ -59,7 +59,7 @@ public class RecordsFile implements Iterable<TableRecord> {
             try {
                 this.recordsFile = recordsFile;
                 this.tableFileBufferedReader = new BufferedReader(new FileReader(recordsFile.getFile()));
-            } catch (FileNotFoundException exception) {
+            } catch (IOException exception) {
                 throw new DatabaseFileNotFoundException(recordsFile);
             }
         }
