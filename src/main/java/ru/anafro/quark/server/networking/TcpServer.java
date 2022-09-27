@@ -21,7 +21,7 @@ public abstract class TcpServer implements AsyncService {
     private static final float DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS = 7;
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = Lists.empty();
-    private final Logger logger = new Logger(this.getClass());
+    protected final Logger logger = new Logger(this.getClass());
 
     /**
      * This function adds a middleware to the list of middlewares
