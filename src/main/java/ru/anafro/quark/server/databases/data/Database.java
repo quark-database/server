@@ -33,7 +33,7 @@ public class Database {
     }
 
     public Table getTable(String tableName) {
-        return new Table(tableName, this.getName());
+        return new Table(this.getName(), tableName);
     }
 
     public List<Table> allTables() {
