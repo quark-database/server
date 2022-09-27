@@ -31,7 +31,7 @@ public final class InstructionEntityConstructorParameter {
     }
 
     public static InstructionEntityConstructorParameter optional(String name, String type) {
-        return new InstructionEntityConstructorParameter(name, type, true);
+        return new InstructionEntityConstructorParameter(name, type, false);
     }
 
     public String name() {
