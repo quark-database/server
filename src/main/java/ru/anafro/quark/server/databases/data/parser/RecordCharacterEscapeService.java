@@ -8,6 +8,7 @@ public class RecordCharacterEscapeService {
             case 'n' -> '\n';
             case 't' -> '\t';
             case '\\' -> '\\';
+            case '\"' -> '\"';
             default -> throw new DatabaseFileException("Cannot escape character %s.".formatted(character)); // TODO: Create a new exception type
         };
     }
