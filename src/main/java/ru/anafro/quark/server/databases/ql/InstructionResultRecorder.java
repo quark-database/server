@@ -7,25 +7,25 @@ import ru.anafro.quark.server.databases.views.TableViewRecorder;
 import ru.anafro.quark.server.databases.views.TableViewRow;
 
 public class InstructionResultRecorder {
-    private InstructionExecutionStatus executionStatus;
+    private QueryExecutionStatus queryExecutionStatus;
     private String message;
     private final long startTimeMilliseconds;
     private TableViewRecorder viewRecorder;
 
     public InstructionResultRecorder() {
-        this.executionStatus = InstructionExecutionStatus.OK;
+        this.queryExecutionStatus = QueryExecutionStatus.OK;
         this.message = "[No message]";
         this.startTimeMilliseconds = System.currentTimeMillis();
         this.viewRecorder = null;
     }
 
-    public void status(InstructionExecutionStatus status, String message) {
-        this.executionStatus = status;
+    public void status(QueryExecutionStatus status, String message) {
+        this.queryExecutionStatus = status;
         this.message = message;
     }
 
-    public void status(InstructionExecutionStatus status) {
-        this.executionStatus = status;
+    public void status(QueryExecutionStatus status) {
+        this.queryExecutionStatus = status;
     }
 
     public void message(String message) {
@@ -49,6 +49,6 @@ public class InstructionResultRecorder {
     }
 
     public InstructionResult collectResult() {
-        return new InstructionResult(executionStatus, message, System.currentTimeMillis() - startTimeMilliseconds, isTableViewHeaderSet() ? viewRecorder.collectView() : TableView.empty());
+        return new InstructionResult(queryExecutionStatus, message, System.currentTimeMillis() - startTimeMilliseconds, isTableViewHeaderSet() ? viewRecorder.collectView() : TableView.empty());
     }
 }
