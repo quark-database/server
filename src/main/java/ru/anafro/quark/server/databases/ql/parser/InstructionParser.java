@@ -23,7 +23,7 @@ public class InstructionParser {
     private final Logger logger = new Logger(this.getClass());
     private int tokenIndex = 0;
 
-    public void parse(ArrayList<InstructionToken> tokens) {
+    public synchronized void parse(ArrayList<InstructionToken> tokens) {
         this.state = new ExpectingInstructionNameInstructionParserState(this);
         this.instructionName = null;
         this.arguments = new InstructionArguments();

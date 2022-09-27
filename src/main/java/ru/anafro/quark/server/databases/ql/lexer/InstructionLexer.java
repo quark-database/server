@@ -21,7 +21,7 @@ public class InstructionLexer {
      private int currentCharacterIndex;
      public static final Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
 
-     public ArrayList<InstructionToken> lex(String instruction) {
+     public synchronized ArrayList<InstructionToken> lex(String instruction) {
           this.instruction = instruction;
           this.tokens = Lists.empty();
           this.buffer.clear();
