@@ -36,7 +36,7 @@ public final class Threads {
         }
 
         try {
-            Thread.sleep((long) (seconds * 1000.0));
+            Thread.sleep((long) (seconds * 1000.0)); // TODO: Add nanos
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
         }
