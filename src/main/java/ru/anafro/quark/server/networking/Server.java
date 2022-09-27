@@ -13,7 +13,6 @@ public class Server extends TcpServer {
     private final ServerConfiguration configuration = new ServerConfigurationLoader().load("Server Configuration.yaml");
     private final InstructionLexer lexer = new InstructionLexer();
     private final InstructionParser parser = new InstructionParser();
-    private final Logger logger = new Logger(this.getClass());
 
 
     public Server() {
@@ -39,15 +38,20 @@ public class Server extends TcpServer {
 
     @Override
     public Response onRequest(Request request) {
+        Quark.logger().error("Request query: %s".formatted(request.getString("query")));
+
         parser.parse(lexer.lex(request.getString("query")));
-        Instruction instruction = parser.getInstruction();
-        Token token = new Token(request.getString("token"));
+        var instruction = parser.getInstruction();
+        var arguments = parser.getArguments();
+        var token = new Token(request.getString("token"));
+
+//        System.out.println("Before: " + arguments.asList().stream().map(instructionArgument -> instructionArgument.name() + ": " + instructionArgument.value().toInstructionForm()).collect(Collectors.joining(", ")));
 
         if(token.hasPermission(instruction.getPermission())) {
-            InstructionResult result = instruction.execute(parser.getArguments());
+            InstructionResult result = instruction.execute(arguments);
 
             return Response.create()
-                    .add("status", result.executionStatus().name())
+                    .add("status", result.queryExecutionStatus().name())
                     .add("message", result.message())
                     .add("time", result.milliseconds())
                     .add("table", result.tableView().toJson());
