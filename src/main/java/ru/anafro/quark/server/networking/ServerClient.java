@@ -1,6 +1,8 @@
 package ru.anafro.quark.server.networking;
 
 import org.json.JSONObject;
+import ru.anafro.quark.server.databases.ql.QueryExecutionStatus;
+import ru.anafro.quark.server.utils.exceptions.Exceptions;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,10 +21,10 @@ public class ServerClient {
         clientDataOutputStream.write(new Message(json.toString()).buildByteMessage());
     }
 
-    public void sendError(String errorMessage) throws IOException {
+    public void sendError(String errorMessage, QueryExecutionStatus status) throws IOException {
         JSONObject errorResponse = new JSONObject();
 
-        errorResponse.put("error", true);
+        errorResponse.put("status", status.name());
         errorResponse.put("message", errorMessage);
 
         sendMessage(errorResponse);
@@ -31,8 +33,8 @@ public class ServerClient {
     public void sendError(Throwable becauseOf) throws IOException {
         JSONObject errorResponse = new JSONObject();
 
-        errorResponse.put("error", true);
-        errorResponse.put("exception", becauseOf.getClass().getSimpleName());
+        errorResponse.put("status", QueryExecutionStatus.SERVER_ERROR.name());
+        errorResponse.put("exception", becauseOf.getClass().getSimpleName() + "\n\n" + Exceptions.getTraceAsString(becauseOf));
         errorResponse.put("message", becauseOf.getMessage());
 
         sendMessage(errorResponse);
