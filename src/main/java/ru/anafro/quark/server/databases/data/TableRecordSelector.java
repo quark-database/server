@@ -10,6 +10,7 @@ public record TableRecordSelector(String expression) {
     public static final String COLUMN_NAME_MARKER = ":";
 
     public static final TableRecordSelector SELECT_ALL = new TableRecordSelector(new StringConstructorBuilder().name("yes").build());
+
     public boolean shouldBeSelected(TableRecord record) {
         String filledExpression = expression;
 
@@ -17,7 +18,7 @@ public record TableRecordSelector(String expression) {
             filledExpression = filledExpression.replace(COLUMN_NAME_MARKER + field.getColumnName(), field.getValue().toInstructionForm());
         }
 
-        var result = ConstructorEvaluator.eval(expression);
+        var result = ConstructorEvaluator.eval(filledExpression);
 
         if(result.mismatchesType(Quark.types().get("boolean"))) {
             throw new TableRecordSelectorExpressionShouldBeBooleanException(expression, result.getType());
