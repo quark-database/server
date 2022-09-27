@@ -43,6 +43,7 @@ public class RecordsFile implements Iterable<TableRecord> {
 
     public void insert(TableRecord record) {
         try(var bufferedWriter = new BufferedWriter(new FileWriter(file, true))){
+            bufferedWriter.newLine();
             bufferedWriter.write(record.toTableLine());
         } catch(IOException exception) {
             throw new RecordsFileInsertionFailedException(this, record, exception);
