@@ -3,13 +3,7 @@ package ru.anafro.quark.server.console.commands;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
-import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
-import ru.anafro.quark.server.debug.EntityConstructorDebugFrame;
-import ru.anafro.quark.server.debug.InstructionLexerDebugFrame;
-import ru.anafro.quark.server.debug.InstructionParserDebugFrame;
 import ru.anafro.quark.server.utils.containers.UniqueList;
-
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class OpenDebugCommand extends Command {
     public OpenDebugCommand() {

@@ -1,7 +1,6 @@
 package ru.anafro.quark.server.networking;
 
 import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionResult;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
