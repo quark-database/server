@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.console.commands;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
@@ -16,15 +17,12 @@ public class OpenDebugCommand extends Command {
     }
 
     @Override
-    public void action(CommandArguments arguments) { // TODO: Extract argument 'for' to a variable
-        var debugDialog = switch(arguments.get("for")) {
-            case "lexer" -> new InstructionLexerDebugFrame();
-            case "parser" -> new InstructionParserDebugFrame();
-            case "constructors" -> new EntityConstructorDebugFrame();
-            default -> throw new CommandRuntimeException("No such debug dialog named " + quoted(arguments.get("for")));
-        };
+    public void action(CommandArguments arguments) {
+        if(Quark.debugFrames().missing(arguments.get("for"))) {
+            error("No such debug frame. Did you mean %s?".formatted(Quark.debugFrames().suggest(arguments.get("for"))));
+        }
 
         logger.info("Opening the %s debug dialog...".formatted(arguments.get("for")));
-        debugDialog.open();
+        Quark.debugFrames().get(arguments.get("for")).open();
     }
 }
