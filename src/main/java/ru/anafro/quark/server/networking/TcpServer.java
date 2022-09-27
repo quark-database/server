@@ -63,8 +63,9 @@ public abstract class TcpServer implements AsyncService {
             Quark.crash("Port %d is invalid. We can't use it for Quark Server. Change it to another one".formatted(port));
         }
 
-        if(Ports.isUnavailable(port)) {
-            throw new PortIsUnavailableException(port);
+        while(Ports.isUnavailable(port)) {
+            logger.error("Port %d is unavailable. Waiting %f seconds before trying to start server again...".formatted(port, DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS));
+            Threads.freezeFor(DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS);
         }
 
         try(ServerSocket serverSocket = new ServerSocket(port)) {
