@@ -15,10 +15,12 @@ public abstract class DebugFrame extends JFrame {
     private static final int EXTRA_FRAME_HEIGHT = 40;
     protected final Server server;
     protected final Panel panel;
+    protected final String name;
 
 
-    public DebugFrame(String title, int width, int height) {
+    public DebugFrame(String title, String name, int width, int height) {
         this.server = Quark.server();
+        this.name = name;
         this.panel = new Panel(new Rectangle(0, 0, width, height));
 
         setTitle(title + " - Quark Server (Debug)");
@@ -49,5 +51,10 @@ public abstract class DebugFrame extends JFrame {
 
     public void open() {
         setVisible(true);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

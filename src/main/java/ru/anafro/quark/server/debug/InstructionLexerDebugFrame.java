@@ -12,10 +12,8 @@ public class InstructionLexerDebugFrame extends DebugFrame {
     private TextArea lexerOutputArea;
     private TextField instructionInputField;
 
-
-
     public InstructionLexerDebugFrame() {
-        super("Instruction Lexer", 600, 400);
+        super("Instruction Lexer", "lexer", 600, 400);
     }
 
     private void updateLexerOutput() {

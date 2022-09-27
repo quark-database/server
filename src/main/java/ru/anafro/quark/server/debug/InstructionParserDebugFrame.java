@@ -14,7 +14,7 @@ public class InstructionParserDebugFrame extends DebugFrame {
     private TextField instructionField;
 
     public InstructionParserDebugFrame() {
-        super("Instruction Parser", 800, 600);
+        super("Instruction Parser", "parser", 800, 600);
     }
 
     @Override

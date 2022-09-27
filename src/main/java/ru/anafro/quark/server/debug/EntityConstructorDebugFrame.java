@@ -11,7 +11,7 @@ public class EntityConstructorDebugFrame extends DebugFrame {
     private TextField expressionField;
 
     public EntityConstructorDebugFrame() {
-        super("Entity Constructor Evaluation", 600, 200);
+        super("Entity Constructor Evaluation", "constructors", 600, 200);
     }
 
     @Override
