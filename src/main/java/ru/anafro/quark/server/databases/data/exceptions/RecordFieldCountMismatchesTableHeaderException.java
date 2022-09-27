@@ -5,6 +5,6 @@ import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 
 public class RecordFieldCountMismatchesTableHeaderException extends DatabaseException {
     public RecordFieldCountMismatchesTableHeaderException(Table table, int fieldsInRecord) {
-        super("Table with %d cannot contain a record with %d fields".formatted(table.getHeader().getColumns().size(), fieldsInRecord));
+        super("Table with %d columns cannot contain a record with %d fields".formatted(table.getHeader().getColumns().size(), fieldsInRecord));
     }
 }
