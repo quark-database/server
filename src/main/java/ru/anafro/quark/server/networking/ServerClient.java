@@ -14,13 +14,6 @@ public class ServerClient {
         this.outputStream = socket.getOutputStream();
     }
 
-    public void sendNamedString(String name, String string) throws IOException {
-        JSONObject response = new JSONObject();
-        response.put(name, string);
-
-        sendMessage(response);
-    }
-
     public void sendMessage(JSONObject json) throws IOException {
         System.out.println("sendMessage()");
 
@@ -45,9 +38,5 @@ public class ServerClient {
         errorResponse.put("message", becauseOf.getMessage());
 
         sendMessage(errorResponse);
-    }
-
-    public void sendMessage(String message) throws IOException {
-        sendNamedString("message", message);
     }
 }
