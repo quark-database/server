@@ -15,8 +15,6 @@ public class ServerClient {
     }
 
     public void sendMessage(JSONObject json) throws IOException {
-        System.out.println("sendMessage()");
-
         DataOutputStream clientDataOutputStream = new DataOutputStream(outputStream);
         clientDataOutputStream.write(new Message(json.toString()).buildByteMessage());
     }
