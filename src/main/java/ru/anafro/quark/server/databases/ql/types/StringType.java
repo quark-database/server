@@ -7,7 +7,7 @@ import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class StringType extends EntityType {
     public StringType() {
-        super("str");
+        super("str", "int", "float", "boolean");
     }
 
     @Override
@@ -18,5 +18,15 @@ public class StringType extends EntityType {
     @Override
     public String toInstructionForm(Entity entity) {
         return quoted(((StringEntity) entity).getValue());
+    }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return switch(entity.getTypeName()) {
+            case "int" -> new StringEntity(entity.valueAs(Integer.class).toString());
+            case "float" -> new StringEntity(entity.valueAs(Float.class).toString());
+            case "boolean" -> new StringEntity(entity.valueAs(Boolean.class).toString());
+            default -> null;
+        };
     }
 }

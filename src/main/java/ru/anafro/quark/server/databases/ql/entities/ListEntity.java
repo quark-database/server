@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.TypeCanNotBeUsedInRecordsException;
 import ru.anafro.quark.server.utils.containers.Lists;
@@ -33,7 +34,9 @@ public class ListEntity extends Entity implements Iterable<Entity> {
 
     public void add(Entity entity) {
         if(entity.getExactTypeName().equals(typeOfValuesInside) || typeOfValuesInside.equals(Entity.WILDCARD_TYPE)) {
-            this.values.add(entity);
+            values.add(entity);
+        } else if(Quark.types().get(typeOfValuesInside).castableFrom(entity.getType())) {
+            values.add(Quark.types().get(typeOfValuesInside).cast(entity));
         } else {
             throw new DatabaseException("A list with type %s cannot contain an element %s with type %s".formatted(typeOfValuesInside, entity.getValue().toString(), entity.getType())); // TODO: Create a new exception type
         }
