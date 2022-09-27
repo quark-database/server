@@ -19,7 +19,6 @@ public class EnableDebugCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        Quark.runCommand("change-log-level for \"%s\" to \"%s\"".formatted(arguments.get("for"), LogLevel.DEBUG.name()));
-
+        Quark.runCommand("change-log-level for '%s' to '%s'".formatted(arguments.get("for"), LogLevel.DEBUG.name()));
     }
 }
