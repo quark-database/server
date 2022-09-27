@@ -68,6 +68,8 @@ public abstract class TcpServer implements AsyncService {
             Threads.freezeFor(DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS);
         }
 
+        logger.info("Server is started!");
+
         try(ServerSocket serverSocket = new ServerSocket(port)) {
             onStartingCompleted();
 
@@ -87,6 +89,7 @@ public abstract class TcpServer implements AsyncService {
 
                     logger.debug("Made a request...");
                     boolean middlewaresPassed = true;
+
                     for(Middleware middleware : middlewares) {
                         logger.debug("Running middleware...");
 
