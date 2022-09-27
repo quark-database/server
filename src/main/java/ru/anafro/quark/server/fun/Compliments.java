@@ -62,7 +62,6 @@ public class Compliments {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Compliments
      */
     public static String random() {
         return Arrays.random(COMPLIMENTS);

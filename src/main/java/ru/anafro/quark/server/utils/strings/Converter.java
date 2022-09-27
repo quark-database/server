@@ -19,7 +19,6 @@ public final class Converter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Converter
      */
     private Converter() {
         throw new CallingUtilityConstructorException(getClass());
@@ -34,7 +33,6 @@ public final class Converter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Converter
      */
     public static int toInteger(String string) {
         try {
@@ -53,7 +51,6 @@ public final class Converter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Converter
      */
     public static float toFloat(String string) {
         try {
@@ -72,7 +69,6 @@ public final class Converter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Converter
      */
     public static long toLong(String string) {
         try {
@@ -91,7 +87,6 @@ public final class Converter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Converter
      */
     public static boolean toBoolean(String string) {
         // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't

@@ -45,11 +45,10 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#TextBuffer(String)
      */
     public TextBuffer() {
@@ -65,7 +64,7 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to pass an empty string "" to create a text buffer
@@ -73,7 +72,6 @@ public class TextBuffer {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#TextBuffer()
      */
     public TextBuffer(String initialString) {
@@ -98,7 +96,7 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to pass an empty string "" to check the buffer's emptiness
@@ -106,7 +104,6 @@ public class TextBuffer {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#TextBuffer()
      */
     public boolean valueEquals(String value) {
@@ -127,11 +124,10 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#clear()
      * @see    TextBuffer#getContent()
      */
@@ -155,11 +151,10 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#isEmpty()
      * @see    TextBuffer#extractContent()
      */
@@ -182,7 +177,7 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to append a new line character "\n"
@@ -191,7 +186,6 @@ public class TextBuffer {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#isEmpty()
      * @see    TextBuffer#extractContent()
      */
@@ -219,7 +213,7 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to append an empty line ""
@@ -227,7 +221,6 @@ public class TextBuffer {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#nextLine()
      * @see    TextBuffer#append(Object)
      */
@@ -253,12 +246,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#appendLine(Object)
      * @see    TextBuffer#append(Object)
      */
@@ -282,12 +274,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#appendLine(Object)
      * @see    TextBuffer#append(Object)
      */
@@ -307,12 +298,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -325,12 +315,11 @@ public class TextBuffer {
      * Returns the Java Core's {@code StringBuilder} used in this text buffer.
      * Use it if you need specific functionality.
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -342,12 +331,11 @@ public class TextBuffer {
      * Returns {@code true} if builder's content is empty, otherwise {@code false}.
      * <br><br>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -374,12 +362,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -408,12 +395,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -441,12 +427,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -479,12 +464,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */
@@ -507,12 +491,11 @@ public class TextBuffer {
      * }
      * </pre>
      *
-     * To know how to use text buffers, read {@link TextBuffer}'s documentation.
+     * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer
      * @see    TextBuffer#getContent()
      * @see    TextBuffer#append(Object)
      */

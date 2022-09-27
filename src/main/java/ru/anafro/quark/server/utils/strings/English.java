@@ -21,7 +21,6 @@ public final class English {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    English
      */
     private English() {
         throw new CallingUtilityConstructorException(getClass());
@@ -42,7 +41,6 @@ public final class English {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    English
      */
     public static String articleFor(String noun) {
         if(Objects.isNull(noun)) {
@@ -68,7 +66,6 @@ public final class English {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    English
      */
     public static String ordinalSuffixFor(int number) {
         return switch(Math.abs(number % 10)) {

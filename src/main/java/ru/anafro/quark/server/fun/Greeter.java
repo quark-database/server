@@ -17,7 +17,6 @@ public final class Greeter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Greeter
      */
     private Greeter() {
         throw new CallingUtilityConstructorException(getClass());
@@ -28,7 +27,6 @@ public final class Greeter {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Greeter
      */
     public static void greet() {
         System.out.println(

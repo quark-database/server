@@ -1,6 +1,6 @@
-package ru.anafro.quark.server.types;
+package ru.anafro.quark.server.utils.types;
 
-import ru.anafro.quark.server.types.exceptions.WrongByteCountException;
+import ru.anafro.quark.server.utils.types.exceptions.WrongByteCountException;
 
 import java.nio.ByteBuffer;
 
@@ -20,7 +20,6 @@ public final class Bytes {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Bytes
      */
     private Bytes() {
         //
@@ -50,7 +49,6 @@ public final class Bytes {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Bytes
      */
     public static long toLong(byte[] bytes) {
         if(bytes.length != Long.BYTES) {
@@ -87,7 +85,6 @@ public final class Bytes {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Bytes
      */
     public static byte[] fromLong(long value) {
         ByteBuffer longBytesBuffer = ByteBuffer.allocate(Long.BYTES);

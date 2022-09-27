@@ -71,7 +71,7 @@ import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
  *
  *         <pre>
  *         {@code
- *             public CakePlugin(String pluginName, String pluginAuthor) { // Plugin won't work if you forget to remove these arguments.
+ *             public CakePlugin() {
  *                 super("Cake", "Anatoly Frolov");
  *
  *                 Quark.commands().add(new CommandBuilder()
@@ -117,7 +117,6 @@ public class Plugin {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Plugin
      */
     public Plugin(String pluginName, String pluginAuthor) {
         this.name = pluginName;
@@ -131,7 +130,6 @@ public class Plugin {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Plugin
      */
     public void onEnable() {
         //
@@ -144,7 +142,6 @@ public class Plugin {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Plugin
      */
     public String getName() {
         return name;
@@ -157,7 +154,6 @@ public class Plugin {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Plugin
      */
     public Logger getLogger() {
         return logger;
@@ -170,7 +166,6 @@ public class Plugin {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Plugin
      */
     public String getAuthor() {
         return author;

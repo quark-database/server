@@ -21,7 +21,6 @@ public interface Builder<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Builder
      */
     T build();
 }

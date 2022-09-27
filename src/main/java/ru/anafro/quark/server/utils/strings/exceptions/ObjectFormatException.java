@@ -23,7 +23,6 @@ public class ObjectFormatException extends QuarkException {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    ObjectFormatException
      */
     public ObjectFormatException(String string, Class<?> clazz) {
         super("String " + quoted(string) + " is being tried to be converted to type " + quoted(clazz.getSimpleName()) + ", but it is not in a good format.");

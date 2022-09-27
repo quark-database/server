@@ -30,12 +30,11 @@ import ru.anafro.quark.server.utils.exceptions.UtilityException;
 public final class StringSimilarityFinder {
 
     /**
-     * This private constructor of {@link StringSimilarityFinder} class <strong>MUST NOT</strong> be ever
-     * called, because {@link StringSimilarityFinder} is a utility class. Use static methods declared inside.
+     * This private constructor of  class <strong>MUST NOT</strong> be ever
+     * called, because  is a utility class. Use static methods declared inside.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    StringSimilarityFinder
      */
     private StringSimilarityFinder() {
         throw new CallingUtilityConstructorException(getClass());
@@ -51,7 +50,6 @@ public final class StringSimilarityFinder {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    StringSimilarityFinder
      */
     public static int getLevenshteinDistance(String firstString, String secondString)
     {
@@ -94,7 +92,6 @@ public final class StringSimilarityFinder {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    StringSimilarityFinder
      */
     public static double findSimilarity(String firstString, String secondString) {
         if (firstString == null || secondString == null) {
@@ -127,7 +124,6 @@ public final class StringSimilarityFinder {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    StringSimilarityFinder
      */
     public static int compare(String originalString, String firstString, String secondString) {
         if(firstString.equals(secondString)) {
@@ -147,7 +143,6 @@ public final class StringSimilarityFinder {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    StringSimilarityFinder
      */
     public static String findTheMostSimilar(String[] strings, String string) {
         if(strings.length == 0) {

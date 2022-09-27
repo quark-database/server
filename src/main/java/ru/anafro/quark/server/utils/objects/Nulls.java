@@ -24,8 +24,9 @@ import java.util.function.Function;
  *
  * It's totally fine to static import methods to shorten your code.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
 public final class Nulls {
 
@@ -35,7 +36,6 @@ public final class Nulls {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Nulls
      */
     private Nulls() {
         throw new CallingUtilityConstructorException(getClass());

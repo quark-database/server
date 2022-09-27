@@ -75,7 +75,6 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    StringTokenizer#nextToken()
-     * @see    StringTokenizer
      */
     public boolean hasTokens() {
         return hasCharacters();
@@ -93,7 +92,6 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    StringTokenizer#hasTokens()
-     * @see    StringTokenizer
      */
     public String nextToken() {
         if(!hasCharacters()) {
@@ -143,7 +141,6 @@ public class StringTokenizer {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    StringTokenizer#getDelimiters()
-     * @see    StringTokenizer
      */
     private boolean characterShouldBeSkipped() {
         for(char delimiter : delimiters) {

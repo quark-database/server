@@ -24,7 +24,6 @@ public class ObjectAlreadyExistsInRegistryException extends UtilityException {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see ObjectAlreadyExistsInRegistryException
      * @see UtilityException
      * @see ru.anafro.quark.server.utils.patterns.NamedObjectsRegistry
      */

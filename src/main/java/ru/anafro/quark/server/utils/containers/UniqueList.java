@@ -31,7 +31,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     @SafeVarargs
     public UniqueList(T... values) {
@@ -52,7 +51,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public boolean contains(T value) {
         return values.contains(value);
@@ -66,7 +64,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public void add(T value) {
         if(!contains(value)) {
@@ -82,7 +79,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public T get(int index) { // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't
         return values.get(index);
@@ -95,7 +91,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public int size() {
         return values.size();
@@ -110,14 +105,13 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public boolean isEmpty() {
         return values.isEmpty();
     }
 
     /**
-     * Returns all the values stored in this unique list valueAs an {@link ArrayList}.
+     * Returns all the values stored in this unique list as an {@link ArrayList}.
      * Note that changing the returned list's content <strong>DOES NOT AFFECT</strong>
      * this unique list.
      *
@@ -125,7 +119,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     public ArrayList<T> asList() {
         return new ArrayList<>(values);
@@ -138,7 +131,6 @@ public class UniqueList<T> implements Iterable<T> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    UniqueList
      */
     @Override
     public Iterator<T> iterator() {

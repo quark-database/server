@@ -77,7 +77,6 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    NamedObjectsRegistry#get(String)
      * @see    NamedObjectsRegistry#has(String)
      * @see    NamedObjectsRegistry#asList()
      */
@@ -110,7 +109,6 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    NamedObjectsRegistry#get(String)
-     * @see    NamedObjectsRegistry#has(String)
      * @see    NamedObjectsRegistry#asList()
      */
     public boolean has(String name) {
@@ -196,18 +194,17 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see    NamedObjectsRegistry#get(String)
      * @see    NamedObjectsRegistry#has(String)
-     * @see    NamedObjectsRegistry#asList()
      */
     public ArrayList<E> asList() {
         return registeredObjects;
     }
 
-    public E suggest(String type) {
+    public E suggest(String objectName) {
         double maximalSimilarity = Double.NEGATIVE_INFINITY;
         E theMostSimilarObject = null;
 
         for(var currentObject : this) {
-            double currentSimilarity = StringSimilarityFinder.findSimilarity(type, Nulls.evalOrNull(theMostSimilarObject, this::getNameOf));
+            double currentSimilarity = StringSimilarityFinder.findSimilarity(objectName, Nulls.evalOrNull(theMostSimilarObject, this::getNameOf));
 
             if(currentSimilarity > maximalSimilarity) {
                 maximalSimilarity = currentSimilarity;

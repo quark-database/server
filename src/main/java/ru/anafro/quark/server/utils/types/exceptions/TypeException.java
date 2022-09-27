@@ -1,9 +1,9 @@
-package ru.anafro.quark.server.types.exceptions;
+package ru.anafro.quark.server.utils.types.exceptions;
 
 import ru.anafro.quark.server.exceptions.QuarkException;
 
 /**
- * This is a super class for all exceptions specific for {@link ru.anafro.quark.server.types}
+ * This is a super class for all exceptions specific for {@link ru.anafro.quark.server.utils.types}
  * package. Please, do not throw {@link TypeException} without creating a new class for it.
  *
  * @since  Quark 1.1

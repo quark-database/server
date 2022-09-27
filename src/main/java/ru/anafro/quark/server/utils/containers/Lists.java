@@ -22,7 +22,6 @@ public final class Lists {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Lists
      */
     private Lists() {
         throw new CallingUtilityConstructorException(getClass());
@@ -47,7 +46,6 @@ public final class Lists {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Lists
      */
     public static <T> String join(List<? extends T> collection, String separator) {
         TextBuffer joinedContainer = new TextBuffer();
@@ -72,7 +70,6 @@ public final class Lists {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Lists
      */
     public static <T> String join(List<? extends T> collection) {
         return join(collection, ", ");

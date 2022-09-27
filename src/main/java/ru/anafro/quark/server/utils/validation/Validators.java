@@ -59,7 +59,7 @@ public interface Validators {
      * </pre>
      *
      * It is recommended to use this method for default validators
-     * stored inside the <code>Validators</code> class.
+     * stored inside the {@code Validators} class.
      *
      * @param value     the validating value
      * @param validator the validator
@@ -68,7 +68,6 @@ public interface Validators {
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Validators
      * @see    Validator
      */
     static <T> boolean validate(T value, Validator<T> validator) {

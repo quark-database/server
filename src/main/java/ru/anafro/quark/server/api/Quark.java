@@ -8,6 +8,7 @@ import ru.anafro.quark.server.console.commands.*;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
 import ru.anafro.quark.server.console.exceptions.NoSuchCommandException;
+import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.data.ColumnModifierRegistry;
 import ru.anafro.quark.server.databases.data.modifiers.*;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
@@ -15,7 +16,7 @@ import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionRegistry;
 import ru.anafro.quark.server.databases.ql.InstructionResult;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
+import ru.anafro.quark.server.databases.ql.entities.EntityConstructor;
 import ru.anafro.quark.server.databases.ql.entities.constructors.*;
 import ru.anafro.quark.server.databases.ql.entities.constructors.columns.IdColumnConstructor;
 import ru.anafro.quark.server.databases.ql.entities.constructors.columns.IntegerColumnConstructor;
@@ -25,6 +26,8 @@ import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException
 import ru.anafro.quark.server.databases.ql.instructions.*;
 import ru.anafro.quark.server.databases.ql.types.*;
 import ru.anafro.quark.server.databases.views.TableView;
+import ru.anafro.quark.server.debug.*;
+import ru.anafro.quark.server.debug.components.DebugFrame;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.exceptions.QuarkExceptionHandler;
 import ru.anafro.quark.server.fun.Greeter;
@@ -32,38 +35,105 @@ import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.AsyncServicePool;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.plugins.PluginManager;
+import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
 /**
  * Provides the easiest way of communicating with the Quark Server by having
  * all Quark Server components in one place. Quark class also contains some
- * static methods to do the most frequent things a simpler way, such valueAs
+ * static methods to do the most frequent things a simpler way, such as
  * running console commands or database instructions.
  *
- * @since  Quark 1.1
- * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since   Quark 1.1
+ * @version Quark 1.1
+ * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
 public final class Quark {
+
+    /**
+     * The server of Quark.
+     * @since Quark 1.1
+     */
     private static final Server server = new Server();
+
+    /**
+     * The default Quark logger.
+     * Should be used only for debugging. Do not use it for your modules.
+     * Create a new logger object instead.
+     * @since Quark 1.1
+     */
     private static final Logger logger = new Logger(Quark.class);
+
+    /**
+     * The Quark plugin manager.
+     * @since Quark 1.1
+     */
     private static final PluginManager pluginManager = new PluginManager();
+
+    /**
+     * The registry of all commands of Quark.
+     * @since Quark 1.1
+     */
     private static final CommandRegistry commandRegistry = new CommandRegistry();
+
+    /**
+     * The registry of all constructors existing in Quark.
+     * @since Quark 1.1
+     */
     private static final EntityConstructorRegistry constructorRegistry = new EntityConstructorRegistry();
+
+    /**
+     * The registry of all instructions of Quark.
+     * @since Quark 1.1
+     */
     private static final InstructionRegistry instructionRegistry = new InstructionRegistry();
+
+    /**
+     * The registry of all column modifiers of Quark.
+     * @since Quark 1.1
+     */
     private static final ColumnModifierRegistry modifierRegistry = new ColumnModifierRegistry();
+
+    /**
+     * The registry of all types existing in Quark.
+     * @since Quark 1.1
+     */
     private static final TypeRegistry typeRegistry = new TypeRegistry();
+
+    /**
+     * The registry of all debug frames in Quark.
+     * @since Quark 1.1
+     */
+    private static final DebugFrameRegistry debugFrameRegistry = new DebugFrameRegistry();
+
+    /**
+     * The command loop reading Quark commands.
+     * @since Quark 1.1
+     */
     private static final CommandLoop commandLoop = new CommandLoop(server);
+
+    /**
+     * The pool of all asynchronous services running in Quark.
+     * @since Quark 1.1
+     */
     private static final AsyncServicePool pool = new AsyncServicePool(commandLoop, server);
+
+    /**
+     * Indicates whether {@link Quark#init(String[])} was run or not.
+     * @since Quark 1.1
+     */
     private static boolean initialized = false;
 
     /**
      * This private constructor of Quark class <strong>MUST NOT</strong> be ever
      * called, because Quark is a utility class. Use static methods declared inside.
      *
-     * @see Quark
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     private Quark() {
-        //
+        throw new CallingUtilityConstructorException(getClass());
     }
+
     /**
      * Initializes the whole Quark Server with all modules inside. It registers
      * all default console commands, Quark QL instructions and constructors.
@@ -74,11 +144,12 @@ public final class Quark {
      *
      * @throws QuarkException when this method is called twice.
      *
+     * @param args the command line arguments. All the arguments will be run as Quark commands.
+     *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see Quark
      */
-    public static void init() {
+    public static void init(String[] args) {
         Greeter.greet();
 
         Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
@@ -97,6 +168,8 @@ public final class Quark {
         typeRegistry.add(new ListType());
         typeRegistry.add(new SelectorType());
         typeRegistry.add(new StringType());
+        typeRegistry.add(new RecordType());
+        typeRegistry.add(new AnyType());
 
         // Modifier registering
         modifierRegistry.add(new UniqueColumnModifier());
@@ -190,7 +263,12 @@ public final class Quark {
         constructorRegistry.add(new ToRadiansConstructor());
         constructorRegistry.add(new TrimConstructor());
         constructorRegistry.add(new UlpConstructor());
-
+        constructorRegistry.add(new DivideConstructor());
+        constructorRegistry.add(new MultiplyConstructor());
+        constructorRegistry.add(new NotConstructor());
+        constructorRegistry.add(new SubtractConstructor());
+        constructorRegistry.add(new SumConstructor());
+        constructorRegistry.add(new RecordConstructor());
         // ...including column constructors...
         constructorRegistry.add(new IdColumnConstructor());
         constructorRegistry.add(new StringColumnConstructor());
@@ -258,6 +336,13 @@ public final class Quark {
         commandRegistry.add(new EvalCommand());
         commandRegistry.add(new ModifiersCommand());
 //        commandRegistry.add(new ReloadCommand());        TODO: Not working yet
+
+        debugFrameRegistry.add(new InstructionLexerDebugFrame());
+        debugFrameRegistry.add(new InstructionParserDebugFrame());
+        debugFrameRegistry.add(new EntityConstructorDebugFrame());
+        debugFrameRegistry.add(new PermissionDebugFrame());
+
+        runCommandsFromCommandLineArguments(args);
 
         pluginManager.loadPlugins();
         pool.run();
@@ -330,7 +415,7 @@ public final class Quark {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @see EntityConstructorRegistry
-     * @see InstructionEntityConstructor
+     * @see EntityConstructor
      */
     public static EntityConstructorRegistry constructors() {
         return constructorRegistry;
@@ -360,10 +445,10 @@ public final class Quark {
      * <strong>Important:</strong> a colon (;) is required at the end of instructions.
      * <br><br>
      *
-     * For example, inside the <code>view</code> variable below all the users
+     * For example, inside the {@code view} variable below all the users
      * which age is greater than 18
      *
-     * <pre>var view = Quark.runInstruction("select from 'users': if = @condition('age > 18');").tableView();</pre>
+     * <pre>var view = Quark.runInstruction("select from 'users': selector = @selector(\\"@greater(:age, 18)\\");").tableView();</pre>
      *
      * You can read about all the instructions by running the 'list-instructions' command inside your terminal,
      * or by opening the documentation on official GitHub project: <a href="https://github.com/anafro/quark">here</a>.
