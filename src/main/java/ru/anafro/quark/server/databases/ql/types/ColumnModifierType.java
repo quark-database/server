@@ -5,7 +5,7 @@ import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
 import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
-import ru.anafro.quark.server.types.exceptions.TypeException;
+import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
 public class ColumnModifierType extends EntityType {
     public ColumnModifierType() {

@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.databases.ql.entities.exceptions;
 
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructor;
+import ru.anafro.quark.server.databases.ql.entities.EntityConstructor;
 
 public class ConstructorEvaluationException extends DatabaseException {
     public ConstructorEvaluationException(InstructionEntityConstructor constructor, String message) {

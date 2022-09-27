@@ -4,7 +4,7 @@ import ru.anafro.quark.server.databases.data.ColumnDescription;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
-import ru.anafro.quark.server.types.exceptions.TypeException;
+import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
 public class ColumnType extends EntityType {
     public ColumnType() {

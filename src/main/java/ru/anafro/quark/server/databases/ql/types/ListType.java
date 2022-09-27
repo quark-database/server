@@ -4,7 +4,7 @@ import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
-import ru.anafro.quark.server.types.exceptions.TypeException;
+import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
 public class ListType extends EntityType {
     public ListType() {
@@ -28,5 +28,10 @@ public class ListType extends EntityType {
                 .name(list.getType().getName())             // list
                 .arguments(((ListEntity) list).getValue())  // values
                 .build();
+    }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
     }
 }

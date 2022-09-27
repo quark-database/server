@@ -5,7 +5,7 @@ import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.SelectorEntity;
 import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
-import ru.anafro.quark.server.types.exceptions.TypeException;
+import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
 public class SelectorType extends EntityType {
     public SelectorType() {
@@ -33,5 +33,10 @@ public class SelectorType extends EntityType {
         } else {
             throw new TypeException("SelectorType.toInstructionForm(InstructionEntity) received an entity, but it has a wrong type: %s, but %s required.".formatted(this.getName(), entity.getType()));
         }
+    }
+
+    @Override
+    protected Entity castOrNull(Entity entity) {
+        return null;
     }
 }

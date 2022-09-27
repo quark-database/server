@@ -1,6 +1,6 @@
-package ru.anafro.quark.server.types.exceptions;
+package ru.anafro.quark.server.utils.types.exceptions;
 
-import ru.anafro.quark.server.types.Bytes;
+import ru.anafro.quark.server.utils.types.Bytes;
 
 /**
  * {@link WrongByteCountException} used only inside {@link Bytes} class
