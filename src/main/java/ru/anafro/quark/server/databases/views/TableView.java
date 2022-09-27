@@ -27,6 +27,7 @@ public record TableView(TableViewHeader header, List<TableViewRow> rows) impleme
             jsonTableViewRows.put(new JSONArray(row.cells()));
         }
 
+        jsonTableView.put("records", jsonTableViewRows);
         return jsonTableView;
     }
 
