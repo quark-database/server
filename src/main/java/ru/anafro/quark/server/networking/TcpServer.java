@@ -2,9 +2,14 @@ package ru.anafro.quark.server.networking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.QueryExecutionStatus;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.AsyncService;
-import ru.anafro.quark.server.networking.exceptions.*;
+import ru.anafro.quark.server.multithreading.Threads;
+import ru.anafro.quark.server.networking.exceptions.MessageHeaderIsTooShortException;
+import ru.anafro.quark.server.networking.exceptions.ServerCannotBeRunTwiceException;
+import ru.anafro.quark.server.networking.exceptions.ServerCrashedException;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.IOException;
@@ -55,7 +60,7 @@ public abstract class TcpServer implements AsyncService {
         }
 
         if(Ports.isInvalid(port)) {
-            throw new ImpossiblePortNumberException(port);
+            Quark.crash("Port %d is invalid. We can't use it for Quark Server. Change it to another one".formatted(port));
         }
 
         if(Ports.isUnavailable(port)) {
