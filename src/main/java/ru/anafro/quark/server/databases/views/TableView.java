@@ -2,6 +2,7 @@ package ru.anafro.quark.server.databases.views;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.Iterator;
@@ -13,7 +14,7 @@ public record TableView(TableViewHeader header, List<TableViewRow> rows) impleme
     private static final int CELL_PADDING = 1;
 
     public static TableView empty() {
-        return new TableView(new TableViewHeader(), List.of( /* nothing */ ));
+        return new TableView(new TableViewHeader(), Lists.empty());
     }
 
     public JSONObject toJson() {
