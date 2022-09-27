@@ -4,6 +4,7 @@ import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
+import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.utils.containers.UniqueList;
 
 public class EvalCommand extends Command {
@@ -13,7 +14,11 @@ public class EvalCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        var result = ConstructorEvaluator.eval(arguments.get("expression"));
-        logger.info("An expression result: (" + result.getExactTypeName() + ") " + result.toInstructionForm());
+        try {
+            var result = ConstructorEvaluator.eval(arguments.get("expression"));
+            logger.info("An expression result: (" + result.getExactTypeName() + ") " + result.toInstructionForm());
+        } catch(QuarkException exception) {
+            logger.error(exception.getMessage());
+        }
     }
 }
