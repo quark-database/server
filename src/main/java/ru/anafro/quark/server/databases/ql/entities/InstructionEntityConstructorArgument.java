@@ -5,7 +5,7 @@ import ru.anafro.quark.server.databases.ql.entities.exceptions.BadInstructionEnt
 public class InstructionEntityConstructorArgument {
     private final String name;
     private Entity entity;
-    private InstructionEntityConstructor constructor;
+    private EntityConstructor constructor;
     private final InstructionEntityConstructorArguments arguments;
 
     public InstructionEntityConstructorArgument(String name, Entity entity) {
@@ -15,7 +15,7 @@ public class InstructionEntityConstructorArgument {
         this.arguments = null;
     }
 
-    public InstructionEntityConstructorArgument(String name, InstructionEntityConstructor constructor, InstructionEntityConstructorArguments arguments) {
+    public InstructionEntityConstructorArgument(String name, EntityConstructor constructor, InstructionEntityConstructorArguments arguments) {
         this.name = name;
         this.arguments = arguments;
         this.entity = null;
@@ -26,7 +26,7 @@ public class InstructionEntityConstructorArgument {
         return new InstructionEntityConstructorArgument(name, entity);
     }
 
-    public static InstructionEntityConstructorArgument uncomputed(String name, InstructionEntityConstructor constructor, InstructionEntityConstructorArguments arguments) {
+    public static InstructionEntityConstructorArgument uncomputed(String name, EntityConstructor constructor, InstructionEntityConstructorArguments arguments) {
         return new InstructionEntityConstructorArgument(name, constructor, arguments);
     }
 
@@ -42,6 +42,14 @@ public class InstructionEntityConstructorArgument {
         return constructor != null;
     }
 
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    public void setConstructor(EntityConstructor constructor) {
+        this.constructor = constructor;
+    }
+
     public Entity getEntity() {
         if(!hasEntityComputed()) {
             eval();
@@ -50,7 +58,7 @@ public class InstructionEntityConstructorArgument {
         return entity;
     }
 
-    public InstructionEntityConstructor getConstructor() {
+    public EntityConstructor getConstructor() {
         return constructor;
     }
 

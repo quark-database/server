@@ -52,7 +52,7 @@ public class IdColumnConstructor extends ColumnConstructor {
                 "id",
                 Quark.types().get("int"),
                 "id",
-                List.of("unique", "incrementing", "positive", "constant")
+                List.of("require unique", "incrementing", "require positive", "require constant")
         );
     }
 }

@@ -6,7 +6,7 @@ import ru.anafro.quark.server.databases.ql.entities.*;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public abstract class ColumnModifierConstructor extends InstructionEntityConstructor {
+public abstract class ColumnModifierConstructor extends EntityConstructor {
     public ColumnModifierConstructor(String modifierName, InstructionEntityConstructorParameter... parameters) {
         super(modifierName, Stream.concat(Stream.of(InstructionEntityConstructorParameter.required("column name", "str")), Arrays.stream(parameters)).toArray(InstructionEntityConstructorParameter[]::new));
     }

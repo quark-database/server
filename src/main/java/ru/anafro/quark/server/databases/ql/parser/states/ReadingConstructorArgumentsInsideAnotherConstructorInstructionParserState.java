@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.parser.states;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
@@ -8,7 +9,7 @@ import ru.anafro.quark.server.utils.objects.Nulls;
 public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState extends ReadingConstructorArgumentsInstructionParserState {
     private final String argumentName;
 
-    public ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState(InstructionParser parser, ReadingConstructorArgumentsInstructionParserState previousState, InstructionEntityConstructor constructor, Instruction instruction, String argumentName) {
+    public ReadingConstructorArgumentsInsideAnotherConstructorInstructionParserState(InstructionParser parser, ReadingConstructorArgumentsInstructionParserState previousState, EntityConstructor constructor, Instruction instruction, String argumentName) {
         super(parser, previousState, constructor, instruction);
         this.argumentName = argumentName;
     }
@@ -26,7 +27,13 @@ public class ReadingConstructorArgumentsInsideAnotherConstructorInstructionParse
         if(constructor.getParameters().hasVarargs() && constructor.getParameters().getParameter(argumentName).isVarargs()) {
             if(arguments.has(argumentName)) {
                 logger.debug("Constructor has varargs, current parameter is varargs, and arguments already have an instructor parameter");
-                arguments.<ListEntity>get(argumentName).add(computedEntity);
+                var list = arguments.<ListEntity>get(argumentName);
+
+                if(!list.getTypeOfValuesInside().equals(computedEntity.getExactTypeName())) {
+                    computedEntity = Quark.types().get(list.getTypeOfValuesInside()).cast(computedEntity);
+                }
+
+                list.add(computedEntity);
             } else {
                 logger.debug("Constructor has varargs, current parameter is varargs, but arguments does not have an instructor parameter. Creating a list for varargs with a computed entity");
                 arguments.add(new InstructionEntityConstructorArgument(argumentName, new ListEntity(computedEntity.getExactTypeName(), computedEntity)));

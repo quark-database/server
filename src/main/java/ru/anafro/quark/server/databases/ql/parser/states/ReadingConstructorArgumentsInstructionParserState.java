@@ -12,14 +12,14 @@ import ru.anafro.quark.server.utils.objects.Nulls;
 public abstract class ReadingConstructorArgumentsInstructionParserState extends InstructionParserState {
     protected final Instruction instruction;
 
-    protected final InstructionEntityConstructor constructor;
+    protected final EntityConstructor constructor;
     private final InstructionEntityConstructorArguments arguments = new InstructionEntityConstructorArguments();
     private int parameterIndex = 0;
     private Entity computedEntity;
     private boolean expectingOpeningParenthesis = false;
     private boolean expectingComma = false;
 
-    public ReadingConstructorArgumentsInstructionParserState(InstructionParser parser, InstructionParserState previousState, InstructionEntityConstructor constructor, Instruction instruction) {
+    public ReadingConstructorArgumentsInstructionParserState(InstructionParser parser, InstructionParserState previousState, EntityConstructor constructor, Instruction instruction) {
         super(parser, previousState);
         this.constructor = constructor;
         this.instruction = instruction;
@@ -124,7 +124,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
         return arguments;
     }
 
-    public InstructionEntityConstructor getConstructor() {
+    public EntityConstructor getConstructor() {
         return constructor;
     }
 }
