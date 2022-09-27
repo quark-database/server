@@ -33,6 +33,8 @@ public class TableRecord implements Iterable<RecordField> {
             if(!value.hasType(column.getType())) {
                 throw new RecordTypeMismatchesTableHeaderException(table, column, value);
             }
+
+            fields.add(new RecordField(column.getName(), value));
         }
     }
 
