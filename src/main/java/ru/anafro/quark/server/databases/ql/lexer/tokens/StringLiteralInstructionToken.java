@@ -11,7 +11,7 @@ public class StringLiteralInstructionToken extends LiteralInstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return STRING_LITERAL_QUOTE + getValue() + STRING_LITERAL_QUOTE;
     }
 

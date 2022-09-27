@@ -6,7 +6,7 @@ public class CommaInstructionToken extends InstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return getValue();
     }
 

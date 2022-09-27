@@ -8,7 +8,7 @@ public class InstructionNameInstructionToken extends InstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return getValue();
     }
 

@@ -6,7 +6,7 @@ public class OpeningParenthesisInstructionToken extends InstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return getValue();
     }
 

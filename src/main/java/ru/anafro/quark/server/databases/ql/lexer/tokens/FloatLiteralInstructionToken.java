@@ -11,7 +11,7 @@ public class FloatLiteralInstructionToken extends LiteralInstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return getValue();
     }
 

@@ -6,7 +6,7 @@ public class ParameterNameInstructionToken extends InstructionToken {
     }
 
     @Override
-    public String getPresentation() {
+    public String getRepresentation() {
         return getName();
     }
 
