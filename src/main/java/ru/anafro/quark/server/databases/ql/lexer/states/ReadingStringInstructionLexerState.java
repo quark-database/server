@@ -5,6 +5,7 @@ import ru.anafro.quark.server.databases.ql.lexer.tokens.StringLiteralInstruction
 
 public class ReadingStringInstructionLexerState extends InstructionLexerState {
     boolean inString = false;
+    boolean escapeMode = false;
 
     public ReadingStringInstructionLexerState(InstructionLexer lexer, InstructionLexerState previousState) {
         super(lexer, previousState);
@@ -16,8 +17,13 @@ public class ReadingStringInstructionLexerState extends InstructionLexerState {
     public void handleCharacter(char currentCharacter) {
         stopSkippingLexerIgnoredCharacters();
 
-        if(currentCharacter == '"') {
-            if(!inString) {
+        if(currentCharacter == '\\') {
+            escapeMode = true;
+        } else if(currentCharacter == '"') {
+            if(escapeMode) {
+                lexer.pushCurrentCharacterToBuffer();
+                escapeMode = false;
+            } else if(!inString) {
                 logger.debug("Found the first quote, so it's going to be a string");
                 inString = true;
             } else {
