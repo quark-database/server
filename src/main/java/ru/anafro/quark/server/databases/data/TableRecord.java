@@ -87,6 +87,6 @@ public class TableRecord implements Iterable<RecordField> {
     }
 
     public TableViewRow toTableViewRow() {
-        return new TableViewRow(fields.stream().map(recordField -> recordField.getValue().toRecordForm()).toArray(String[]::new));
+        return new TableViewRow(fields.stream().map(recordField -> recordField.getValue().getValue().toString()).toArray(String[]::new));
     }
 }
