@@ -5,6 +5,7 @@ import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.views.TableView;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.exceptions.Exceptions;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 /**
@@ -71,7 +72,7 @@ public abstract class Instruction {
      *             in this method instead.
      */
     @Deprecated
-    public abstract void action(InstructionArguments arguments, Server server, InstructionResultRecorder result);
+    public abstract void action(InstructionArguments arguments, @Deprecated Server server, InstructionResultRecorder result);
 
     /**
      * Executes the instruction with arguments.
@@ -95,12 +96,12 @@ public abstract class Instruction {
             }
 
             if(arguments.has(parameter.getName()) && !parameter.isWildcard() && !arguments.get(parameter.getName()).getExactTypeName().equals(parameter.getType())) {
-                throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s"
+                throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s."
                         .formatted(
                                 parameter.getName(),
                                 parameter.getType(),
                                 arguments.get(parameter.getName()).toInstructionForm(),
-                                arguments.get(parameter.getName()).getType()
+                                arguments.get(parameter.getName()).getExactTypeName()
                         )
                 );
             }
