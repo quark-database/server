@@ -32,6 +32,10 @@ public class ListEntity extends Entity implements Iterable<Entity> {
         }
     }
 
+    public static ListEntity of(Iterable<? extends Entity> entities) {
+        return new ListEntity("any", entities);
+    }
+
     public void add(Entity entity) {
         if(entity.getExactTypeName().equals(typeOfValuesInside) || typeOfValuesInside.equals(Entity.WILDCARD_TYPE)) {
             values.add(entity);
