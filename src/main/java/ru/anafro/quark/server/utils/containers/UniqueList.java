@@ -25,7 +25,7 @@ public class UniqueList<T> implements Iterable<T> {
     private final List<T> values;
 
     /**
-     * Creates a new list with <code>values</code>.
+     * Creates a new list with {@code values}.
      *
      * @param values initial values of this unique list.
      *
@@ -42,9 +42,9 @@ public class UniqueList<T> implements Iterable<T> {
     }
 
     /**
-     * Returns <code>true</code>, if this unique list has an
+     * Returns {@code true}, if this unique list has an
      * object passed to this method. Otherwise, if this method
-     * does not contain this object, <code>false</code> will be returned.
+     * does not contain this object, {@code false} will be returned.
      *
      * @param value a finding value.
      * @return      a boolean representing the object existence.
@@ -72,7 +72,7 @@ public class UniqueList<T> implements Iterable<T> {
     }
 
     /**
-     * Returns an object at index <code>index</code>.
+     * Returns an object at index {@code index}.
      *
      * @param index an index of an object that should be returned.
      * @return      an object at the index.
@@ -97,8 +97,8 @@ public class UniqueList<T> implements Iterable<T> {
     }
 
     /**
-     * Returns <code>true</code> if this unique list is empty.
-     * Otherwise, if this list contains objects, <code>false</code>
+     * Returns {@code true} if this unique list is empty.
+     * Otherwise, if this list contains objects, {@code false}
      * will be returned.
      *
      * @return a boolean represents the unique list emptiness.
