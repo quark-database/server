@@ -1,8 +1,18 @@
 package ru.anafro.quark.server.networking;
 
-public class ServerConfiguration {
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+import ru.anafro.quark.server.databases.data.files.Savable;
+import ru.anafro.quark.server.networking.exceptions.ServerConfigurationCannotBeSavedException;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ServerConfiguration implements Savable {
+    private String path = null;
     private String name;
-    private String token;
     private int port;
 
     /**
@@ -24,15 +34,6 @@ public class ServerConfiguration {
     }
 
     /**
-     * This function returns the token of the server
-     * 
-     * @return The token is being returned.
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
      * This function sets the name of the server to the name passed in as a parameter
      * 
      * @param name The new server name.
@@ -50,12 +51,22 @@ public class ServerConfiguration {
         this.port = port;
     }
 
-    /**
-     * This function sets the token to the token passed in
-     * 
-     * @param token The new token.
-     */
-    public void setToken(String token) {
-        this.token = token;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void save() {
+        try {
+            var options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            options.setPrettyFlow(true);
+
+            var yaml = new Yaml(options);
+
+            Map<String, String> mappedConfiguration = new HashMap<>();
+            yaml.dump(mappedConfiguration, new FileWriter(path));
+        } catch (IOException exception) {
+            throw new ServerConfigurationCannotBeSavedException(exception);
+        }
     }
 }
