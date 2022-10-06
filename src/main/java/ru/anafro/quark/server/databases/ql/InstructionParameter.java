@@ -72,6 +72,7 @@ public class InstructionParameter {
         return !isGeneral();
     }
 
+    @Deprecated(since = "Quark 1.1", forRemoval = true)
     public interface Types {
         String STRING = "str";
         String INT = "int";
