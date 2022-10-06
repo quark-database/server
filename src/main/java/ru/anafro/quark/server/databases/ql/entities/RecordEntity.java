@@ -27,8 +27,8 @@ public class RecordEntity extends Entity implements Iterable<Entity> {
     }
 
     @Override
-    public Object getValue() {
-        return null;
+    public ArrayList<Entity> getValue() {
+        return values;
     }
 
     @Override
