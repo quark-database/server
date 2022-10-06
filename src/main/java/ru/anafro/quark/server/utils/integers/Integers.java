@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.utils.integers;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityException;
 
 public final class Integers {
     private Integers() {
@@ -16,5 +17,13 @@ public final class Integers {
         }
 
         return digitCount;
+    }
+
+    public static int limit(int integer, int min, int max) {
+        if(max <= min) {
+            throw new UtilityException("Integers.limit() received max <= min.");
+        }
+
+        return Math.max(Math.min(integer, max), min);
     }
 }
