@@ -4,20 +4,37 @@ import ru.anafro.quark.server.databases.data.exceptions.TableRecordChangerTriesT
 import ru.anafro.quark.server.databases.data.exceptions.TableRecordChangerWrongTypeException;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 
-public record TableRecordChanger(Table table, String column, String expression) {
-    public static final String COLUMN_VALUE_PLACE_MARKER = "::";
+public record TableRecordChanger(String column, String expression) implements RecordLambda<Void> {
+    public static final String COLUMN_NAME_MARKER = ":";
 
     public void change(TableRecord record) {
+        apply(record);
+    }
+
+    @Override
+    public Void apply(TableRecord record) {
         if(!record.hasField(column)) {
-            throw new TableRecordChangerTriesToChangeFieldThatDoesNotExistException(table, record, this);
+            throw new TableRecordChangerTriesToChangeFieldThatDoesNotExistException(record.getTable(), record, this);
         }
 
-        var result = ConstructorEvaluator.eval(expression.replace(COLUMN_VALUE_PLACE_MARKER, record.getField(column).getValue().toInstructionForm()));
+        var filledExpression = expression;
 
-        if(result.mismatchesType(record.getField(column).getValue().getType())) {
-            throw new TableRecordChangerWrongTypeException(table, this, result);
+        for(var field : record) {
+            filledExpression = filledExpression.replace(COLUMN_NAME_MARKER + field.getColumnName(), field.getValue().toInstructionForm());
+        }
+
+        var result = ConstructorEvaluator.eval(filledExpression);
+
+        if(record.getField(column).getValue().getType().castableFrom(result.getType())) {
+            result = record.getField(column).getValue().getType().cast(result);
+        }
+
+        if(result.mismatchesType(record.getField(column).getValue().getType()) || record.getField(column).getValue().getType().castableFrom(result.getType())) {
+            throw new TableRecordChangerWrongTypeException(record.getTable(), this, result);
         }
 
         record.getField(column).setValue(result);
+
+        return null;
     }
 }
