@@ -14,6 +14,7 @@ public class ConstructorsCommand extends Command {
     public void action(CommandArguments arguments) {
         for(var constructor : Quark.constructors()) {
             logger.info(constructor.getSyntax());
+            logger.info("");
         }
     }
 }
