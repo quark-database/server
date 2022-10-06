@@ -1,19 +1,26 @@
 package ru.anafro.quark.server.databases.data;
 
-import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.databases.data.exceptions.WrongCompoundedTableNameException;
+import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileException;
 import ru.anafro.quark.server.databases.data.files.HeaderFile;
 import ru.anafro.quark.server.databases.data.files.RecordsFile;
 import ru.anafro.quark.server.databases.data.files.VariableFolder;
+import ru.anafro.quark.server.databases.data.structures.LinearRecordCollection;
+import ru.anafro.quark.server.databases.data.structures.RecordCollection;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.ql.entities.ColumnEntity;
+import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.views.TableViewHeader;
-import ru.anafro.quark.server.utils.containers.Lists;
-import ru.anafro.quark.server.utils.objects.Nulls;
+import ru.anafro.quark.server.files.Databases;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class Table {
-    public static final String COMPOUNDED_TABLE_NAME_SEPARATOR = ".";
     private final String name;
     private final Database database;
     private final HeaderFile headerFile;
@@ -21,12 +28,22 @@ public class Table {
     private final VariableFolder variableFolder;
 
     public static Table byName(String compoundedName) {
-        if(!compoundedName.contains(COMPOUNDED_TABLE_NAME_SEPARATOR)) {
-            throw new WrongCompoundedTableNameException(compoundedName);
+        return Table.byName(new CompoundedTableName(compoundedName));
+    }
+
+    public static Table byName(CompoundedTableName compoundedName) {
+        return new Table(compoundedName.getDatabaseName(), compoundedName.getTableName());
+    }
+
+    public static boolean exists(String compoundedName) {
+        var name = new CompoundedTableName(compoundedName);
+
+        if(!Database.exists(name.getDatabaseName())) {
+            return false;
         }
 
-        var compoundedNameParts = compoundedName.split(Pattern.quote(COMPOUNDED_TABLE_NAME_SEPARATOR), 2);
-        return new Table(compoundedNameParts[0], compoundedNameParts[1]);
+        var tableDirectory = new File(Path.of(Databases.get(name.getDatabaseName()), name.getTableName()).toUri());
+        return tableDirectory.exists() && tableDirectory.isDirectory();
     }
 
     public Table(String databaseName, String tableName) {
@@ -35,6 +52,33 @@ public class Table {
         this.headerFile = new HeaderFile(this);
         this.recordsFile = new RecordsFile(this);
         this.variableFolder = new VariableFolder(this);
+    }
+
+    public static Table create(CompoundedTableName name, List<ColumnDescription> columns, List<ColumnModifierEntity> modifiers) {
+        try {
+            if(exists(name.toCompoundedString())) {
+                throw new DatabaseFileException("Table '%s' already exists".formatted(name.toCompoundedString()));
+            }
+
+            var tableFolder = new File(Path.of(Databases.get(name.getDatabaseName()), name.getTableName()).toUri());
+
+            Files.createDirectory(tableFolder.toPath());
+
+            Files.createFile(Path.of(tableFolder.getPath(), RecordsFile.NAME));
+            Files.createFile(Path.of(tableFolder.getPath(), HeaderFile.NAME));
+            Files.createDirectory(Path.of(tableFolder.getPath(), VariableFolder.NAME));
+
+            var lines = new TextBuffer();
+
+            lines.appendLine(ListEntity.of(columns.stream().map(ColumnEntity::new).toList()).toInstructionForm());
+            lines.appendLine(ListEntity.of(modifiers).toInstructionForm());
+
+            Files.writeString(Path.of(tableFolder.getPath(), HeaderFile.NAME), lines);
+
+            return byName(name);
+        } catch (IOException exception) {
+            throw new DatabaseFileException("Table cannot be created, because of %s: %s".formatted(exception.getClass().getSimpleName(), exception.getMessage()));
+        }
     }
 
     public String getName() {
@@ -59,48 +103,45 @@ public class Table {
 
     public void insert(TableRecord record) {
         headerFile.requireValidity(record);
-        headerFile.runBeforeRecordInsertionActionOfModifiers(record);
+//        headerFile.runBeforeRecordInsertionActionOfModifiers(record);
         recordsFile.insert(record);
     }
 
-    public ArrayList<TableRecord> select(TableRecordSelector selector, long skip, long limit) {
-        if(limit == 0) {
-            return Lists.empty();
-        }
+    public RecordCollection loadRecords(RecordCollectionResolver resolver) {
+        RecordCollection collection = resolver.createEmptyCollection();
+        collection.addAll(recordsFile);
 
-        var selectedRecords = Lists.<TableRecord>empty();
-
-        final long[] recordsLeftToSkip = { skip };
-        final long[] recordsLeftToSelect = { limit };
-
-
-        for(var record : recordsFile) {
-            Quark.logger().error(Nulls.evalOrDefault(record, TableRecord::toTableLine, "<null table record>"));
-
-            if(selector.shouldBeSelected(record)) {
-                if(recordsLeftToSelect[0] > 0) {
-                    if(recordsLeftToSkip[0] > 0) {
-                        recordsLeftToSkip[0]--;
-                    } else {
-                        selectedRecords.add(record);
-                        recordsLeftToSelect[0]--;
-                    }
-                }
-            }
-        }
-
-        return selectedRecords;
+        return collection;
     }
 
-    public void changeRecords(TableRecordChanger changer, TableRecordSelector selector) {
-        recordsFile.forEach(record -> {
+    public RecordCollection select(TableRecordSelector selector, RecordIterationLimiter limiter) {
+        // TODO: Change the collection resolver case (pull it to the higher level?)
+        var allRecords = loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
+
+        return allRecords.select(selector, limiter);
+    }
+
+    public void changeRecords(TableRecordChanger changer, ExpressionTableRecordSelector selector) {
+        var allRecords = loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+
+        allRecords.forEach(record -> {
             if(selector.shouldBeSelected(record)) {
-                // TODO change the record?
+                changer.change(record);
             }
         });
+
+        recordsFile.save(allRecords);
     }
 
     public TableViewHeader createTableViewHeader() {
         return new TableViewHeader(headerFile.getColumns().stream().map(ColumnDescription::getName).toArray(String[]::new));
+    }
+
+    public void delete() {
+        boolean ignored = new File(Path.of(database.getFolder().getPath(), name).toUri()).delete();
+    }
+
+    public void clear() {
+        getRecords().save(new LinearRecordCollection());
     }
 }
