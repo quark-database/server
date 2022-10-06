@@ -29,9 +29,19 @@ public class ColumnEntity extends Entity {
 
     @Override
     public String toInstructionForm() {
-        return new StringConstructorBuilder()
-                .name(columnDescription.getType().getName())
-                .argument(new StringEntity(columnDescription.getName()))
-                .build();
+        var builder = new StringConstructorBuilder();
+
+        builder.name(columnDescription.getType().getName());
+        builder.argument(new StringEntity(columnDescription.getName()));
+
+        for(var modifierEntity : columnDescription.getModifiers()) {
+            builder.argument(new ColumnModifierEntity(columnDescription.getName(), modifierEntity.getModifier(), modifierEntity.getModifierArguments()));
+        }
+
+        return builder.build();
+    }
+
+    public ColumnDescription getColumnDescription() {
+        return columnDescription;
     }
 }
