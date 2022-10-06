@@ -10,8 +10,13 @@ public class ReadingUnquotedRecordParserState extends RecordParserState {
     @Override
     public void handleCharacter(char currentCharacter) {
         if(currentCharacter == RecordParser.STRING_SEPARATOR) {
+            if(parser.getBuffer().isEmpty()) {
+                parser.pushToRecord(null);
+            } else {
+                parser.pushBufferContentToRecord();
+            }
+
             parser.switchState(new ResolvingWrapperTypeRecordParserState(parser));
-            parser.pushBufferContentToRecord();
         } else {
             parser.pushCurrentCharacterToBuffer();
         }
