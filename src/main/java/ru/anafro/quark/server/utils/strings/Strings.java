@@ -2,6 +2,7 @@ package ru.anafro.quark.server.utils.strings;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 
 /**
@@ -71,5 +72,25 @@ public final class Strings {
                 .boxed()
                 .map(character -> Character.isLowerCase(character) ? Character.toUpperCase(character) : Character.toLowerCase(character))
                 .collect(Collector.of(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append, StringBuilder::toString));
+    }
+
+    /**
+     * Counts entries of one string inside another.
+     * If any of the parameters is {@code null}, {@code 0} will be returned.
+     *
+     * @param whereToCount the string where to search.
+     * @param whatToCount  the string to search.
+     *
+     * @return the count of entries inside the string passed.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     */
+    public static int countEntries(String whereToCount, String whatToCount) {
+        if(whereToCount == null || whatToCount == null) {
+            return 0;
+        }
+
+        return whereToCount.split(Pattern.quote(whatToCount)).length - 1;
     }
 }
