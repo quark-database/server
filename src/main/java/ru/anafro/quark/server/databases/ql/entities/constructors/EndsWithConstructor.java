@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the ends with constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class EndsWithConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EndsWithConstructor() {
-        super("ends with", InstructionEntityConstructorParameter.required("string", "str"), InstructionEntityConstructorParameter.required("suffix", "str"));
+        super(
+                "ends with",
+
+                returns("is string ends with the suffix", "boolean"),
+
+                required("string", "str"),
+                required("suffix", "str")
+        );
     }
 
     /**

@@ -4,6 +4,9 @@ import ru.anafro.quark.server.databases.ql.entities.*;
 
 import java.util.stream.Stream;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the split constructor of Quark QL.
  * <br><br>
@@ -48,7 +51,14 @@ public class SplitConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SplitConstructor() {
-        super("split", InstructionEntityConstructorParameter.required("string to split", "str"), InstructionEntityConstructorParameter.required("delimiter", "str"));
+        super(
+                "split",
+
+                returns("the string parts", "list"),
+
+                required("string to split", "str"),
+                required("delimiter", "str")
+        );
     }
 
     /**

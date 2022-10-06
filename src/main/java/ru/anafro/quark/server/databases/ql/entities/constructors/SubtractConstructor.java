@@ -2,6 +2,10 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the subtract constructor of Quark QL.
  * <br><br>
@@ -46,9 +50,13 @@ public class SubtractConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SubtractConstructor() {
-        super("subtract",
-                InstructionEntityConstructorParameter.required("number to subtract from", "float"),
-                InstructionEntityConstructorParameter.varargs("numbers to subtract", "float")
+        super(
+                "subtract",
+
+                returns("the difference", "float"),
+
+                required("number to subtract from", "float"),
+                varargs("numbers to subtract", "float")
         );
     }
 

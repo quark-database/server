@@ -4,6 +4,9 @@ import ru.anafro.quark.server.databases.ql.entities.*;
 
 import java.util.Random;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the random between constructor of Quark QL.
  * <br><br>
@@ -49,7 +52,14 @@ public class RandomBetweenConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RandomBetweenConstructor() {
-        super("random between", InstructionEntityConstructorParameter.required("inclusive min", "int"), InstructionEntityConstructorParameter.required("exclusive max", "int"));
+        super(
+                "random between",
+
+                returns("the random value", "int"),
+
+                required("inclusive min", "int"),
+                required("exclusive max", "int")
+        );
     }
 
     /**

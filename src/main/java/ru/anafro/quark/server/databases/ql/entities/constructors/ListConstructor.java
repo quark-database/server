@@ -2,6 +2,8 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the list constructor of Quark QL.
  * <br><br>
@@ -46,7 +48,13 @@ public class ListConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ListConstructor() {
-        super("list", InstructionEntityConstructorParameter.varargs("values", "?"));
+        super(
+                "list",
+
+                returns("a new list of values", "list"),
+
+                InstructionEntityConstructorParameter.varargs("values", "?")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the next after constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class NextAfterConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public NextAfterConstructor() {
-        super("next after", InstructionEntityConstructorParameter.required("start", "float"), InstructionEntityConstructorParameter.required("direction", "float"));
+        super(
+                "next after",
+
+                returns("the next after", "float"),
+
+                required("start", "float"),
+                required("direction", "float")
+        );
     }
 
     /**

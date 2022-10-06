@@ -3,6 +3,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.utils.strings.Strings;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the invert case constructor of Quark QL.
  * <br><br>
@@ -47,7 +50,13 @@ public class InvertCaseConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public InvertCaseConstructor() {
-        super("invert case", InstructionEntityConstructorParameter.required("string where to switch case", "str"));
+        super(
+                "invert case",
+
+                returns("the string with case inverted", "str"),
+
+                required("string where to switch case", "str")
+        );
     }
 
     /**

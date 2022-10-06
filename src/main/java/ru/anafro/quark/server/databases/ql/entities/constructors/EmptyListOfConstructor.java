@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the empty list of constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class EmptyListOfConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EmptyListOfConstructor() {
-        super("empty list of", InstructionEntityConstructorParameter.required("type name of a new list", "str"));
+        super(
+                "empty list of",
+
+                returns("an empty list with specified type", "list"),
+
+                required("type name of a new list", "str")
+        );
     }
 
     /**

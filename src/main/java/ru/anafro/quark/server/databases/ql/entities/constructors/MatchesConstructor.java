@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the matches constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class MatchesConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public MatchesConstructor() {
-        super("matches", InstructionEntityConstructorParameter.required("string to check", "str"), InstructionEntityConstructorParameter.required("regex expression", "str"));
+        super(
+                "matches",
+
+                returns("is the string matches regex", "boolean"),
+
+                required("string to check", "str"),
+                required("regex expression", "str")
+        );
     }
 
     /**

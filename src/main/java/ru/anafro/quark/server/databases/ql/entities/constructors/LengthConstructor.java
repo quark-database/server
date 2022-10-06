@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the length constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class LengthConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public LengthConstructor() {
-        super("length", InstructionEntityConstructorParameter.required("string to count characters in", "str"));
+        super(
+                "length",
+
+                returns("the length of the string", "int"),
+
+                required("string to count characters in", "str")
+        );
     }
 
     /**

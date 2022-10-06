@@ -1,12 +1,14 @@
 package ru.anafro.quark.server.databases.ql.entities.constructors.modifiers;
 
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
 
 public class BetweenModifierConstructor extends ColumnModifierConstructor {
     public BetweenModifierConstructor() {
-        super("require between",
-                InstructionEntityConstructorParameter.required("min", "float"),
-                InstructionEntityConstructorParameter.required("max", "float")
+        super(
+                "require between",
+
+                required("min", "float"),
+                required("max", "float")
         );
     }
 }

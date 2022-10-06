@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the starts with constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class StartsWithConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public StartsWithConstructor() {
-        super("starts with", InstructionEntityConstructorParameter.required("string", "str"), InstructionEntityConstructorParameter.required("prefix", "str"));
+        super(
+                "starts with",
+
+                returns("does the string start with the prefix", "boolean"),
+
+                required("string", "str"),
+                required("prefix", "str")
+        );
     }
 
     /**

@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.databases.ql.entities.constructors;
 
-import ru.anafro.quark.server.databases.ql.entities.Entity;
-import ru.anafro.quark.server.databases.ql.entities.FloatEntity;
-import ru.anafro.quark.server.databases.ql.entities.EntityConstructor;
-import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
+import ru.anafro.quark.server.databases.ql.entities.*;
+
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
 
 /**
  * This class represents the acos constructor of Quark QL.
@@ -49,7 +49,13 @@ public class AcosConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public AcosConstructor() {
-        super("acos");
+        super(
+                "acos",
+
+                returns("arc cosine of the number", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

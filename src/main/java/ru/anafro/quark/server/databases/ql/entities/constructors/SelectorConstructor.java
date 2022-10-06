@@ -1,7 +1,10 @@
 package ru.anafro.quark.server.databases.ql.entities.constructors;
 
-import ru.anafro.quark.server.databases.data.TableRecordSelector;
+import ru.anafro.quark.server.databases.data.ExpressionTableRecordSelector;
 import ru.anafro.quark.server.databases.ql.entities.*;
+
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
 
 /**
  * This class represents the selector constructor of Quark QL.
@@ -47,7 +50,13 @@ public class SelectorConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SelectorConstructor() {
-        super("selector", InstructionEntityConstructorParameter.required("selector expression", "str"));
+        super(
+                "selector",
+
+                returns("the selector", "selector"),
+
+                required("selector expression", "str")
+        );
     }
 
     /**
@@ -68,6 +77,6 @@ public class SelectorConstructor extends EntityConstructor {
      */
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return new SelectorEntity(new TableRecordSelector(arguments.<StringEntity>get("selector expression").getString()));
+        return new SelectorEntity(new ExpressionTableRecordSelector(arguments.<StringEntity>get("selector expression").getString()));
     }
 }

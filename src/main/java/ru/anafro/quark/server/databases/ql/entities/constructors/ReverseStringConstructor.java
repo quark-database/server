@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the reverse string constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class ReverseStringConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ReverseStringConstructor() {
-        super("reverse string", InstructionEntityConstructorParameter.required("string to reverse", "str"));
+        super(
+                "reverse string",
+
+                returns("the reversed string", "str"),
+
+                required("string to reverse", "str")
+        );
     }
 
     /**

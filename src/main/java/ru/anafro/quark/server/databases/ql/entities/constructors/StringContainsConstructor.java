@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the string contains constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class StringContainsConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public StringContainsConstructor() {
-        super("string contains", InstructionEntityConstructorParameter.required("string where to search", "str"), InstructionEntityConstructorParameter.required("searching string", "str"));
+        super(
+                "string contains",
+
+                returns("does the string contain the entry", "boolean"),
+
+                required("string where to search", "str"),
+                required("searching string", "str")
+        );
     }
 
     /**

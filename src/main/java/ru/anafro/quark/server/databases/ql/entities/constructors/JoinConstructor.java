@@ -5,6 +5,10 @@ import ru.anafro.quark.server.databases.ql.entities.constructors.exceptions.BadI
 
 import java.util.ArrayList;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the join constructor of Quark QL.
  * <br><br>
@@ -49,7 +53,14 @@ public class JoinConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public JoinConstructor() {
-        super("join", InstructionEntityConstructorParameter.required("first list", "list of ?"), InstructionEntityConstructorParameter.varargs("more lists", "list of ?"));
+        super(
+                "join",
+
+                returns("a joined list", "list"),
+
+                required("first list", "list of ?"),
+                varargs("more lists", "list of ?")
+        );
     }
 
     /**

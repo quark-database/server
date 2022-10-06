@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the less or equals constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class LessOrEqualsConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public LessOrEqualsConstructor() {
-        super("less or equals", InstructionEntityConstructorParameter.required("first number", "float"), InstructionEntityConstructorParameter.required("second number", "float"));
+        super(
+                "less or equals",
+
+                returns("is the first number is less than the second or equals to", "boolean"),
+
+                required("first number", "float"),
+                required("second number", "float")
+        );
     }
 
     /**

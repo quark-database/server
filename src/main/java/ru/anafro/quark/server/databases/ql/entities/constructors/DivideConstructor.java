@@ -3,6 +3,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.entities.constructors.exceptions.ConstructorRuntimeException;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the divide constructor of Quark QL.
  * <br><br>
@@ -47,9 +50,13 @@ public class DivideConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public DivideConstructor() {
-        super("divide",
-                InstructionEntityConstructorParameter.required("number to divide", "float"),
-                InstructionEntityConstructorParameter.required("divisor", "float")
+        super(
+                "divide",
+
+                returns("fraction", "float"),
+
+                required("number to divide", "float"),
+                required("divisor", "float")
         );
     }
 

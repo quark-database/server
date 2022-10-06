@@ -3,6 +3,8 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the concat constructor of Quark QL.
  * <br><br>
@@ -47,7 +49,13 @@ public class ConcatConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ConcatConstructor() {
-        super("concat", InstructionEntityConstructorParameter.varargs("strings", "str"));
+        super(
+                "concat",
+
+                returns("concatenated string", "str"),
+
+                InstructionEntityConstructorParameter.varargs("strings", "str")
+        );
     }
 
     /**

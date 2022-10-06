@@ -2,6 +2,10 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the max constructor of Quark QL.
  * <br><br>
@@ -46,7 +50,14 @@ public class MaxConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public MaxConstructor() {
-        super("max", InstructionEntityConstructorParameter.required("first number", "float"), InstructionEntityConstructorParameter.varargs("more numbers", "float"));
+        super(
+                "max",
+
+                returns("the biggest number", "float"),
+
+                required("first number", "float"),
+                varargs("more numbers", "float")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the to binary string constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class ToBinaryStringConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ToBinaryStringConstructor() {
-        super("to binary string", InstructionEntityConstructorParameter.required("integer to convert to binary string", "int"));
+        super(
+                "to binary string",
+
+                returns("the binary string", "str"),
+
+                required("integer to convert to binary string", "int")
+        );
     }
 
     /**

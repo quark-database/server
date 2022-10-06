@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the fast hypot constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class FastHypotConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public FastHypotConstructor() {
-        super("fast hypot", InstructionEntityConstructorParameter.required("first leg", "float"), InstructionEntityConstructorParameter.required("second leg", "float"));
+        super(
+                "fast hypot",
+
+                returns("hypotenuse length", "float"),
+
+                required("first leg", "float"),
+                required("second leg", "float")
+        );
     }
 
     /**

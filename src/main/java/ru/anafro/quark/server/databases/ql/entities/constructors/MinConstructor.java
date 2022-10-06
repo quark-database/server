@@ -2,6 +2,10 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the min constructor of Quark QL.
  * <br><br>
@@ -46,7 +50,14 @@ public class MinConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public MinConstructor() {
-        super("min", InstructionEntityConstructorParameter.required("first number", "float"), InstructionEntityConstructorParameter.varargs("more numbers", "float"));
+        super(
+                "min",
+
+                returns("the smallest number", "float"),
+
+                required("first number", "float"),
+                varargs("more numbers", "float")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the atan constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class AtanConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public AtanConstructor() {
-        super("atan", InstructionEntityConstructorParameter.required("atan", "float"));
+        super(
+                "atan",
+
+                returns("arc tangent of the number", "float"),
+
+                required("atan", "float")
+        );
     }
 
     /**

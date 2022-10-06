@@ -5,6 +5,8 @@ import ru.anafro.quark.server.databases.ql.entities.FloatEntity;
 import ru.anafro.quark.server.databases.ql.entities.EntityConstructor;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the e constructor of Quark QL.
  * <br><br>
@@ -49,7 +51,11 @@ public class EConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EConstructor() {
-        super("e");
+        super(
+                "e",
+
+                returns("the value of 'e' math constant", "float")
+        );
     }
 
     /**

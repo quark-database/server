@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the count constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class CountConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public CountConstructor() {
-        super("count", InstructionEntityConstructorParameter.required("list to count elements", "list of ?"));
+        super(
+                "count",
+
+                returns("number of elements inside the list", "int"),
+
+                required("list to count elements", "list of ?")
+        );
     }
 
     /**

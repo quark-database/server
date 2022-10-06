@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the floor mod constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class FloorModConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public FloorModConstructor() {
-        super("floor mod", InstructionEntityConstructorParameter.required("first number", "int"), InstructionEntityConstructorParameter.required("second number", "int"));
+        super(
+                "floor mod",
+
+                returns("the floor modulo of the numbers", "float"),
+
+                required("first number", "int"),
+                required("second number", "int")
+        );
     }
 
     /**

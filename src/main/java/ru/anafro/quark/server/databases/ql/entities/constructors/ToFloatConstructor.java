@@ -5,6 +5,10 @@ import ru.anafro.quark.server.databases.ql.entities.constructors.exceptions.BadI
 import ru.anafro.quark.server.utils.strings.Converter;
 import ru.anafro.quark.server.utils.validation.Validators;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.optional;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the to float constructor of Quark QL.
  * <br><br>
@@ -49,7 +53,14 @@ public class ToFloatConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ToFloatConstructor() {
-        super("to float", InstructionEntityConstructorParameter.required("string to convert to float", "str"), InstructionEntityConstructorParameter.optional("default float value if conversation fails", "float"));
+        super(
+                "to float",
+
+                returns("the float", "float"),
+
+                required("string to convert to float", "str"),
+                optional("default float value if conversation fails", "float")
+        );
     }
 
     /**

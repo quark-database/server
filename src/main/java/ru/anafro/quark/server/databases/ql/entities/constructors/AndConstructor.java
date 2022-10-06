@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the and constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class AndConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public AndConstructor() {
-        super("and", InstructionEntityConstructorParameter.varargs("booleans", "boolean"));
+        super(
+                "and",
+
+                returns("result of and", "boolean"),
+
+                varargs("booleans", "boolean")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the left trim constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class LeftTrimConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public LeftTrimConstructor() {
-        super("left trim", InstructionEntityConstructorParameter.required("string to trim", "str"));
+        super(
+                "left trim",
+
+                returns("the left trimmed string", "str"),
+
+                required("string to trim", "str")
+        );
     }
 
     /**

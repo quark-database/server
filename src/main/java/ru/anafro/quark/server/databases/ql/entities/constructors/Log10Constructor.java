@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the log ten constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class Log10Constructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public Log10Constructor() {
-        super("log ten", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "log ten",
+
+                returns("the logarithm with base 10 of the number", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

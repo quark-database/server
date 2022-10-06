@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the is string empty constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class IsStringEmptyConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public IsStringEmptyConstructor() {
-        super("is string empty", InstructionEntityConstructorParameter.required("string", "str"));
+        super(
+                "is string empty",
+
+                returns("is the string empty", "boolean"),
+
+                required("string", "str")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the log constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class LogConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public LogConstructor() {
-        super("log", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "log",
+
+                returns("the logarithm of the number", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the exp constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class ExpConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ExpConstructor() {
-        super("exp", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "exp",
+
+                returns("exponent of the number", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

@@ -1,6 +1,8 @@
 package ru.anafro.quark.server.databases.ql.entities.constructors.columns;
 
 import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 
 import java.util.List;
 
@@ -52,7 +54,12 @@ public class IdColumnConstructor extends ColumnConstructor {
                 "id",
                 Quark.types().get("int"),
                 "id",
-                List.of("require unique", "incrementing", "require positive", "require constant")
+                List.of(
+                        new ColumnModifierEntity("id", Quark.modifiers().get("require unique"), new InstructionEntityConstructorArguments()),
+                        new ColumnModifierEntity("id", Quark.modifiers().get("incrementing"), new InstructionEntityConstructorArguments()),
+                        new ColumnModifierEntity("id", Quark.modifiers().get("require positive"), new InstructionEntityConstructorArguments()),
+                        new ColumnModifierEntity("id", Quark.modifiers().get("require constant"), new InstructionEntityConstructorArguments())
+                )
         );
     }
 }

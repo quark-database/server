@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the sum constructor of Quark QL.
  * <br><br>
@@ -46,8 +49,12 @@ public class SumConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SumConstructor() {
-        super("sum",
-                InstructionEntityConstructorParameter.varargs("numbers to sum", "float")
+        super(
+                "sum",
+
+                returns("the sum", "float"),
+
+                varargs("numbers to sum", "float")
         );
     }
 

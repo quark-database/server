@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the to octal string constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class ToOctalStringConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ToOctalStringConstructor() {
-        super("to octal string", InstructionEntityConstructorParameter.required("integer to convert to octal string", "int"));
+        super(
+                "to octal string",
+
+                returns("the octal string", "str"),
+
+                required("integer to convert to octal string", "int")
+        );
     }
 
     /**

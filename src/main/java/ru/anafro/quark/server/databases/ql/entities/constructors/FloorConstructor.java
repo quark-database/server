@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the floor constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class FloorConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public FloorConstructor() {
-        super("floor", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "floor",
+
+                returns("the number rounded down", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

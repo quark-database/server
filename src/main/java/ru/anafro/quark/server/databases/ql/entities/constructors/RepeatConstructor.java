@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the repeat constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class RepeatConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RepeatConstructor() {
-        super("repeat", InstructionEntityConstructorParameter.required("string to repeat", "str"), InstructionEntityConstructorParameter.required("times to repeat", "str"));
+        super(
+                "repeat",
+
+                returns("the repeated string", "str"),
+
+                required("string to repeat", "str"),
+                required("times to repeat", "int")
+        );
     }
 
     /**

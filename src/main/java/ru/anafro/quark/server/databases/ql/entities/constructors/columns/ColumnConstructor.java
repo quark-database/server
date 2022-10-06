@@ -1,15 +1,15 @@
 package ru.anafro.quark.server.databases.ql.entities.constructors.columns;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.ColumnDescription;
-import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.ql.entities.*;
-import ru.anafro.quark.server.databases.ql.entities.constructors.exceptions.ColumnModifierNotFoundException;
 import ru.anafro.quark.server.databases.ql.types.EntityType;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
 
 /**
  * This is the base class for all column constructor of Quark QL.
@@ -39,7 +39,7 @@ public abstract class ColumnConstructor extends EntityConstructor {
      * The modifiers applying to the column by default.
      * @since Quark 1.1
      */
-    private final ArrayList<ColumnModifier> modifiers;
+    private final ArrayList<ColumnModifierEntity> modifiers;
 
     /**
      * The name of the column if the column name in the constructor is omitted.
@@ -53,19 +53,25 @@ public abstract class ColumnConstructor extends EntityConstructor {
      *
      * @param name the name of the constructor in Quark QL.
      * @param type the type of the column this constructor is going to represent.
-     * @param modifiersNames the default column modifiers this constructor will apply on a column.
+     * @param modifiers the default column modifiers this constructor will apply on a column.
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public ColumnConstructor(String name, EntityType type, String... modifiersNames) {
-        super(name, InstructionEntityConstructorParameter.required("column name", "str"));
+    public ColumnConstructor(String name, EntityType type, ColumnModifierEntity... modifiers) {
+        super(
+                name,
+
+                returns("the column description", "column"),
+
+                required("column name", "str")
+        );
         this.type = type;
         this.defaultColumnName = null;
         this.modifiers = Lists.empty();
 
-        for(var modifierName : modifiersNames) {
-            addModifier(modifierName);
+        for(var modifier : modifiers) {
+            addModifier(modifier);
         }
     }
 
@@ -76,20 +82,26 @@ public abstract class ColumnConstructor extends EntityConstructor {
      * @param name the name of the constructor in Quark QL.
      * @param type the type of the column this constructor is going to represent.
      * @param defaultColumnName the default column name if the column name is omitted.
-     * @param modifiersNames the default column modifiers this constructor will apply on a column.
+     * @param modifiers the default column modifiers this constructor will apply on a column.
      * @param parameters the parameters of the constructor.
      *
      * @since Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public ColumnConstructor(String name, EntityType type, String defaultColumnName, List<String> modifiersNames, InstructionEntityConstructorParameter... parameters) {
-        super(name, parameters);
+    public ColumnConstructor(String name, EntityType type, String defaultColumnName, List<ColumnModifierEntity> modifiers, InstructionEntityConstructorParameter... parameters) {
+        super(
+                name,
+
+                returns("the column description", "column"),
+
+                parameters
+        );
         this.type = type;
         this.defaultColumnName = defaultColumnName;
         this.modifiers = Lists.empty();
 
-        for(var modifierName : modifiersNames) {
-            addModifier(modifierName);
+        for(var modifier : modifiers) {
+            addModifier(modifier);
         }
     }
 
@@ -99,7 +111,7 @@ public abstract class ColumnConstructor extends EntityConstructor {
      * @since Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public ArrayList<ColumnModifier> getModifiers() {
+    public ArrayList<ColumnModifierEntity> getModifiers() {
         return modifiers;
     }
 
@@ -134,7 +146,7 @@ public abstract class ColumnConstructor extends EntityConstructor {
      */
     @Override
     protected ColumnEntity invoke(InstructionEntityConstructorArguments arguments) {
-        var columnName = getParameters().has("column name") ? arguments.<StringEntity>get("column name").getValue() : this.defaultColumnName;
+        var columnName = getParameters().has("column name") ? arguments.getString("column name") : this.defaultColumnName;
         return new ColumnEntity(new ColumnDescription(columnName, type, modifiers));
     }
 
@@ -142,16 +154,12 @@ public abstract class ColumnConstructor extends EntityConstructor {
      * Adds a new default modifier to this constructor.
      * Should be called only inside the constructor of {@link ColumnConstructor}.
      *
-     * @param modifierName the name of adding modifier.
+     * @param modifier the adding modifier.
      *
      * @since Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    private void addModifier(String modifierName) {
-        if(Quark.modifiers().missing(modifierName)) {
-            throw new ColumnModifierNotFoundException(modifierName);
-        }
-
-        modifiers.add(Quark.modifiers().get(modifierName));
+    private void addModifier(ColumnModifierEntity modifier) {
+        modifiers.add(modifier);
     }
 }

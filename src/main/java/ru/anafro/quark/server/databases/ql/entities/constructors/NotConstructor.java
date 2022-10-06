@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the not constructor of Quark QL.
  * <br><br>
@@ -46,8 +49,12 @@ public class NotConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public NotConstructor() {
-        super("not",
-                InstructionEntityConstructorParameter.required("boolean to invert", "boolean")
+        super(
+                "not",
+
+                returns("negated value", "boolean"),
+
+                required("boolean to invert", "boolean")
         );
     }
 

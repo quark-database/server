@@ -4,6 +4,10 @@ import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.entities.constructors.exceptions.BadInstructionEntityConstructorArgumentTypeException;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.optional;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the to boolean constructor of Quark QL.
  * <br><br>
@@ -50,7 +54,14 @@ public class ToBooleanConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ToBooleanConstructor() {
-        super("to boolean", InstructionEntityConstructorParameter.required("string to convert to boolean", "str"), InstructionEntityConstructorParameter.optional("default boolean value if conversation fails", "boolean"));
+        super(
+                "to boolean",
+
+                returns("the boolean", "boolean"),
+
+                required("string to convert to boolean", "str"),
+                optional("default boolean value if conversation fails", "boolean")
+        );
     }
 
     /**

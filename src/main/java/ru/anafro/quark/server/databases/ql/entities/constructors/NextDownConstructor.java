@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the next down constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class NextDownConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public NextDownConstructor() {
-        super("next down", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "next down",
+
+                returns("the next down", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

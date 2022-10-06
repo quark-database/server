@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the exp minus one constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class ExpMinusOneConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ExpMinusOneConstructor() {
-        super("exp minus one", InstructionEntityConstructorParameter.required("number", "float"));
+        super(
+                "exp minus one",
+
+                returns("exponent of the number minus one", "float"),
+
+                required("number", "float")
+        );
     }
 
     /**

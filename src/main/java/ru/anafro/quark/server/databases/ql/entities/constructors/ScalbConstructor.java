@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the scalb constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class ScalbConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ScalbConstructor() {
-        super("scalb", InstructionEntityConstructorParameter.required("number", "float"), InstructionEntityConstructorParameter.required("scale factor", "int"));
+        super(
+                "scalb",
+
+                returns("the scalf", "float"),
+
+                required("number", "float"),
+                required("scale factor", "int")
+        );
     }
 
     /**

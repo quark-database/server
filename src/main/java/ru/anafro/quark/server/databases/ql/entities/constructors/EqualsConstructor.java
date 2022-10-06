@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the equals constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,14 @@ public class EqualsConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EqualsConstructor() {
-        super("equals", InstructionEntityConstructorParameter.required("first object", "?"), InstructionEntityConstructorParameter.required("second object", "?"));
+        super(
+                "equals",
+
+                returns("are these objects equal", "boolean"),
+
+                required("first object", "?"),
+                required("second object", "?")
+        );
     }
 
     /**

@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the replace constructor of Quark QL.
  * <br><br>
@@ -48,9 +51,12 @@ public class ReplaceConstructor extends EntityConstructor {
     public ReplaceConstructor() {
         super(
                 "replace",
-                InstructionEntityConstructorParameter.required("string where to replace", "str"),
-                InstructionEntityConstructorParameter.required("string to be replaced", "str"),
-                InstructionEntityConstructorParameter.required("string to replace", "str")
+
+                returns("the string with replaced entries", "str"),
+
+                required("string where to replace", "str"),
+                required("string to be replaced", "str"),
+                required("string to replace", "str")
         );
     }
 

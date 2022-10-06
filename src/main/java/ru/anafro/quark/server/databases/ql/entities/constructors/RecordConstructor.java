@@ -2,6 +2,9 @@ package ru.anafro.quark.server.databases.ql.entities.constructors;
 
 import ru.anafro.quark.server.databases.ql.entities.*;
 
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
+
 /**
  * This class represents the record constructor of Quark QL.
  * <br><br>
@@ -46,7 +49,13 @@ public class RecordConstructor extends EntityConstructor {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RecordConstructor() {
-        super("record", InstructionEntityConstructorParameter.varargs("values", "any"));
+        super(
+                "record",
+
+                returns("the record", "record"),
+
+                varargs("values", "any")
+        );
     }
 
     /**
