@@ -55,7 +55,39 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
         return (T) getArgument(argumentName).getEntity();
     }
 
+    public String getString(String argumentName) {
+        return this.<StringEntity>get(argumentName).getValue();
+    }
+
+    public int getInt(String argumentName) {
+        return this.<IntegerEntity>get(argumentName).getValue();
+    }
+
+    public boolean getBoolean(String argumentName) {
+        return this.<BooleanEntity>get(argumentName).getValue();
+    }
+
+    public float getFloat(String argumentName) {
+        return this.<FloatEntity>get(argumentName).getValue();
+    }
+
+    public Object getObject(String argumentName) {
+        return this.get(argumentName).getValue();
+    }
+
+    public ArrayList<Entity> getList(String argumentName) {
+        return this.<ListEntity>get(argumentName).getValue();
+    }
+
     public List<Entity> toList() {
         return arguments.stream().map(InstructionEntityConstructorArgument::getEntity).toList();
+    }
+
+    public List<InstructionEntityConstructorArgument> getArgumentsAsList() {
+        return arguments;
+    }
+
+    public long getLong(String argumentName) {
+        return this.<LongEntity>get(argumentName).getValue();
     }
 }
