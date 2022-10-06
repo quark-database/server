@@ -32,7 +32,7 @@ package ru.anafro.quark.server.utils.strings;
  * @see    TextBuffer#TextBuffer() 
  * @see    TextBuffer#TextBuffer(String) 
  */
-public class TextBuffer {
+public class TextBuffer implements CharSequence {
     private final StringBuilder builder = new StringBuilder();
     private int tabLevel = 0;
 
@@ -327,6 +327,16 @@ public class TextBuffer {
         return builder;
     }
 
+    @Override
+    public int length() {
+        return builder.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return builder.charAt(index);
+    }
+
     /**
      * Returns {@code true} if builder's content is empty, otherwise {@code false}.
      * <br><br>
@@ -341,6 +351,11 @@ public class TextBuffer {
      */
     public boolean isEmpty() {
         return builder.isEmpty();
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return builder.subSequence(start, end);
     }
 
     /**
@@ -501,5 +516,21 @@ public class TextBuffer {
      */
     public void resetTabLevel() {
         setTabLevel(0);
+    }
+
+    /**
+     * Returns {@code true} if builder's content is not empty, otherwise {@code false}.
+     * <br><br>
+     *
+     * To know how to use text buffers, read 's documentation.
+     * <br><br>
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    TextBuffer#getContent()
+     * @see    TextBuffer#append(Object)
+     */
+    public boolean containsSomething() {
+        return !isEmpty();
     }
 }
