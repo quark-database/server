@@ -38,8 +38,6 @@ public class InstructionSyntaxException extends LexerException {
         formattedMessage.appendLine("-".repeat(instruction.length()));
         formattedMessage.appendLine("TIP: " + tipToFix);
 
-        System.out.println(formattedMessage.getContent());
-
         return formattedMessage.extractContent();
     }
 
