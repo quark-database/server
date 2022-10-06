@@ -20,7 +20,10 @@ public class ServerConfigurationLoader {
         Yaml yaml = new Yaml(new Constructor(ServerConfiguration.class));
 
         try(FileInputStream configurationFileInputStream = new FileInputStream(path)) {
-            return yaml.load(configurationFileInputStream);
+            var configuration = (ServerConfiguration) yaml.load(configurationFileInputStream);
+            configuration.setPath(path);
+
+            return configuration;
         } catch(IOException exception) {
             throw new ServerConfigurationCannotBeLoadedException(path, exception);
         } catch(YAMLException exception) {
