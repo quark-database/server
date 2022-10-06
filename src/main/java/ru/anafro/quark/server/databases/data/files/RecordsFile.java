@@ -4,8 +4,14 @@ import ru.anafro.quark.server.databases.data.*;
 import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileNotFoundException;
 import ru.anafro.quark.server.databases.data.exceptions.ReadingTheNextLineOfTableFileFailedException;
 import ru.anafro.quark.server.databases.data.exceptions.RecordsFileInsertionFailedException;
+import ru.anafro.quark.server.databases.data.exceptions.RecordsFileWritingFailedException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollection;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 public class RecordsFile implements Iterable<TableRecord> {
@@ -32,8 +38,15 @@ public class RecordsFile implements Iterable<TableRecord> {
         return table;
     }
 
-    public void change(TableRecordChanger changer, TableRecordSelector selector) {
-        // TODO
+    public void change(TableRecordChanger changer, ExpressionTableRecordSelector selector) {
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
+        records.forEach(record -> {
+            if(selector.shouldBeSelected(record)) {
+                changer.change(record);
+            }
+        });
+
+        save(records);
     }
 
     @Override
@@ -47,6 +60,20 @@ public class RecordsFile implements Iterable<TableRecord> {
             bufferedWriter.write(record.toTableLine());
         } catch(IOException exception) {
             throw new RecordsFileInsertionFailedException(this, record, exception);
+        }
+    }
+
+    public void save(RecordCollection collection) {
+        try {
+            var lines = new TextBuffer();
+
+            for(var records : collection) {
+                lines.appendLine(records.toTableLine());
+            }
+
+            Files.writeString(Path.of(file.getPath()), lines);
+        } catch (IOException exception) {
+            throw new RecordsFileWritingFailedException(this, exception);
         }
     }
 
@@ -76,8 +103,15 @@ public class RecordsFile implements Iterable<TableRecord> {
         private void readNextLineToBufferIfDidNot() {
             if(!readerNextLineResultStored) {
                 try {
-                    this.bufferedFileLine = tableFileBufferedReader.readLine();
-                    this.readerNextLineResultStored = true;
+                    do {
+                        bufferedFileLine = tableFileBufferedReader.readLine();
+                        this.readerNextLineResultStored = true;
+
+                        if(bufferedFileLine == null) {
+                            break;
+                        }
+
+                    } while (bufferedFileLine.isBlank());
                 } catch (IOException exception) {
                     throw new ReadingTheNextLineOfTableFileFailedException(recordsFile, exception);
                 }
