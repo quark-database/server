@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.databases.data.parser.RecordCharacterEscapeService;
+
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class StringEntity extends Entity {
@@ -17,7 +19,7 @@ public class StringEntity extends Entity {
 
     @Override
     public String toInstructionForm() {
-        return quoted(value);
+        return quoted(new RecordCharacterEscapeService().wrapEscapableCharacters(value));
     }
 
     @Override
