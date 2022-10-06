@@ -1,11 +1,10 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.data.TableRecord;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.ql.entities.RecordEntity;
 import ru.anafro.quark.server.networking.Server;
@@ -79,8 +78,16 @@ public class InsertIntoInstruction extends Instruction {
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
         var recordEntity = arguments.<RecordEntity>get("record");
-        var table = Table.byName(arguments.getString("table"));
+        var tableName = arguments.getString("table");
+
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
 
         table.insert(new TableRecord(table, new ListEntity("any", recordEntity.getValues())));
+
+        result.status(QueryExecutionStatus.OK, "A record has been successfully inserted.");
     }
 }

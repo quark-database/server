@@ -1,9 +1,7 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -72,6 +70,9 @@ public class RenameServerInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        Quark.server().getConfiguration().setName(arguments.getString("new"));
 
+        Quark.warning("Server name is changed. Stop server and run it again to see the effect.");
+        result.status(QueryExecutionStatus.OK, "Server name is changed.");
     }
 }

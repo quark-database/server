@@ -1,10 +1,18 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileException;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.files.Databases;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.files.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * This class represents the clone table scheme instruction of Quark QL.
@@ -75,6 +83,37 @@ public class CloneTableSchemeInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO
+        var prototypeName = arguments.getString("prototype");
+        var destinationName = new CompoundedTableName(arguments.getString("destination"));
+
+        if(!Table.exists(prototypeName)) {
+            throw new TableNotFoundException(new CompoundedTableName(prototypeName));
+        }
+
+        if(Table.exists(destinationName.toCompoundedString())) {
+            throw new QueryException("Table '%s' can't be a destination of cloning, it already exists. Delete it first.");
+        }
+
+        var prototype = Table.byName(prototypeName);
+        var prototypeFolder = new File(Path.of(prototype.getDatabase().getFolder().getPath(), prototype.getName()).toUri());
+
+        try {
+            FileUtils.copyDirectory(prototypeFolder.toPath().toString(), Path.of(Databases.get(destinationName.getDatabaseName()), destinationName.getTableName()).toString());
+        } catch (IOException exception) {
+            throw new DatabaseFileException("Cannot clone table '%s' to '%s', because of %s: %s.".formatted(
+                    prototypeName,
+                    destinationName.toCompoundedString(),
+                    exception.getClass().getSimpleName(),
+                    exception.getMessage()
+            ));
+        }
+
+        var destination = Table.byName(destinationName);
+        destination.clear();
+
+        result.status(QueryExecutionStatus.OK, "Table scheme of '%s' successfully cloned to '%s'.".formatted(
+                prototypeName,
+                destinationName.toCompoundedString()
+        ));
     }
 }

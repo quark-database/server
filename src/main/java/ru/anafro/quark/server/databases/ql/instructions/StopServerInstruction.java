@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
 import ru.anafro.quark.server.databases.ql.Instruction;
@@ -68,6 +69,7 @@ public class StopServerInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        server.stop();
+        Quark.warning("Quark Server has been stopped from outside by querying 'stop server'");
+        System.exit(0);
     }
 }

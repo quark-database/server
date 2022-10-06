@@ -1,9 +1,12 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.RecordIterationLimiter;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.SelectorEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -54,7 +57,9 @@ public class DeleteFromInstruction extends Instruction {
 
                 InstructionParameter.general("table"),
 
-                InstructionParameter.required("if", InstructionParameter.Types.CONDITION)
+                InstructionParameter.required("selector", "selector"),
+                InstructionParameter.optional("skip", "int"),
+                InstructionParameter.optional("limit", "int")
         );
     }
 
@@ -74,6 +79,23 @@ public class DeleteFromInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var tableName = arguments.getString("table");
+        var selector = arguments.<SelectorEntity>get("selector");
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
+
+        records.remove(selector.getSelector(), new RecordIterationLimiter(
+                arguments.has("skip") ? arguments.getInteger("skip") : 0,
+                arguments.has("limit") ? arguments.getInteger("limit") : Integer.MAX_VALUE
+        ));
+
+        table.getRecords().save(records);
+
+        result.status(QueryExecutionStatus.OK, "Deletion of some records in table '%s' has been performed.".formatted(tableName));
     }
 }

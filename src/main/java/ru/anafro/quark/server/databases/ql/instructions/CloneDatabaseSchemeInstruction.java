@@ -1,10 +1,14 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
+import ru.anafro.quark.server.databases.data.Database;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.files.Databases;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.files.FileUtils;
+
+import java.io.IOException;
 
 /**
  * This class represents the clone database scheme instruction of Quark QL.
@@ -75,6 +79,34 @@ public class CloneDatabaseSchemeInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO
+        try {
+            var prototypeName = arguments.getString("prototype");
+            var destinationName = arguments.getString("destination");
+
+            if (!Database.exists(prototypeName)) {
+                throw new QueryException("Prototype database '%s' does not exist.".formatted(prototypeName));
+            }
+
+            if (Database.exists(destinationName)) {
+                throw new QueryException("Destination database '%s' already exist. To clone to here, delete it first.");
+            }
+
+            var prototype = Database.byName(prototypeName);
+            FileUtils.copyDirectory(prototype.getFolder().getPath(), Databases.get(destinationName));
+
+            var destination = Database.byName(destinationName);
+
+            destination.allTables().forEach(Table::clear);
+
+            result.status(QueryExecutionStatus.OK, "Database '%s' successfully cloned to '%s', and all the tables was cleared in the destination.".formatted(
+                    prototypeName,
+                    destinationName
+            ));
+        } catch(IOException exception) {
+            throw new QueryException("Unable to clone database, because of %s: %s.".formatted(
+                    exception.getClass().getSimpleName(),
+                    exception.getMessage()
+            ));
+        }
     }
 }

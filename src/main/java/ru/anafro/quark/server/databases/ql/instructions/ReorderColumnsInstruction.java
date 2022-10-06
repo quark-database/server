@@ -1,10 +1,15 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.ColumnDescription;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 /**
  * This class represents the reorder columns in instruction of Quark QL.
@@ -54,7 +59,7 @@ public class ReorderColumnsInstruction extends Instruction {
 
                 InstructionParameter.general("table"),
 
-                InstructionParameter.required("order", "array")
+                InstructionParameter.required("order", "list of str")
         );
     }
 
@@ -74,6 +79,28 @@ public class ReorderColumnsInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var tableName = arguments.getString("table");
+        var order = arguments.getList("order").stream().map(entity -> ((StringEntity) entity).getString()).toList();
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(order.stream().anyMatch(columnName -> !table.getHeader().hasColumn(columnName)) || table.getHeader().getColumns().stream().anyMatch(columnDescription -> !order.contains(columnDescription.getName()))) {
+            throw new QueryException("A new order cannot be applied, because it has extra columns or missed some existing ones (your order: %s, existing order: %s).".formatted(
+                    Lists.join(order),
+                    Lists.joinPresentations(table.getHeader().getColumns(), ColumnDescription::getName)
+            ));
+        }
+
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+
+        for(var record : records) {
+            record.reorderFields(order);
+        }
+
+        result.status(QueryExecutionStatus.OK, "All the columns has been reordered successfully.");
     }
 }

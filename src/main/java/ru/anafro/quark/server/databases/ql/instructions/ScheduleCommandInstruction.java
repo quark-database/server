@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.IntegerEntity;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -54,7 +54,7 @@ public class ScheduleCommandInstruction extends Instruction {
 
                 InstructionParameter.general("command"),
 
-                InstructionParameter.required("every", InstructionParameter.Types.INT)
+                InstructionParameter.required("period", "int")
         );
     }
 
@@ -74,6 +74,16 @@ public class ScheduleCommandInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var command = arguments.getString("command");
+        var period = arguments.getInteger("period");
 
+        Quark.runInstruction("""
+                insert into "Quark.Scheduled Commands": record = @record(%s, %s);
+        """.formatted(
+                new StringEntity(command).toInstructionForm(),
+                new IntegerEntity(period).toInstructionForm()
+        ));
+
+        result.status(QueryExecutionStatus.OK, "A new command is scheduled. Rerun the server.");
     }
 }

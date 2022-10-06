@@ -4,6 +4,7 @@ import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
 
 /**
  * This class represents the reload server instruction of Quark QL.
@@ -26,6 +27,7 @@ import ru.anafro.quark.server.networking.Server;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
+@Deprecated(since = "Quark 1.1")
 public class ReloadServerInstruction extends Instruction {
 
     /**
@@ -68,6 +70,6 @@ public class ReloadServerInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-
+        throw new NotImplementedException();
     }
 }

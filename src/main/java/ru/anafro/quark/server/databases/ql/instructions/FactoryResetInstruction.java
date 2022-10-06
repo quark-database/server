@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
@@ -68,6 +69,6 @@ public class FactoryResetInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        //
+        Quark.factoryReset();
     }
 }

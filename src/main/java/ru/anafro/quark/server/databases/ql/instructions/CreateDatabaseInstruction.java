@@ -1,9 +1,8 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.Database;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -72,6 +71,14 @@ public class CreateDatabaseInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO
+        var databaseName = arguments.getString("name");
+
+        if(Database.exists(databaseName)) {
+            throw new QueryException("Database '%s' already exists.".formatted(databaseName));
+        }
+
+        Database.create(databaseName);
+
+        result.status(QueryExecutionStatus.OK, "Database '%s' successfully created.".formatted(databaseName));
     }
 }

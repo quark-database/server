@@ -1,10 +1,14 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.Database;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.files.Databases;
 import ru.anafro.quark.server.networking.Server;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class represents the rename database instruction of Quark QL.
@@ -72,6 +76,23 @@ public class RenameDatabaseInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        try {
+            var oldName = arguments.getString("old");
+            var newName = arguments.getString("new");
 
+            if(!Database.exists(oldName)) {
+                throw new QueryException("Database '%s' does not exist. You can't rename it.");
+            }
+
+            if(Database.exists(newName)) {
+                throw new QueryException("Database '%s' already exists. You can't rename database with this name.");
+            }
+
+            Files.move(Path.of(Databases.get(oldName)), Path.of(Databases.get(newName)));
+
+            result.status(QueryExecutionStatus.OK, "Database has been successfully renamed.");
+        } catch (IOException exception) {
+            throw new QueryException("Database cannot be renamed, because: " + exception);
+        }
     }
 }

@@ -1,17 +1,16 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
- * This class represents the grand token instruction of Quark QL.
+ * This class represents the ungrand token instruction of Quark QL.
  * <br><br>
  *
  * Note that you should not create instances of this class
- * by your own. Instead, use {@code Quark.instructions().get("grand token"); }
+ * by your own. Instead, use {@code Quark.instructions().get("ungrand token"); }
  * to get an instance of this class.
  *
  * <br><br>
@@ -19,7 +18,7 @@ import ru.anafro.quark.server.networking.Server;
  * You can check out the syntax of this instruction by running
  * <pre>
  * {@code
- * Quark.instructions().get("grand token").getSyntax();
+ * Quark.instructions().get("ungrand token").getSyntax();
  * }
  * </pre>
  *
@@ -27,30 +26,30 @@ import ru.anafro.quark.server.networking.Server;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-public class GrandTokenInstruction extends Instruction {
+public class RemovePermissionFromTokenInstruction extends Instruction {
 
     /**
-     * Creates a new instance of the grand token instruction
+     * Creates a new instance of the ungrand token instruction
      * representing object.
      * <br><br>
      *
      * Note that you should not create instances of this class
-     * by your own. Instead, use Quark.instructions().get("grand token");
+     * by your own. Instead, use Quark.instructions().get("ungrand token");
      * to get an instance of this class.
      * <br><br>
      *
      * You can check out the syntax of this instruction by running
      * <pre>
      * {@code
-     * Quark.instructions().get("grand token").getSyntax();
+     * Quark.instructions().get("ungrand token").getSyntax();
      * }
      * </pre>
      *
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public GrandTokenInstruction() {
-        super("grand token", "token.grand",
+    public RemovePermissionFromTokenInstruction() {
+        super("remove permission from token", "token.remove permission",
 
                 InstructionParameter.general("token"),
 
@@ -65,7 +64,7 @@ public class GrandTokenInstruction extends Instruction {
      * You can check out the syntax of this instruction by running
      * <pre>
      * {@code
-     * Quark.instructions().get("grand token").getSyntax();
+     * Quark.instructions().get("ungrand token").getSyntax();
      * }
      * </pre>
      *
@@ -74,6 +73,16 @@ public class GrandTokenInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var token = arguments.getString("token");
+        var permission = arguments.getString("permission");
 
+        Quark.runInstruction("""
+                insert into "Quark.Tokens": record = @record(%s, %s);
+        """.formatted(
+                new StringEntity(token).toInstructionForm(),
+                new StringEntity(permission).toInstructionForm()
+        ));
+
+        result.status(QueryExecutionStatus.OK, "A permission has been successfully removed from the token.");
     }
 }

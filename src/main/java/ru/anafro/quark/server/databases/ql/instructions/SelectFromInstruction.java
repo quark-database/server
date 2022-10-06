@@ -1,11 +1,14 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.ExpressionTableRecordSelector;
+import ru.anafro.quark.server.databases.data.RecordIterationLimiter;
 import ru.anafro.quark.server.databases.data.Table;
-import ru.anafro.quark.server.databases.data.TableRecordSelector;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
 import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
-import ru.anafro.quark.server.utils.exceptions.Exceptions;
 
 /**
  * This class represents the select from instruction of Quark QL.
@@ -53,7 +56,7 @@ public class SelectFromInstruction extends Instruction {
     public SelectFromInstruction() {
         super("select from", "data.select",
 
-                InstructionParameter.general("table name"),
+                InstructionParameter.general("table"),
 
                 InstructionParameter.optional("selector", "selector"),
                 InstructionParameter.optional("skip", "int"),
@@ -79,11 +82,16 @@ public class SelectFromInstruction extends Instruction {
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
         var skip = arguments.has("skip") ? arguments.getInteger("skip") : 0;
         var limit = arguments.has("limit") ? arguments.getInteger("limit") : Integer.MAX_VALUE;
-        var selector = arguments.has("selector") ? arguments.get("selector").valueAs(TableRecordSelector.class) : TableRecordSelector.SELECT_ALL;
+        var selector = arguments.has("selector") ? arguments.get("selector").valueAs(ExpressionTableRecordSelector.class) : ExpressionTableRecordSelector.SELECT_ALL;
+        var tableName = arguments.getString("table");
 
         try {
-            var table = Table.byName(arguments.getString("table name"));
-            var selectedRecords = table.select(selector, skip, limit);
+            if(!Table.exists(tableName)) {
+                throw new TableNotFoundException(new CompoundedTableName(tableName));
+            }
+
+            var table = Table.byName(arguments.getString("table"));
+            var selectedRecords = table.select(selector, new RecordIterationLimiter(skip, limit));
 
             result.header(table.createTableViewHeader());
 
@@ -91,9 +99,9 @@ public class SelectFromInstruction extends Instruction {
                 result.appendRow(selectedRecord.toTableViewRow());
             }
 
-            result.status(QueryExecutionStatus.OK, "%d rows successfully selected.".formatted(selectedRecords.size()));
+            result.status(QueryExecutionStatus.OK, "%d rows successfully selected.".formatted(selectedRecords.count()));
         } catch(QuarkException exception) {
-            result.status(QueryExecutionStatus.SERVER_ERROR, "?" + Exceptions.getTraceAsString(exception));
+            throw new QueryException("Cannot select from the table, because of: " + exception);
         }
     }
 }

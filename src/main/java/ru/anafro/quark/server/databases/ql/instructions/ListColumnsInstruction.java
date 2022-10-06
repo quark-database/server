@@ -1,9 +1,11 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.views.TableViewHeader;
+import ru.anafro.quark.server.databases.views.TableViewRow;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -72,6 +74,20 @@ public class ListColumnsInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var tableName = arguments.getString("table");
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        result.header(new TableViewHeader("column name"));
+
+        for(var columnDescription : table.getHeader().getColumns()) {
+            result.appendRow(new TableViewRow(columnDescription.getName()));
+        }
+
+        result.status(QueryExecutionStatus.OK, "All the columns has been successfully listed.");
     }
 }

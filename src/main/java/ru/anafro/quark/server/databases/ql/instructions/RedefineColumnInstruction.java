@@ -1,9 +1,11 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.ColumnEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -50,7 +52,7 @@ public class RedefineColumnInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RedefineColumnInstruction() {
-        super("redefine column", "column.redefine",
+        super("redefine column in", "column.redefine",
 
                 InstructionParameter.general("name"),
 
@@ -74,6 +76,21 @@ public class RedefineColumnInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var tableName = arguments.getString("name");
+        var columnDescription = arguments.<ColumnEntity>get("definition").getColumnDescription();
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(table.getHeader().missingColumn(columnDescription.getName())) {
+            throw new QueryException("Cannot redefine a column %s, because it does not exist. Did you make a typo? Or wanted to add a column instead?");
+        }
+
+        table.getHeader().redefineColumn(columnDescription);
+
+        result.status(QueryExecutionStatus.OK, "A column has been successfully redefined.");
     }
 }

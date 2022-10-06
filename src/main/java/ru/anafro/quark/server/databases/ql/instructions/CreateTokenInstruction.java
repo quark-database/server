@@ -1,9 +1,13 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.data.Database;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.TableRecord;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -54,7 +58,7 @@ public class CreateTokenInstruction extends Instruction {
 
                 InstructionParameter.general("token"),
 
-                InstructionParameter.required("permissions", "array"));
+                InstructionParameter.required("permissions", "list of str"));
     }
 
     /**
@@ -73,6 +77,28 @@ public class CreateTokenInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO: 16.09.2022  
+        if(!Database.exists("Quark")) {
+            Quark.logger().warning("Quark database is missing. Trying to create a new one...");
+            Database.create("Quark");
+        }
+
+        if(!Table.exists("Quark.Tokens")) {
+            Quark.logger().warning("Quark.Tokens table is missing. Trying to create a new one...");
+            Quark.runInstruction("""
+                    create table "Quark.Tokens": columns = @list(@str("token"), @str("permission"));
+            """);
+        }
+
+        var table = Table.byName("Quark.Tokens");
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+        var token = arguments.getString("token");
+        var permissions = arguments.getList("permissions");
+
+        for(var permission : permissions) {
+            records.add(new TableRecord(table, new ListEntity("any", new StringEntity(token), new StringEntity(permission.valueAs(String.class)))));
+        }
+
+        table.getRecords().save(records);
+        result.status(QueryExecutionStatus.OK, "A new token was registered!");
     }
 }

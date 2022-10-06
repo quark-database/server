@@ -50,7 +50,7 @@ public class EvalInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EvalInstruction() {
-        super("eval", "server.eval", InstructionParameter.general("object", "?"));
+        super("eval", "!unsafe.eval", InstructionParameter.general("object", "?"));
     }
 
     /**

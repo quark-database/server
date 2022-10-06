@@ -1,9 +1,10 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -27,7 +28,7 @@ import ru.anafro.quark.server.networking.Server;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-public class RenameColumnInstruction extends Instruction {
+public class RenameColumnInInstruction extends Instruction {
 
     /**
      * Creates a new instance of the rename column instruction
@@ -49,8 +50,8 @@ public class RenameColumnInstruction extends Instruction {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public RenameColumnInstruction() {
-        super("rename column",
+    public RenameColumnInInstruction() {
+        super("rename column in",
                 "column.rename",
 
                 InstructionParameter.general("name"),
@@ -76,6 +77,32 @@ public class RenameColumnInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var oldName = arguments.getString("old");
+        var newName = arguments.getString("new");
+        var tableName = arguments.getString("name");
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(table.getHeader().missingColumn(oldName)) {
+            throw new QuarkException("Cannot rename the column '%s' to '%s', because it does not exist.".formatted(
+                    oldName,
+                    newName
+            ));
+        }
+
+        if(table.getHeader().hasColumn(newName)) {
+            throw new QuarkException("Cannot rename the column '%s' to '%s', because column with such name already exists.".formatted(
+                    oldName,
+                    newName
+            ));
+        }
+
+        table.getHeader().save();
+
+        result.status(QueryExecutionStatus.OK, "A column has been successfully renamed.");
     }
 }

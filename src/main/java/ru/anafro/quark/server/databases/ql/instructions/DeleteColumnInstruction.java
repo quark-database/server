@@ -1,5 +1,10 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionParameter;
@@ -74,6 +79,30 @@ public class DeleteColumnInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO
+        var columnName = arguments.getString("name");
+        var tableName = arguments.getString("table");
+
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(table.getHeader().missingColumn(columnName)) {
+            throw new QueryException("Table '%s' does not contain column '%s'.".formatted(
+                    tableName,
+                    columnName
+            ));
+        }
+
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+
+        records.forEach(record -> record.removeField(columnName));
+
+        table.getHeader().getColumns().removeIf(columnDescription -> columnDescription.getName().equals(columnName));
+        table.getHeader().getModifiers().removeIf(columnModifierEntity -> columnModifierEntity.getColumnName().equals(columnName));
+
+        table.getHeader().save();
+        table.getRecords().save(records);
     }
 }

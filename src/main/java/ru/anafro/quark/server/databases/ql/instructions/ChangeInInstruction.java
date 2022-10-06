@@ -1,10 +1,15 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.ChangerEntity;
+import ru.anafro.quark.server.databases.ql.entities.SelectorEntity;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.ColumnNotFoundException;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.integers.Counter;
 
 /**
  * This class represents the change in instruction of Quark QL.
@@ -55,8 +60,8 @@ public class ChangeInInstruction extends Instruction {
 
                 InstructionParameter.general("table"),
 
-                InstructionParameter.required("if", InstructionParameter.Types.CONDITION),
-                InstructionParameter.required("perform", InstructionParameter.Types.CHANGER)
+                InstructionParameter.required("selector", "selector"),
+                InstructionParameter.required("changer", "changer")
         );
     }
 
@@ -76,6 +81,31 @@ public class ChangeInInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var selector = arguments.<SelectorEntity>get("selector").getSelector();
+        var changer = arguments.<ChangerEntity>get("changer").getChanger();
+        var tableName = arguments.getString("table");
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(table.getHeader().missingColumn(changer.column())) {
+            throw new ColumnNotFoundException(table, changer.column());
+        }
+
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+        var selectedRecords = new Counter();
+
+        for(var record : records) {
+            if(selector.shouldBeSelected(record)) {
+                changer.change(record);
+                selectedRecords.count();
+            }
+        }
+
+        table.getRecords().save(records);
+        result.status(QueryExecutionStatus.OK, "%d records has been changed".formatted(selectedRecords.getCount()));
     }
 }

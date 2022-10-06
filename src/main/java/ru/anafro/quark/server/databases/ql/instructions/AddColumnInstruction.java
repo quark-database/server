@@ -1,9 +1,15 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.RecordField;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.ColumnEntity;
+import ru.anafro.quark.server.databases.ql.entities.GeneratorEntity;
+import ru.anafro.quark.server.databases.ql.exceptions.GeneratedValueMismatchesColumnTypeException;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -52,10 +58,10 @@ public class AddColumnInstruction extends Instruction {
     public AddColumnInstruction() {
         super("add column",
             "column.add",
-            InstructionParameter.general("name"),
+            InstructionParameter.general("definition", "column"),
 
             InstructionParameter.required("table"),
-            InstructionParameter.required("definition", InstructionParameter.Types.COLUMN)
+            InstructionParameter.optional("generator", "generator")
         );
     }
 
@@ -75,6 +81,53 @@ public class AddColumnInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO
+        var tableName = new CompoundedTableName(arguments.getString("table"));
+
+        if(!Table.exists(tableName.toCompoundedString())) {
+            throw new TableNotFoundException(tableName);
+        }
+
+        var table = Table.byName(tableName);
+        var columnDescription = arguments.<ColumnEntity>get("definition").getColumnDescription();
+
+        if(table.getHeader().hasColumn(columnDescription.getName())) {
+            result.status(QueryExecutionStatus.SERVER_ERROR, "A column with name '%s' already exists. Did you suddenly run this instruction twice? Or tried to add a column to a wrong table? If not, you can choose different name.");
+            return;
+        }
+
+        table.getHeader().addColumn(columnDescription);
+        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
+
+        if(columnDescription.getModifiers().stream().anyMatch(modifierEntity -> modifierEntity.getModifier().areValuesShouldBeGenerated())) {
+            var generatingModifier = columnDescription.getModifiers().stream().filter(modifierEntity -> modifierEntity.getModifier().areValuesShouldBeGenerated()).findFirst().get();
+            for(var record : records) {
+                var addingField = new RecordField(columnDescription.getName(), null);
+                generatingModifier.getModifier().beforeRecordInsertion(table, addingField, generatingModifier.getModifierArguments());
+                record.addField(addingField);
+            }
+        } else if(arguments.has("generator")) {
+            var generator = arguments.<GeneratorEntity>get("generator").getGenerator();
+
+            for(var record : records) {
+                var generatedFieldValue = generator.apply(record);
+
+                if(columnDescription.getType().castableFrom(generatedFieldValue.getType())) {
+                    generatedFieldValue = columnDescription.getType().cast(generatedFieldValue);
+                }
+
+                if(generatedFieldValue.mismatchesType(columnDescription.getType())) {
+                    throw new GeneratedValueMismatchesColumnTypeException(generator, columnDescription, generatedFieldValue);
+                }
+
+                record.addField(new RecordField(columnDescription.getName(), generatedFieldValue));
+            }
+        } else {
+            throw new QueryException("Add column needs a generator or a generating modifier.");
+        }
+
+        table.getRecords().save(records);
+        table.getHeader().save();
+
+        result.status(QueryExecutionStatus.OK, "A column was added successfully.");
     }
 }

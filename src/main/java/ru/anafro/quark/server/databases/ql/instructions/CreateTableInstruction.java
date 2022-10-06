@@ -1,10 +1,20 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.databases.data.ColumnDescription;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.TableRecord;
+import ru.anafro.quark.server.databases.data.structures.LinearRecordCollection;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
 import ru.anafro.quark.server.databases.ql.InstructionParameter;
 import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.ql.entities.*;
+import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.ArrayList;
 
 /**
  * This class represents the create table instruction of Quark QL.
@@ -53,7 +63,9 @@ public class CreateTableInstruction extends Instruction {
         super("create table", "table.create",
                 InstructionParameter.general("name"),
 
-                InstructionParameter.required("columns", "array")
+                InstructionParameter.required("columns", "list of column"),
+                InstructionParameter.optional("modifiers", "list of modifier"),
+                InstructionParameter.optional("records", "list of record")
         );
     }
 
@@ -73,6 +85,29 @@ public class CreateTableInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // TODO: 16.09.2022
+        var tableName = arguments.getString("name");
+        var columns = arguments.getList("columns");
+        var modifiers = arguments.has("modifiers") ? arguments.getList("modifiers") : Lists.<Entity>empty();
+        var records = arguments.has("records") ? arguments.getList("records") : Lists.<Entity>empty();
+
+        if(Table.exists(tableName)) {
+            throw new QuarkException("Table '%s' already exists.".formatted(tableName));
+        }
+
+        var table = Table.create(
+                new CompoundedTableName(tableName),
+                Lists.empty(),
+                (ArrayList<ColumnModifierEntity>) (ArrayList<?>) modifiers
+        );
+
+        for(var column : columns) {
+            table.getHeader().addColumn(column.valueAs(ColumnDescription.class));
+        }
+
+        var recordCollection = new LinearRecordCollection();
+        records.forEach(record -> recordCollection.add(new TableRecord(table, new ListEntity("any", ((RecordEntity) record).getValues()))));
+
+        table.getHeader().save();
+        table.getRecords().save(recordCollection);
     }
 }

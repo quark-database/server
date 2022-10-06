@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.exceptions.QuerySyntaxException;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
@@ -56,7 +57,7 @@ public class ChangePortToInstruction extends Instruction {
     public ChangePortToInstruction() {
         super("change port to", "server.port.change",
 
-                InstructionParameter.general("port", InstructionParameter.Types.INT)
+                InstructionParameter.general("port", "int")
         );
     }
 
@@ -87,6 +88,9 @@ public class ChangePortToInstruction extends Instruction {
         }
 
         server.getConfiguration().setPort(newPort);
-        server.reload();
+        server.getConfiguration().save();
+
+        Quark.warning("The port has been changed. To start the server on the new port, please, reload the server manually (stop it by typing 'exit' and run it again).");
+//        server.reload();
     }
 }

@@ -1,9 +1,8 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.Database;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -72,6 +71,14 @@ public class DeleteDatabaseInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var databaseName = arguments.getString("name");
 
+        if(!Database.exists(databaseName)) {
+            throw new QueryException("Database '%s' does not exist.".formatted(databaseName));
+        }
+
+        Database.delete(databaseName);
+
+        result.status(QueryExecutionStatus.OK, "Database '%s' successfully deleted.".formatted(databaseName));
     }
 }

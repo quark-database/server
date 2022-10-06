@@ -1,10 +1,14 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.data.ColumnDescription;
+import ru.anafro.quark.server.databases.data.CompoundedTableName;
+import ru.anafro.quark.server.databases.data.Table;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.databases.exceptions.QueryException;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.networking.Server;
+
+import java.util.Collections;
 
 /**
  * This class represents the swap columns in instruction of Quark QL.
@@ -75,6 +79,30 @@ public class SwapColumnsInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
+        var tableName = arguments.getString("table");
+        var firstColumnName = arguments.getString("first");
+        var secondColumnName = arguments.getString("second");
 
+        if(!Table.exists(tableName)) {
+            throw new TableNotFoundException(new CompoundedTableName(tableName));
+        }
+
+        var table = Table.byName(tableName);
+
+        if(table.getHeader().missingColumn(firstColumnName)) {
+            throw new QueryException("There's no column named %s.".formatted(firstColumnName));
+        }
+
+        if(table.getHeader().missingColumn(secondColumnName)) {
+            throw new QueryException("There's no column named %s.".formatted(secondColumnName));
+        }
+
+        var newOrder = table.getHeader().getColumns().stream().map(ColumnDescription::getName).toList();
+        int firstIndex = newOrder.indexOf(firstColumnName);
+        int secondIndex = newOrder.indexOf(secondColumnName);
+
+        Collections.swap(newOrder, firstIndex, secondIndex);
+
+        result.status(QueryExecutionStatus.OK, "Successfully swapped two columns in the table.");
     }
 }
