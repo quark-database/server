@@ -5,6 +5,7 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Lists class contains uncategorized utility methods for
@@ -77,5 +78,9 @@ public final class Lists {
 
     public static <T> ArrayList<T> empty() {
         return new ArrayList<>();
+    }
+
+    public static <T> String joinPresentations(List<? extends T> collection, Function<T, String> presentation) {
+        return join(collection.stream().map(presentation).toList());
     }
 }
