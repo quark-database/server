@@ -55,7 +55,6 @@ public record Token(String token) {
                 if(result.tableView().header().columnNames()[index].equals("permission")) {
                     var existingPermission = tokenRecord.cells()[index];
                     var tokenPermission = new TokenPermission(permission);
-                    Quark.logger().error(tokenPermission.getPermission() + ", " + existingPermission + ", " + tokenPermission.includesPermission(permission));
                     if (tokenPermission.includesPermission(existingPermission)) {
                         return true;
                     }
