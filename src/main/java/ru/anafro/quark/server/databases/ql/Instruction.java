@@ -10,7 +10,7 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 /**
  * Instruction is a command to Quark Server to do an action.
  * Inherit from this class to create a new instruction and register it
- * via {@code Quark.instructions().add(new YourInstruction();}
+ * via {@code Quark.instructions().add(new YourInstruction());}
  *
  * @since   Quark 1.1
  * @version Quark 1.1
