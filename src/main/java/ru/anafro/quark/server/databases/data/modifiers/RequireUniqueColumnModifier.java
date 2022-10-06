@@ -15,18 +15,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-public class UniqueColumnModifier extends ColumnModifier {
-    public UniqueColumnModifier() {
+public class RequireUniqueColumnModifier extends ColumnModifier {
+    public RequireUniqueColumnModifier() {
         super(ColumnModifierApplicationPriority.LOWEST, "require unique", false);
     }
 
     @Override
     public boolean isFieldSuitable(Table table, RecordField field, InstructionEntityConstructorArguments arguments) {
-        var valueAlreadyExists = new AtomicBoolean(false);
+        var valueAlreadyExists = new AtomicBoolean(true);
 
         table.getRecords().forEach(record -> {
             if(record.getField(field.getColumnName()).getValue().getValue().equals(field.getValue())) {
-                valueAlreadyExists.set(true);
+                valueAlreadyExists.set(false);
             }
         });
 
