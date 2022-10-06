@@ -7,6 +7,6 @@ import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 
 public class RecordFieldMissingException extends DatabaseException {
     public RecordFieldMissingException(TableRecord record, ColumnDescription column, Table table) {
-        super("A record %s cannot be used in the table %s, because it's missing a field %s, but the table has a column with this name.".formatted(record.toTableLine(), table.getName(), column));
+        super("A record %s cannot be used in the table %s, because it's missing a field %s with type %s, but the table has a column with this name.".formatted(record.toTableLine(), table.getName(), column.getName(), column.getType().getName()));
     }
 }
