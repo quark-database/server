@@ -22,6 +22,7 @@ public class TokenPermission {
      * @since Quark 1.1
      */
     public static final String ALL_PERMISSIONS = "*";
+    public static final String ALLOWED_FOR_ALL_TOKENS = "any";
 
     /**
      * Creates a new token permission object.
@@ -46,6 +47,10 @@ public class TokenPermission {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public boolean includesPermission(String permission) {
+        if(permission.equals(ALLOWED_FOR_ALL_TOKENS)) {
+            return true;
+        }
+
         var thisPermissionEntities = this.permission.split("\\.");
         var thatPermissionEntities = permission.split("\\.");
         for(int index = 0; index < Math.min(thatPermissionEntities.length, thisPermissionEntities.length); index++) {
