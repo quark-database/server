@@ -33,7 +33,7 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
             lexer.pushCurrentCharacterToBuffer();
         } else if(currentCharacter == '(') {
             logger.debug("Reading the constructor name is completed. Reading it's arguments");
-            lexer.pushToken(new ConstructorNameInstructionToken(lexer.extractBufferContent()));
+            lexer.pushToken(new ConstructorNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.pushToken(new OpeningParenthesisInstructionToken());
             lexer.switchState(new ReadingNextConstructorArgumentInstructionLexerState(lexer, getPreviousState()));
         }
