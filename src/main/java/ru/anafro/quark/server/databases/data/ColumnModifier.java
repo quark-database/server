@@ -25,7 +25,7 @@ public abstract class ColumnModifier {
         this.applicationPriority = applicationPriority;
         this.name = name;
         this.valuesShouldBeGenerated = valuesShouldBeGenerated;
-        this.allowedTypes = new ArrayList<>(Arrays.stream(allowedTypes).map(Quark.types()::get).toList());
+        this.allowedTypes = allowedTypes.length == 0 ? ANY_TYPE_ALLOWED : new ArrayList<>(Arrays.stream(allowedTypes).map(Quark.types()::get).toList());
     }
 
     public ColumnModifier(ColumnModifierApplicationPriority applicationPriority, String name, boolean valuesShouldBeGenerated) {
