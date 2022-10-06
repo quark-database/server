@@ -40,8 +40,9 @@ public class IncrementingColumnModifier extends ColumnModifier {
     @Override
     public void beforeRecordInsertion(Table table, RecordField field, InstructionEntityConstructorArguments arguments) {
         var lastValue = table.getVariableFolder().getVariable(INCREMENTING_VARIABLE_NAME_FORMAT.formatted(field.getColumnName()));
-        field.setValue(lastValue.get());
-        lastValue.<IntegerEntity>change(variableValueEntity -> new IntegerEntity(variableValueEntity.getValue() + 1));
+        field.setValue(lastValue.get(new IntegerEntity(1)));
+
+        lastValue.<IntegerEntity>change(variableValueEntity -> new IntegerEntity(variableValueEntity.getValue() + 1), null /* 100% it's present. */);
     }
 
     @Override
