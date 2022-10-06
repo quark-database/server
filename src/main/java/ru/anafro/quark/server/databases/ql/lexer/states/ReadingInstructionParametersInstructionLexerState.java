@@ -14,12 +14,17 @@ public class ReadingInstructionParametersInstructionLexerState extends Instructi
 
     @Override
     public void handleCharacter(char currentCharacter) {
+        stopSkippingLexerIgnoredCharacters();
+
         if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
             logger.debug("Appending this character to the parameter name");
             lexer.pushCurrentCharacterToBuffer();
+        } else if(lexer.currentCharacterShouldBeIgnored() && !lexer.getBufferContent().endsWith(" ")) {
+            logger.debug("Appending one space to the parameter name. Next spaces will be ignored");
+            lexer.getBuffer().append(' ');
         } else if(currentCharacter == '=') {
             logger.debug("Found an equals sign. Let the separate state deal with it. And completing the parameter name reading");
-            lexer.pushToken(new ParameterNameInstructionToken(lexer.extractBufferContent()));
+            lexer.pushToken(new ParameterNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new ReadingEqualsSignInstructionLexerState(lexer));
         } else if(currentCharacter == ';') {
