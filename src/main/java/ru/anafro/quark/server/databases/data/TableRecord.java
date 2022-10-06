@@ -2,12 +2,15 @@ package ru.anafro.quark.server.databases.data;
 
 import ru.anafro.quark.server.databases.data.exceptions.RecordFieldCountMismatchesTableHeaderException;
 import ru.anafro.quark.server.databases.data.exceptions.RecordTypeMismatchesTableHeaderException;
+import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.views.TableViewRow;
 import ru.anafro.quark.server.utils.containers.Lists;
+import ru.anafro.quark.server.utils.integers.Counter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class TableRecord implements Iterable<RecordField> {
@@ -19,22 +22,39 @@ public class TableRecord implements Iterable<RecordField> {
         this.fields = Lists.empty();
 
         // TODO: replace with a table.requireValidity();
-        if(table.getHeader().getColumns().size() != entities.size()) {
+        if(table.getHeader().getColumns().size() != entities.size() + table.getHeader().getModifiers().stream().map(ColumnModifierEntity::getModifier).filter(ColumnModifier::areValuesShouldBeGenerated).count()) {
             throw new RecordFieldCountMismatchesTableHeaderException(table, entities.size());
         }
         // TODO: --------------------------------------
 
         var columns = table.getHeader().getColumns();
+        var fieldIndex = new Counter();
 
-        for(int index = 0; index < columns.size(); index++) {
-            var column = columns.get(index);
-            var value = entities.valueAt(index);
+        for(var columnIndex = new Counter(); columnIndex.getCount() < columns.size(); columnIndex.count()) {
+            var column = columns.get(columnIndex.getCount());
 
-            if(!value.hasType(column.getType())) {
-                throw new RecordTypeMismatchesTableHeaderException(table, column, value);
+            if(table.getHeader().getModifiers().stream().anyMatch(e -> e.getModifier().areValuesShouldBeGenerated() && e.getColumnName().equals(column.getName()))) {
+                var generatingModifier = table.getHeader().getModifiers().stream().filter(modifierEntity -> modifierEntity.getModifier().areValuesShouldBeGenerated() && modifierEntity.getColumnName().equals(column.getName())).findFirst().get();
+                var field = new RecordField(columns.get(columnIndex.getCount()).getName(), null);
+
+                generatingModifier.getModifier().beforeRecordInsertion(table, field, generatingModifier.getModifierArguments());
+
+                fields.add(field);
+            } else {
+                var value = entities.valueAt(fieldIndex.getCount());
+
+                if(column.getType().castableFrom(value.getType())) {
+                    value = column.getType().cast(value);
+                }
+
+                if(value.mismatchesType(column.getType())) {
+                    throw new RecordTypeMismatchesTableHeaderException(table, column, value);
+                }
+
+                fields.add(new RecordField(column.getName(), value));
+
+                fieldIndex.count();
             }
-
-            fields.add(new RecordField(column.getName(), value));
         }
     }
 
@@ -65,6 +85,10 @@ public class TableRecord implements Iterable<RecordField> {
         return fields;
     }
 
+    public void addField(RecordField field) {
+        fields.add(field);
+    }
+
     @Override
     public Iterator<RecordField> iterator() {
         return fields.iterator();
@@ -88,5 +112,20 @@ public class TableRecord implements Iterable<RecordField> {
 
     public TableViewRow toTableViewRow() {
         return new TableViewRow(fields.stream().map(recordField -> recordField.getValue().getValue().toString()).toArray(String[]::new));
+    }
+
+    public void removeField(String columnName) {
+        fields.removeIf(field -> field.getColumnName().equals(columnName));
+    }
+
+    public void reorderFields(List<String> newOrder) {
+        var reorderedFields = new ArrayList<RecordField>();
+
+        for(var nextFieldName : newOrder) {
+            reorderedFields.add(fields.stream().filter(field -> field.getColumnName().equals(nextFieldName)).findFirst().get());
+        }
+
+        fields.clear();
+        fields.addAll(reorderedFields);
     }
 }
