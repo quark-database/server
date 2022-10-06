@@ -6,7 +6,7 @@ import ru.anafro.quark.server.utils.strings.Converter;
 
 public class IntegerType extends EntityType {
     public IntegerType() {
-        super("int", "float");
+        super("int", "float", "long");
     }
 
     @Override
@@ -23,6 +23,8 @@ public class IntegerType extends EntityType {
     protected Entity castOrNull(Entity entity) {
         return switch(entity.getTypeName()) {
             case "float" -> new IntegerEntity(entity.valueAs(Float.class).intValue());
+            case "long" -> new IntegerEntity(entity.valueAs(Long.class).intValue());
+
             default -> null;
         };
     }
