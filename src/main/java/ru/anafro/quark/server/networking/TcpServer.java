@@ -12,9 +12,12 @@ import ru.anafro.quark.server.networking.exceptions.ServerCannotBeRunTwiceExcept
 import ru.anafro.quark.server.networking.exceptions.ServerCrashedException;
 import ru.anafro.quark.server.utils.containers.Lists;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +29,7 @@ public abstract class TcpServer implements AsyncService {
     private static final float DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS = 7;
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = Lists.empty();
+    protected ServerSocket serverSocket;
     protected final Logger logger = new Logger(this.getClass());
 
     /**
@@ -64,13 +68,15 @@ public abstract class TcpServer implements AsyncService {
         }
 
         while(Ports.isUnavailable(port)) {
-            logger.error("Port %d is unavailable. Waiting %f seconds before trying to start server again...".formatted(port, DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS));
+            logger.error("Port %d is unavailable. Waiting %.1f seconds before trying to start server again...".formatted(port, DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS));
             Threads.freezeFor(DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS);
         }
 
         logger.info("Server is started!");
 
-        try(ServerSocket serverSocket = new ServerSocket(port)) {
+        try {
+            serverSocket = new ServerSocket(port);
+
             onStartingCompleted();
 
             while(isStarted()) {
@@ -117,6 +123,8 @@ public abstract class TcpServer implements AsyncService {
                     logger.debug("Woopsie, exception! Sent an error message");
                 }
             }
+        } catch(SocketException exception) {
+            logger.info("Server has stopped.");
         } catch(IOException exception) {
             throw new ServerCrashedException(exception);
         }
@@ -126,8 +134,12 @@ public abstract class TcpServer implements AsyncService {
      * The stop() function sets the stopped variable to false.
      */
     public void stop() {
-        logger.debug("Server is stopping...");
-        stopped = false; // TODO: Change so it will stop with no additional request acceptance.
+        try {
+            logger.debug("Server is stopping...");
+            serverSocket.close();
+        } catch (IOException ignored) {
+            // Ignored.
+        }
     }
 
     /**
@@ -158,7 +170,26 @@ public abstract class TcpServer implements AsyncService {
     /**
      * It reloads the server.
      */
+    @Deprecated(since = "Quark 1.1")
     public void reload() {
-        // TODO
+        try {
+            String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            File currentJar = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            if(!currentJar.getName().endsWith(".jar")) {
+                return;
+            }
+
+            ArrayList<String> command = new ArrayList<>();
+            command.add(javaBin);
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            System.exit(0);
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
