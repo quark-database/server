@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Function;
 
 public class VariableFile {
@@ -23,11 +24,16 @@ public class VariableFile {
     public VariableFile(Table table, String name) {
         this.table = table;
         this.name = name;
-        this.file = new File(table.getDatabase().getFolder().getAbsolutePath() + File.separator + table.getName() + File.separator + VariableFolder.NAME + name + EXTENSION);
+        this.file = new File(Path.of(table.getDatabase().getFolder().getAbsolutePath(), table.getName(), VariableFolder.NAME, name + EXTENSION).toUri());
     }
 
-    public <T extends Entity> T get() {
+    public <T extends Entity> T get(Entity defaultValue) {
         try {
+            if(!Files.exists(file.toPath())) {
+                Files.createFile(file.toPath());
+                set(defaultValue);
+            }
+
             var lines = Files.readAllLines(file.toPath());
 
             if(lines.size() != 2) {
