@@ -7,8 +7,12 @@ import ru.anafro.quark.server.databases.data.exceptions.*;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.databases.ql.entities.ColumnEntity;
 import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
+import ru.anafro.quark.server.utils.containers.Lists;
+import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HeaderFile {
+public class HeaderFile implements Savable {
     public static final String NAME = "Table's Header.qheader";
     private final Table ownerTable;
     private final List<ColumnDescription> columns;
@@ -30,6 +34,7 @@ public class HeaderFile {
             this.ownerTable = table;
 
             var lines = Files.readAllLines(Path.of(filename));
+
             this.columns = ((ArrayList<ColumnEntity>) ConstructorEvaluator.eval(lines.get(0)).getValue()).stream().map(ColumnEntity::getValue).collect(Collectors.toList());
             this.modifiers = ((ArrayList<ColumnModifierEntity>) ConstructorEvaluator.eval(lines.get(1)).getValue());
 
@@ -67,6 +72,11 @@ public class HeaderFile {
 
     public boolean missingColumn(String columnName) {
         return !hasColumn(columnName);
+    }
+
+    public void redefineColumn(ColumnDescription newColumnDescription) {
+        columns.removeIf(columnDescription -> columnDescription.getName().equals(newColumnDescription.getName()));
+        columns.add(newColumnDescription);
     }
 
     public void requireValidity(TableRecord record) {
@@ -109,11 +119,35 @@ public class HeaderFile {
         return columns.get(index);
     }
 
+    @Deprecated(since = "Quark 1.1", forRemoval = true)
     public void runBeforeRecordInsertionActionOfModifiers(TableRecord record) {
         modifiers.sort(Comparator.comparing(modifierEntity -> modifierEntity.getModifier().getApplicationPriority()));
 
         for(var modifier : modifiers) {
             modifier.getModifier().beforeRecordInsertion(ownerTable, record.getField(modifier.getColumnName()), modifier.getModifierArguments());
         }
+    }
+
+    public void addColumn(ColumnDescription columnDescription) {
+        modifiers.addAll(columnDescription.getModifiers());
+        columns.add(new ColumnDescription(columnDescription.getName(), columnDescription.getType(), Lists.empty()));
+    }
+
+    @Override
+    public void save() {
+        try {
+            var lines = new TextBuffer();
+
+            lines.appendLine(ListEntity.of(columns.stream().map(ColumnEntity::new).toList()).toInstructionForm());
+            lines.appendLine(ListEntity.of(modifiers).toInstructionForm());
+
+            Files.writeString(Path.of(getFilename()), lines);
+        } catch (IOException exception) {
+            throw new HeaderFileWritingFailedException(this, exception);
+        }
+    }
+
+    public Table getOwnerTable() {
+        return ownerTable;
     }
 }
