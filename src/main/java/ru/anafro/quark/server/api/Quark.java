@@ -61,7 +61,7 @@ public final class Quark {
      * Create a new logger object instead.
      * @since Quark 1.1
      */
-    private static final Logger logger = new Logger(Quark.class);
+    private static final Logger logger = new Logger(Quark.class, LogLevel.DEBUG);
 
     /**
      * The Quark plugin manager.
