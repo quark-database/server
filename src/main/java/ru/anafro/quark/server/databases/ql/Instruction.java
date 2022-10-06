@@ -115,6 +115,8 @@ public abstract class Instruction {
         } catch(QuarkException exception) {
             return new InstructionResult(QueryExecutionStatus.SYNTAX_ERROR, exception.getMessage(), 0, TableView.empty());
         } catch(Exception exception) {
+            Quark.logger().error("Exception happened when running an instruction. Check out the stack trace: ");
+            Quark.logger().error(Exceptions.getTraceAsString(exception));
             return new InstructionResult(QueryExecutionStatus.SERVER_ERROR, exception.getMessage(), 0, TableView.empty());
         }
     }
