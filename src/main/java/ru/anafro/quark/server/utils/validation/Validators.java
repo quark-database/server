@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.utils.validation;
 
+import ru.anafro.quark.server.utils.validation.validators.InLongValidator;
 import ru.anafro.quark.server.utils.validation.validators.IsFloatValidator;
 import ru.anafro.quark.server.utils.validation.validators.IsIntegerValidator;
 
@@ -40,6 +41,7 @@ public interface Validators {
     Validator<String> ALPHANUMERIC_WITH_SPACES = new RegexValidator("^[a-zA-Z0-9 ]*$");
     Validator<String> FLOAT_STRING = new IsFloatValidator();
     Validator<String> INTEGER_STRING = new IsIntegerValidator();
+    Validator<String> LONG_VALUE = new InLongValidator();
     Validator<Character> IS_LATIN = character -> (character >= 'A' && character <= 'Z') || (character >= 'a' && character <= 'z');
 
     /**
