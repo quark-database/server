@@ -38,14 +38,10 @@ public class Server extends TcpServer {
 
     @Override
     public Response onRequest(Request request) {
-        Quark.logger().error("Request query: %s".formatted(request.getString("query")));
-
         parser.parse(lexer.lex(request.getString("query")));
         var instruction = parser.getInstruction();
         var arguments = parser.getArguments();
         var token = new Token(request.getString("token"));
-
-//        System.out.println("Before: " + arguments.asList().stream().map(instructionArgument -> instructionArgument.name() + ": " + instructionArgument.value().toInstructionForm()).collect(Collectors.joining(", ")));
 
         if(token.hasPermission(instruction.getPermission())) {
             InstructionResult result = instruction.execute(arguments);
