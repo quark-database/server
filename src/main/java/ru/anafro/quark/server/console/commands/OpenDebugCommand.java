@@ -19,10 +19,16 @@ public class OpenDebugCommand extends Command {
     @Override
     public void action(CommandArguments arguments) {
         if(Quark.debugFrames().missing(arguments.get("for"))) {
-            error("No such debug frame. Did you mean %s?".formatted(Quark.debugFrames().suggest(arguments.get("for"))));
+            error("No such debug frame. Did you mean %s?".formatted(Quark.debugFrames().suggest(arguments.get("for")).getName()));
         }
 
-        logger.info("Opening the %s debug dialog...".formatted(arguments.get("for")));
-        Quark.debugFrames().get(arguments.get("for")).open();
+        var frame = Quark.debugFrames().get(arguments.get("for"));
+
+        if(frame.isEnabled()) {
+            logger.info("Debug dialog %s is already opened. Check out your taskbar.".formatted(frame.getName()));
+        } else {
+            logger.info("Opening the %s debug dialog...".formatted(frame.getName()));
+            frame.open();
+        }
     }
 }
