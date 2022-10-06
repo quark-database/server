@@ -62,8 +62,8 @@ public class VariableFile {
         }
     }
 
-    public <T extends Entity> void change(Function<T, T> changer) {
-        set(changer.apply(get()));
+    public <T extends Entity> void change(Function<T, T> changer, Entity defaultValue) {
+        set(changer.apply(get(defaultValue)));
     }
 
     public Table getTable() {
