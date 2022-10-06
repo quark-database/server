@@ -41,7 +41,9 @@ public class RecordParser {
             index++;
         }
 
-        pushBufferContentToRecord();
+        if(buffer.containsSomething()) {
+            pushBufferContentToRecord();
+        }
     }
 
     public UntypedTableRecord getRecord() {
@@ -57,7 +59,11 @@ public class RecordParser {
     }
 
     public void pushBufferContentToRecord() {
-        record.add(buffer.extractContent());
+        pushToRecord(buffer.extractContent());
+    }
+
+    public void pushToRecord(String cell) {
+        record.add(cell);
     }
 
     public void letTheNextStateStartFromCurrentCharacter() {
