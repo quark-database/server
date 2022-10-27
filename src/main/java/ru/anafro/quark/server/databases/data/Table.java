@@ -12,6 +12,7 @@ import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.views.TableViewHeader;
 import ru.anafro.quark.server.files.Databases;
+import ru.anafro.quark.server.files.FileSystem;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.io.File;
@@ -44,6 +45,10 @@ public class Table {
 
         var tableDirectory = new File(Path.of(Databases.get(name.getDatabaseName()), name.getTableName()).toUri());
         return tableDirectory.exists() && tableDirectory.isDirectory();
+    }
+
+    public static boolean exists(CompoundedTableName tableName) {
+        return exists(tableName.toCompoundedString());
     }
 
     public Table(String databaseName, String tableName) {
@@ -114,6 +119,10 @@ public class Table {
         return collection;
     }
 
+    public RecordCollection loadRecords() {
+        return loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.NO_FURTHER_MANIPULATIONS));
+    }
+
     public RecordCollection select(TableRecordSelector selector, RecordIterationLimiter limiter) {
         // TODO: Change the collection resolver case (pull it to the higher level?)
         var allRecords = loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
@@ -138,7 +147,8 @@ public class Table {
     }
 
     public void delete() {
-        boolean ignored = new File(Path.of(database.getFolder().getPath(), name).toUri()).delete();
+//        boolean ignored = new File(Path.of(database.getFolder().getPath(), name).toUri()).delete();
+        FileSystem.deleteIfExists(Path.of(database.getFolder().getPath(), name).toString());
     }
 
     public void clear() {
