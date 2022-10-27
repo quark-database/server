@@ -51,15 +51,17 @@ public class InstructionParser {
             logger.debug("Instruction name: " + Nulls.nullOrDefault(instructionName, "<unset>"));
             logger.debug("Arguments: ");
 
+            logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere
+
             for(var argument : arguments) {
                 logger.debug("\t" + argument.name() + " = (" + Nulls.evalOrDefault(argument.value(), Entity::getType, "<null type>") + ") " + Nulls.evalOrDefault(argument.value(), Entity::toInstructionForm, "<null object>"));
             }
 
-            logger.debug("_".repeat(50)); // TODO: change to a separate method or extract "_".repeat(..) to a constant somewhere
-
             state.handleToken(getCurrentToken());
             nextToken();
         }
+
+
     }
 
     private InstructionToken getCurrentToken() {
@@ -91,7 +93,11 @@ public class InstructionParser {
     }
 
     public Instruction getInstruction() {
-        return Quark.instructions().get(instructionName);
+        if(instructionName == null) {
+            throw new InstructionParserException("Instruction name is missing.");
+        }
+
+        return Quark.instructions().getOrThrow(instructionName, "There's no instruction with name %s.".formatted(instructionName));
     }
 
     public InstructionArguments getArguments() {
