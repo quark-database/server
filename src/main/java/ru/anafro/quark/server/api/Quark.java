@@ -12,6 +12,10 @@ import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.data.ColumnModifierRegistry;
 import ru.anafro.quark.server.databases.data.Database;
 import ru.anafro.quark.server.databases.data.modifiers.*;
+import ru.anafro.quark.server.databases.data.schemes.ScheduledCommandsTableScheme;
+import ru.anafro.quark.server.databases.data.schemes.ScheduledQueriesTableScheme;
+import ru.anafro.quark.server.databases.data.schemes.TableSchemeRegistry;
+import ru.anafro.quark.server.databases.data.schemes.TokensTableScheme;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.ql.Instruction;
 import ru.anafro.quark.server.databases.ql.InstructionArguments;
@@ -35,12 +39,19 @@ import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.AsyncServicePool;
 import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.plugins.Plugin;
 import ru.anafro.quark.server.plugins.PluginManager;
+import ru.anafro.quark.server.plugins.events.BeforeServerCrash;
+import ru.anafro.quark.server.plugins.events.Event;
+import ru.anafro.quark.server.scheduling.ScheduledTaskPool;
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.hashing.HashingFunction;
 import ru.anafro.quark.server.utils.hashing.HashingFunctionRegistryGroup;
+import ru.anafro.quark.server.utils.hashing.integers.BitMixerHashingFunction;
 import ru.anafro.quark.server.utils.hashing.integers.DefaultIntegerHashingFunction;
-import ru.anafro.quark.server.utils.hashing.strings.DefaultStringHashingFunction;
-import ru.anafro.quark.server.utils.hashing.strings.PearsonHashingFunction;
+import ru.anafro.quark.server.utils.hashing.integers.SevenShiftsHashingFunction;
+import ru.anafro.quark.server.utils.hashing.integers.ThomasWangHashingFunction;
+import ru.anafro.quark.server.utils.hashing.strings.*;
 
 /**
  * Provides the easiest way of communicating with the Quark Server by having
@@ -122,6 +133,10 @@ public final class Quark {
      */
     private static final CommandLoop commandLoop = new CommandLoop(server);
 
+    private static final ScheduledTaskPool scheduledTaskPool = new ScheduledTaskPool();
+
+    private static final TableSchemeRegistry tableSchemeRegistry = new TableSchemeRegistry();
+
     /**
      * The pool of all asynchronous services running in Quark.
      * @since Quark 1.1
@@ -185,6 +200,7 @@ public final class Quark {
         typeRegistry.add(new GeneratorType());
         typeRegistry.add(new LongType());
         typeRegistry.add(new DateType());
+        typeRegistry.add(new FinderType());
 
         // Modifier registering
         modifierRegistry.add(new RequireUniqueColumnModifier());
@@ -298,6 +314,7 @@ public final class Quark {
         constructorRegistry.add(new ChangerConstructor());
         constructorRegistry.add(new NullConstructor());
         constructorRegistry.add(new GeneratorConstructor());
+        constructorRegistry.add(new FinderConstructor());
         // ...including column constructors...
         constructorRegistry.add(new IdColumnConstructor());
         constructorRegistry.add(new StringColumnConstructor());
@@ -305,6 +322,7 @@ public final class Quark {
         constructorRegistry.add(new BooleanColumnConstructor());
         constructorRegistry.add(new FloatColumnConstructor());
         constructorRegistry.add(new DateColumnConstructor());
+        constructorRegistry.add(new LongColumnConstructor());
         // ...including column modifiers...
         constructorRegistry.add(new BetweenModifierConstructor());
         constructorRegistry.add(new ConstantModifierConstructor());
@@ -381,6 +399,12 @@ public final class Quark {
         instructionRegistry.add(new DescribeConstructorsInstruction());
         instructionRegistry.add(new HintNextElementsInstruction());
         instructionRegistry.add(new GetServerNameInstruction());
+        instructionRegistry.add(new SecretInstruction());
+        instructionRegistry.add(new AddModifierInstruction());
+        instructionRegistry.add(new ListPluginsInstruction());
+        instructionRegistry.add(new FindInInstruction());
+        instructionRegistry.add(new CountInInstruction());
+        instructionRegistry.add(new DescribeModifiersOfInstruction());
 
         // Command registering
         commandRegistry.add(new ExitCommand());
@@ -397,19 +421,48 @@ public final class Quark {
         commandRegistry.add(new ModifiersCommand());
         commandRegistry.add(new AfterInstallationCommand());
         commandRegistry.add(new FactoryResetCommand());
+        commandRegistry.add(new CheckIntegrityCommand());
+        commandRegistry.add(new ClearMavenOutputCommand());
+        commandRegistry.add(new ListScheduledTasksCommand());
 //        commandRegistry.add(new ReloadCommand());        TODO: Not working yet
 
         debugFrameRegistry.add(new InstructionLexerDebugFrame());
         debugFrameRegistry.add(new InstructionParserDebugFrame());
         debugFrameRegistry.add(new EntityConstructorDebugFrame());
         debugFrameRegistry.add(new PermissionDebugFrame());
+        debugFrameRegistry.add(new HashtableDebugFrame());
+        debugFrameRegistry.add(new TreeDebugFrame());
 
         // Hashing functions
         hashingFunctionRegistryGroup.forIntegers().add(new DefaultIntegerHashingFunction());
+        hashingFunctionRegistryGroup.forIntegers().add(new SevenShiftsHashingFunction());
+        hashingFunctionRegistryGroup.forIntegers().add(new ThomasWangHashingFunction());
+        hashingFunctionRegistryGroup.forIntegers().add(new BitMixerHashingFunction());
         hashingFunctionRegistryGroup.forStrings().add(new DefaultStringHashingFunction());
         hashingFunctionRegistryGroup.forStrings().add(new PearsonHashingFunction());
+        hashingFunctionRegistryGroup.forStrings().add(new LoseLoseHashingFunction());
+        hashingFunctionRegistryGroup.forStrings().add(new DJB2HashingFunction());
+        hashingFunctionRegistryGroup.forStrings().add(new FoldHashingFunction());
+        hashingFunctionRegistryGroup.forStrings().add(new SDBMHashingFunction());
 
+        // Table schemes
+        tableSchemeRegistry.add(new TokensTableScheme());
+        tableSchemeRegistry.add(new ScheduledCommandsTableScheme());
+        tableSchemeRegistry.add(new ScheduledQueriesTableScheme());
+
+        runCommand("repair-files");
+        runCommand("clear-maven");
         runCommandsFromCommandLineArguments(args);
+
+        for(var scheme : tableSchemes()) {
+            scheme.deploy();
+        }
+
+        scheduledTaskPool.load();
+
+        for(var task : scheduledTaskPool) {
+            pool.add(task);
+        }
 
         pluginManager.loadPlugins();
         pool.run();
@@ -443,6 +496,10 @@ public final class Quark {
         return pluginManager;
     }
 
+    public static Plugin plugin(String name) {
+        return pluginManager.get(name);
+    }
+
     /**
      * Returns the command loop that currently running and reading command
      * from the console line.
@@ -472,6 +529,10 @@ public final class Quark {
         return commandRegistry;
     }
 
+    public static Command command(String name) {
+        return commandRegistry.get(name);
+    }
+
     /**
      * Returns the constructor registry that contains all default Quark Server
      * constructors, and also constructors that was registered by loaded
@@ -488,6 +549,10 @@ public final class Quark {
         return constructorRegistry;
     }
 
+    public static EntityConstructor constructor(String name) {
+        return constructorRegistry.get(name);
+    }
+
     /**
      * Returns the instruction registry that contains all default Quark Server
      * constructors, and also constructors that was registered by loaded
@@ -502,6 +567,10 @@ public final class Quark {
      */
     public static InstructionRegistry instructions() {
         return instructionRegistry;
+    }
+
+    public static Instruction instruction(String name) {
+        return instructionRegistry.get(name);
     }
 
     /**
@@ -619,6 +688,10 @@ public final class Quark {
         return typeRegistry;
     }
 
+    public static EntityType type(String name) {
+        return typeRegistry.get(name);
+    }
+
     /**
      * Returns the modifier registry that contains all default Quark Server
      * column modifiers, and also modifiers that was registered by loaded
@@ -637,6 +710,10 @@ public final class Quark {
         return modifierRegistry;
     }
 
+    public static ColumnModifier modifier(String name) {
+        return modifierRegistry.get(name);
+    }
+
     /**
      * Returns the debug frame registry that contains all Quark Server
      * debug frames, and also debug frames that was registered by loaded
@@ -650,6 +727,10 @@ public final class Quark {
      */
     public static DebugFrameRegistry debugFrames() {
         return debugFrameRegistry;
+    }
+
+    public static DebugFrame debugFrame(String name) {
+        return debugFrameRegistry.get(name);
     }
 
     public static HashingFunctionRegistryGroup hashingFunctions() {
@@ -667,6 +748,8 @@ public final class Quark {
     public static void crash(String message) {
         logger.error("Server has crashed.");
         logger.error(message);
+
+        Quark.fire(new BeforeServerCrash(server, message));
 
         System.exit(-1);
     }
@@ -686,41 +769,41 @@ public final class Quark {
     }
 
     public static void factoryReset() {
-        Quark.logger().info("Quark is about to factory reset.");
-        Quark.logger().info("It may take a while.");
-        Quark.logger().warning("!! TO CANCEL, CTRL+C IN THE TERMINAL !!");
-        Quark.logger().info("Resetting to the factory in 7 seconds");
-        Quark.logger().info("After the resetting started, it CAN NOT be undone.");
+        Quark.info("Quark is about to factory reset.");
+        Quark.info("It may take a while.");
+        Quark.warning("!! TO CANCEL, CTRL+C IN THE TERMINAL !!");
+        Quark.info("Resetting to the factory in 7 seconds");
+        Quark.info("After the resetting started, it CAN NOT be undone.");
 
         Threads.freezeFor(7.0);
 
-        Quark.logger().info("Quark Server is resetting. ");
-        Quark.logger().warning("---------------------------------------------");
-        Quark.logger().warning("     <!>    DO NOT PRESS CTRL+C.    <!>      ");
-        Quark.logger().warning("                                             ");
-        Quark.logger().warning("  IT MAY BREAK QUARK SERVER WITH NO ABILITY  ");
-        Quark.logger().warning("              TO BE REPAIRED                 ");
-        Quark.logger().warning("---------------------------------------------");
-        Quark.logger().info("");
-        Quark.logger().info("Please, do not type any command.");
+        Quark.info("Quark Server is resetting. ");
+        Quark.warning("---------------------------------------------");
+        Quark.warning("     <!>    DO NOT PRESS CTRL+C.    <!>      ");
+        Quark.warning("                                             ");
+        Quark.warning("  IT MAY BREAK QUARK SERVER WITH NO ABILITY  ");
+        Quark.warning("              TO BE REPAIRED                 ");
+        Quark.warning("---------------------------------------------");
+        Quark.info("");
+        Quark.info("Please, do not type any command.");
 
-        Quark.logger().info("Stopping the server...");
+        Quark.info("Stopping the server...");
         server.stop();
 
         Database.all().forEach(database -> {
-            Quark.logger().info("Deleting database %s.".formatted(database.getName()));
+            Quark.info("Deleting database %s.".formatted(database.getName()));
             Database.delete(database.getName());
 
-            Quark.logger().info("Successfully deleted.");
+            Quark.info("Successfully deleted.");
         });
 
-        Quark.logger().info("All the databases are deleted.");
-        Quark.logger().info("Running the command after installation...");
+        Quark.info("All the databases are deleted.");
+        Quark.info("Running the command after installation...");
 
         Quark.runCommand("---not-for-manual-run---after-installation");
 
-        Quark.logger().info("Factory resetting is completed. Stopping the Quark Server.");
-        Quark.logger().info("Relaunch it, please.");
+        Quark.info("Factory resetting is completed. Stopping the Quark Server.");
+        Quark.info("Relaunch it, please.");
 
         System.exit(0);
     }
@@ -739,5 +822,29 @@ public final class Quark {
 
     public static void error(String message) {
         logger.error(message);
+    }
+
+    public static void fire(Event event) {
+        plugins().fireEvent(event);
+    }
+
+    public static HashingFunction<String> stringHashingFunction() {
+        return Quark.hashingFunctions().forStrings().getOrThrow(Quark.server().getConfiguration().getStringHashingFunction(), "There is no string hashing function with name %s.".formatted(
+                Quark.server().getConfiguration().getStringHashingFunction()
+        ));
+    }
+
+    public static HashingFunction<Integer> integerHashingFunction() {
+        return Quark.hashingFunctions().forIntegers().getOrThrow(Quark.server().getConfiguration().getIntegerHashingFunction(), "There is no integer hashing function with name %s.".formatted(
+                Quark.server().getConfiguration().getIntegerHashingFunction()
+        ));
+    }
+
+    public static TableSchemeRegistry tableSchemes() {
+        return tableSchemeRegistry;
+    }
+
+    public static ScheduledTaskPool taskPool() {
+        return scheduledTaskPool;
     }
 }
