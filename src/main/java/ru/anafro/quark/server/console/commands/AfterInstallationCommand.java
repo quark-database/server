@@ -40,11 +40,11 @@ public class AfterInstallationCommand extends Command {
         """.replace(":token", new StringEntity(generatedToken).toInstructionForm()));
 
         Quark.runInstruction("""
-                create table "Quark.Scheduled Commands": columns = @list(@id(), @str("command"), @int("period"));
+                create table "Quark.Scheduled Commands": columns = @list(@id(), @str("command"), @long("period"));
         """);
 
         Quark.runInstruction("""
-                create table "Quark.Scheduled Queries": columns = @list(@id(), @str("query"), @int("period"));
+                create table "Quark.Scheduled Queries": columns = @list(@id(), @str("query"), @long("period"));
         """);
 
         Quark.logger().info("Your access token with all permissions: %s".formatted(generatedToken));
