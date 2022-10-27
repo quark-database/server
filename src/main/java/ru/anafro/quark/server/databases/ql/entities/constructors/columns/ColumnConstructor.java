@@ -3,12 +3,14 @@ package ru.anafro.quark.server.databases.ql.entities.constructors.columns;
 import ru.anafro.quark.server.databases.data.ColumnDescription;
 import ru.anafro.quark.server.databases.ql.entities.*;
 import ru.anafro.quark.server.databases.ql.types.EntityType;
+import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.required;
+import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorParameter.varargs;
 import static ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorReturnDescription.returns;
 
 /**
@@ -64,7 +66,8 @@ public abstract class ColumnConstructor extends EntityConstructor {
 
                 returns("the column description", "column"),
 
-                required("column name", "str")
+                required("column name", "str"),
+                varargs("modifiers", "modifier")
         );
         this.type = type;
         this.defaultColumnName = null;
@@ -94,7 +97,7 @@ public abstract class ColumnConstructor extends EntityConstructor {
 
                 returns("the column description", "column"),
 
-                parameters
+                Arrays.concat(parameters, Arrays.of(varargs("modifiers", "modifier")))
         );
         this.type = type;
         this.defaultColumnName = defaultColumnName;
@@ -147,7 +150,13 @@ public abstract class ColumnConstructor extends EntityConstructor {
     @Override
     protected ColumnEntity invoke(InstructionEntityConstructorArguments arguments) {
         var columnName = getParameters().has("column name") ? arguments.getString("column name") : this.defaultColumnName;
-        return new ColumnEntity(new ColumnDescription(columnName, type, modifiers));
+        var additionalModifiers = (ArrayList<ColumnModifierEntity>) (ArrayList<?>) arguments.getList("modifiers");
+        var allModifiers = Lists.<ColumnModifierEntity>empty();
+
+        allModifiers.addAll(additionalModifiers);
+        allModifiers.addAll(modifiers);
+
+        return new ColumnEntity(new ColumnDescription(columnName, type, allModifiers));
     }
 
     /**
