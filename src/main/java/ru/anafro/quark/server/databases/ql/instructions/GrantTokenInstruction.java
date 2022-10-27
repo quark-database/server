@@ -48,7 +48,11 @@ public class GrantTokenInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public GrantTokenInstruction() {
-        super("grant token", "token.grand",
+        super("grant token",
+
+                "Grants a token a permission",
+
+                "token.grand",
 
                 InstructionParameter.general("token"),
 

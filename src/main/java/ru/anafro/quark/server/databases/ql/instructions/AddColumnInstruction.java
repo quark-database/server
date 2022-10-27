@@ -57,7 +57,11 @@ public class AddColumnInstruction extends Instruction {
      */
     public AddColumnInstruction() {
         super("add column",
+
+            "Adds a new column to a table",
+
             "column.add",
+
             InstructionParameter.general("definition", "column"),
 
             InstructionParameter.required("table"),

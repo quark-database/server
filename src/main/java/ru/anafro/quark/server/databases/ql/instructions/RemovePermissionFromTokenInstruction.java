@@ -49,7 +49,11 @@ public class RemovePermissionFromTokenInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RemovePermissionFromTokenInstruction() {
-        super("remove permission from token", "token.remove permission",
+        super("remove permission from token",
+
+                "Removes a permission from a token",
+
+                "token.remove permission",
 
                 InstructionParameter.general("token"),
 

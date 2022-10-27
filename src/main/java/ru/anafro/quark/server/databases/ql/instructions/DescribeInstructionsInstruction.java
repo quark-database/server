@@ -19,17 +19,24 @@ public class DescribeInstructionsInstruction extends Instruction {
      * @since Quark 1.1
      */
     public DescribeInstructionsInstruction() {
-        super("describe instructions", TokenPermission.ALLOWED_FOR_ALL_TOKENS);
+        super(
+                "_describe instructions",
+
+                "Describes all the instructions. Don't use.",
+
+                TokenPermission.ALLOWED_FOR_ALL_TOKENS
+        );
     }
 
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        result.header(new TableViewHeader("instruction name", "permission", "parameter name", "is general", "is required", "parameter type"));
+        result.header(new TableViewHeader("instruction name", "description", "permission", "parameter name", "is general", "is required", "parameter type"));
 
         for(var instruction : Quark.instructions()) {
             for(var parameter : instruction.getParameters()) {
                 result.appendRow(new TableViewRow(
                         instruction.getName(),
+                        instruction.getDescription(),
                         instruction.getPermission(),
                         parameter.getName(),
                         Boolean.toString(parameter.isGeneral()),

@@ -54,7 +54,12 @@ public class RenameDatabaseInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RenameDatabaseInstruction() {
-        super("rename database", "database.rename",
+        super(
+                "rename database",
+
+                "Renames a database",
+
+                "database.rename",
                 InstructionParameter.required("old"),
                 InstructionParameter.required("new")
         );

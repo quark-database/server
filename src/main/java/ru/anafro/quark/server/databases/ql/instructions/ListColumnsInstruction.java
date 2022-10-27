@@ -52,7 +52,12 @@ public class ListColumnsInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ListColumnsInstruction() {
-        super("list columns in", "column.list",
+        super(
+                "list columns in",
+
+                "Lists columns in a table",
+
+                "column.list",
 
                 InstructionParameter.general("table")
         );

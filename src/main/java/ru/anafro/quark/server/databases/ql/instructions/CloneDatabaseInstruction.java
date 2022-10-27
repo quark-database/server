@@ -54,6 +54,9 @@ public class CloneDatabaseInstruction extends Instruction {
      */
     public CloneDatabaseInstruction() {
         super("clone database",
+
+                "Copies the database with all the contents",
+
                 "database.clone",
 
                 InstructionParameter.general("prototype"),

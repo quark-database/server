@@ -48,7 +48,12 @@ public class RenameServerInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RenameServerInstruction() {
-        super("rename server to", "server.rename",
+        super(
+                "rename server to",
+
+                "Renames the server",
+
+                "server.rename",
 
                 InstructionParameter.general("new")
         );

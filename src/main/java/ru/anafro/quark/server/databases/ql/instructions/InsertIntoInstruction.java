@@ -53,7 +53,11 @@ public class InsertIntoInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public InsertIntoInstruction() {
-        super("insert into", "table.insert",
+        super("insert into",
+
+                "Inserts a new record to a table",
+
+                "table.insert",
 
                 InstructionParameter.general("table"),
 

@@ -50,7 +50,13 @@ public class StopServerInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public StopServerInstruction() {
-        super("stop server", "server.stop");
+        super(
+                "stop server",
+
+                "Stop the server",
+
+                "server.stop"
+        );
     }
 
     /**

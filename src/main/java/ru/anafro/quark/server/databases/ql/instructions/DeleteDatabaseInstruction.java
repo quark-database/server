@@ -49,7 +49,11 @@ public class DeleteDatabaseInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public DeleteDatabaseInstruction() {
-        super("delete database", "database.delete",
+        super("delete database",
+
+                "Deletes a database",
+
+                "database.delete",
 
                 InstructionParameter.general("name")
         );

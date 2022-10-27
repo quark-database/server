@@ -55,6 +55,9 @@ public class CloneDatabaseSchemeInstruction extends Instruction {
      */
     public CloneDatabaseSchemeInstruction() { // TODO: register
         super("clone database scheme",
+
+                "Clones the database, but clears the tables",
+
                 "database.scheme",
 
                 InstructionParameter.general("prototype"),

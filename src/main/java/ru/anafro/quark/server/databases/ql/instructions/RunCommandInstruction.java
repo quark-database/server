@@ -48,7 +48,11 @@ public class RunCommandInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RunCommandInstruction() {
-        super("run command", "server.command",
+        super("run command",
+
+                "Runs a command",
+
+                "server.command",
 
                 InstructionParameter.general("command")
         );

@@ -53,7 +53,13 @@ public class ListDatabasesInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ListDatabasesInstruction() {
-        super("list databases", "databases.list");
+        super(
+                "list databases",
+
+                "Lists the databases",
+
+                "databases.list"
+        );
     }
 
     /**

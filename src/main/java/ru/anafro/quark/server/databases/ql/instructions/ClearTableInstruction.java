@@ -51,6 +51,9 @@ public class ClearTableInstruction extends Instruction {
      */
     public ClearTableInstruction() {
         super("clear table",
+
+                "Removes all the records from the table",
+
                 "table.clear",
 
                 InstructionParameter.general("name")

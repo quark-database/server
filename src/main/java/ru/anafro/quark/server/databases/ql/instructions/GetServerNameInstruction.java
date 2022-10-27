@@ -18,7 +18,13 @@ public class GetServerNameInstruction extends Instruction {
      * @since Quark 1.1
      */
     public GetServerNameInstruction() {
-        super("get server name", TokenPermission.ALLOWED_FOR_ALL_TOKENS);
+        super(
+                "get server name",
+
+                "Returns the server name",
+
+                TokenPermission.ALLOWED_FOR_ALL_TOKENS
+        );
     }
 
     @Override

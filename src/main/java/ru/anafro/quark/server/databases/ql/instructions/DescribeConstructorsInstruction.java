@@ -19,7 +19,13 @@ public class DescribeConstructorsInstruction extends Instruction {
      * @since Quark 1.1
      */
     public DescribeConstructorsInstruction() {
-        super("describe constructors", TokenPermission.ALLOWED_FOR_ALL_TOKENS);
+        super(
+                "_describe constructors",
+
+                "Describes all the constructors. Don't use.",
+
+                TokenPermission.ALLOWED_FOR_ALL_TOKENS
+        );
     }
 
     @Override

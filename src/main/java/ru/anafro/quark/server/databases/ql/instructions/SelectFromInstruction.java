@@ -54,7 +54,11 @@ public class SelectFromInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SelectFromInstruction() {
-        super("select from", "data.select",
+        super("select from",
+
+                "Selects records from a table",
+
+                "data.select",
 
                 InstructionParameter.general("table"),
 

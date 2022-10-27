@@ -52,6 +52,9 @@ public class DeleteTableInstruction extends Instruction {
     public DeleteTableInstruction() {
         super(
                 "delete table",
+
+                "Deletes a table",
+
                 "table.delete",
 
                 InstructionParameter.general("table")

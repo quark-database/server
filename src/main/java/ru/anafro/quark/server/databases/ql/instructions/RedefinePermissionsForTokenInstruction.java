@@ -50,7 +50,12 @@ public class RedefinePermissionsForTokenInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RedefinePermissionsForTokenInstruction() {
-        super("redefine permissions for token", "token.redefine",
+        super(
+                "redefine permissions for token",
+
+                "Defines a new set of permissions for a token",
+
+                "token.redefine",
 
                 InstructionParameter.general("token"),
 

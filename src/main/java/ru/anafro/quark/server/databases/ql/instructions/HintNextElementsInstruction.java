@@ -1,11 +1,9 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.ql.*;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
+import ru.anafro.quark.server.databases.views.TableViewHeader;
+import ru.anafro.quark.server.databases.views.TableViewRow;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.utils.integers.Integers;
 
@@ -19,7 +17,9 @@ public class HintNextElementsInstruction extends Instruction {
      */
     public HintNextElementsInstruction() {
         super(
-                "hint next elements",
+                "_hint next elements",
+
+                "Hints the next elements for editor hints. Don't use.",
 
                 "any",
 
@@ -34,6 +34,25 @@ public class HintNextElementsInstruction extends Instruction {
         var caretPosition = arguments.has("caret position") ? Integers.limit(arguments.getInteger("caret position"), 0, query.length()) : query.length() - 1;
 
         var lexer = new InstructionLexer();
-        var parser = new InstructionParser();
+
+        lexer.allowBufferTrash();
+        lexer.lex(query.substring(0, caretPosition));
+
+        result.header(new TableViewHeader("type", "title", "description", "completion"));
+
+        try {
+            for (var hint : lexer.getState().makeHints()) {
+                result.appendRow(new TableViewRow(
+                        hint.getType().toString().toLowerCase(),
+                        hint.getTitle(),
+                        hint.getDescription(),
+                        hint.getCompletion()
+                ));
+            }
+        } catch(Exception ignored) {
+            // TODO: Probably there's a better way to determine if hints are not needed.
+        }
+
+        result.status(QueryExecutionStatus.OK, "Hints are collected.");
     }
 }

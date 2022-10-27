@@ -56,6 +56,9 @@ public class ChangeInInstruction extends Instruction {
      */
     public ChangeInInstruction() {
         super("change in",
+
+                "Changes records match the condition",
+
                 "table.change",
 
                 InstructionParameter.general("table"),

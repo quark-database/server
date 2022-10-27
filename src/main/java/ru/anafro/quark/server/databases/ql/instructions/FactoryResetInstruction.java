@@ -50,7 +50,13 @@ public class FactoryResetInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public FactoryResetInstruction() {
-        super("factory reset", "!unsafe.factory-reset");
+        super(
+                "factory reset",
+
+                "Resets the server to factory settings",
+
+                "!unsafe.factory-reset"
+        );
     }
 
     /**

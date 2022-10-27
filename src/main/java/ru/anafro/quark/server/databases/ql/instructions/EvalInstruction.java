@@ -1,9 +1,8 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.views.TableViewHeader;
+import ru.anafro.quark.server.databases.views.TableViewRow;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -50,7 +49,15 @@ public class EvalInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public EvalInstruction() {
-        super("eval", "!unsafe.eval", InstructionParameter.general("object", "?"));
+        super(
+                "eval",
+
+                "Evaluates the Quark QL entity.",
+
+                "!unsafe.eval",
+
+                InstructionParameter.general("entity", "?")
+        );
     }
 
     /**
@@ -69,6 +76,10 @@ public class EvalInstruction extends Instruction {
      */
     @Override
     public void action(InstructionArguments arguments, Server server, InstructionResultRecorder result) {
-        // This instruction should not be run. It's used by Quark to evaluate entities.
+        var entity = arguments.get("entity");
+
+        result.header(new TableViewHeader("value", "type", "exact type"));
+        result.appendRow(new TableViewRow(entity.toInstructionForm(), entity.getTypeName(), entity.getExactTypeName()));
+        result.status(QueryExecutionStatus.OK, "Expression is evaluated.");
     }
 }

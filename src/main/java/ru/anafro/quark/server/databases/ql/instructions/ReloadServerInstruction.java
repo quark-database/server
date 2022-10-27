@@ -51,7 +51,13 @@ public class ReloadServerInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ReloadServerInstruction() {
-        super("reload server", "server.reload");
+        super(
+                "reload server",
+
+                "Reloads the server",
+
+                "server.reload"
+        );
     }
 
     /**

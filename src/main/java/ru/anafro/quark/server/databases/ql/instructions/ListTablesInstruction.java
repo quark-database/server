@@ -51,7 +51,11 @@ public class ListTablesInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ListTablesInstruction() {
-        super("list tables in", "table.list",
+        super("list tables in",
+
+                "Lists tables in a database",
+
+                "table.list",
 
                 InstructionParameter.general("database")
         );

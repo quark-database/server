@@ -1,15 +1,16 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.ColumnDescription;
 import ru.anafro.quark.server.databases.data.CompoundedTableName;
 import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.data.TableRecord;
 import ru.anafro.quark.server.databases.data.structures.LinearRecordCollection;
-import ru.anafro.quark.server.databases.ql.Instruction;
-import ru.anafro.quark.server.databases.ql.InstructionArguments;
-import ru.anafro.quark.server.databases.ql.InstructionParameter;
-import ru.anafro.quark.server.databases.ql.InstructionResultRecorder;
-import ru.anafro.quark.server.databases.ql.entities.*;
+import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.databases.ql.entities.Entity;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
+import ru.anafro.quark.server.databases.ql.entities.RecordEntity;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.utils.containers.Lists;
@@ -60,7 +61,12 @@ public class CreateTableInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public CreateTableInstruction() {
-        super("create table", "table.create",
+        super("create table",
+
+                "Creates a table",
+
+                "table.create",
+
                 InstructionParameter.general("name"),
 
                 InstructionParameter.required("columns", "list of column"),
@@ -109,5 +115,7 @@ public class CreateTableInstruction extends Instruction {
 
         table.getHeader().save();
         table.getRecords().save(recordCollection);
+
+        result.status(QueryExecutionStatus.OK, "A table has been created.");
     }
 }

@@ -52,6 +52,9 @@ public class RenameColumnInInstruction extends Instruction {
      */
     public RenameColumnInInstruction() {
         super("rename column in",
+
+                "Renames a column in a table",
+
                 "column.rename",
 
                 InstructionParameter.general("name"),

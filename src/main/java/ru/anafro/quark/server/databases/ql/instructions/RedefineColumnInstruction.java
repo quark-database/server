@@ -52,7 +52,11 @@ public class RedefineColumnInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RedefineColumnInstruction() {
-        super("redefine column in", "column.redefine",
+        super("redefine column in",
+
+                "Changes the definition of a column",
+
+                "column.redefine",
 
                 InstructionParameter.general("name"),
 

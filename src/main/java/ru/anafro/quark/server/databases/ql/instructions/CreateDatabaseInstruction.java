@@ -49,7 +49,11 @@ public class CreateDatabaseInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public CreateDatabaseInstruction() {
-        super("create database", "database.create",
+        super("create database",
+
+                "Creates a database",
+
+                "database.create",
 
                 InstructionParameter.general("name")
         );

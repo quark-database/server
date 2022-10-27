@@ -53,7 +53,11 @@ public class DeleteFromInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public DeleteFromInstruction() {
-        super("delete from", "data.delete",
+        super("delete from",
+
+                "Deletes records meet the condition",
+
+                "data.delete",
 
                 InstructionParameter.general("table"),
 

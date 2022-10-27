@@ -50,6 +50,9 @@ public class ClearDatabaseInstruction extends Instruction {
      */
     public ClearDatabaseInstruction() {
         super("clear database",
+
+                "Deletes all the tables inside the database",
+
                 "database.clear",
 
                 InstructionParameter.general("database")

@@ -54,7 +54,12 @@ public class SwapColumnsInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public SwapColumnsInstruction() {
-        super("swap columns in", "columns.swap",
+        super(
+                "swap columns in",
+
+                "Swaps two columns in a table",
+
+                "columns.swap",
 
                 InstructionParameter.general("table"),
 

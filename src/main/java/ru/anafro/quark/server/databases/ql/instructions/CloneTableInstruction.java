@@ -59,6 +59,9 @@ public class CloneTableInstruction extends Instruction {
      */
     public CloneTableInstruction() {
         super("clone table",
+
+                "Clones the table",
+
                 "table.clone",
 
                 InstructionParameter.general("prototype"),

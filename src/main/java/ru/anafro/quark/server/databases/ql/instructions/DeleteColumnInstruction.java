@@ -55,7 +55,11 @@ public class DeleteColumnInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public DeleteColumnInstruction() {
-        super("delete column", "column.delete",
+        super("delete column",
+
+                "Deletes a column in a table",
+
+                "column.delete",
 
                 InstructionParameter.general("name"),
 

@@ -55,7 +55,12 @@ public class ReorderColumnsInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ReorderColumnsInstruction() {
-        super("reorder columns in", "column.reorder",
+        super(
+                "reorder columns in",
+
+                "Changes the column order",
+
+                "column.reorder",
 
                 InstructionParameter.general("table"),
 

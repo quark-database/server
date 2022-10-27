@@ -55,7 +55,11 @@ public class ChangePortToInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public ChangePortToInstruction() {
-        super("change port to", "server.port.change",
+        super("change port to",
+
+                "Changes the server port",
+
+                "server.port.change",
 
                 InstructionParameter.general("port", "int")
         );

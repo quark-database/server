@@ -54,7 +54,13 @@ public class RenameTableInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public RenameTableInstruction() {
-        super("rename table", "table.rename",
+        super(
+                "rename table",
+
+                "Renames a table",
+
+                "table.rename",
+
                 InstructionParameter.required("old"),
                 InstructionParameter.required("new")
         );

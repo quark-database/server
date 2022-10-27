@@ -59,6 +59,9 @@ public class CloneTableSchemeInstruction extends Instruction {
      */
     public CloneTableSchemeInstruction() {
         super("clone table scheme",
+
+                "Clones the table, but deletes the records",
+
                 "table.scheme",
 
                 InstructionParameter.general("prototype"),

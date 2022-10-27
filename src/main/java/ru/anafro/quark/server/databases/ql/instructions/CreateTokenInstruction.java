@@ -54,7 +54,11 @@ public class CreateTokenInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public CreateTokenInstruction() {
-        super("create token", "token.create",
+        super("create token",
+
+                "Creates an access token",
+
+                "token.create",
 
                 InstructionParameter.general("token"),
 
