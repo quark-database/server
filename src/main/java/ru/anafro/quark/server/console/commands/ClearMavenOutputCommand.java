@@ -31,7 +31,9 @@ public class ClearMavenOutputCommand extends Command {
                 "classes",
                 "generated-sources",
                 "maven-archiver",
-                "maven-status"
+                "maven-status",
+                "original-Quark Server.jar",
+                "QuarkServer-1.1-SNAPSHOT-shaded.jar"
         );
     }
 }
