@@ -41,10 +41,10 @@ public final class Greeter {
         );
 
         System.out.println("-".repeat(50));
-        System.out.println("Quark Server 1 - Your own data storage."); // TODO: Hardcoded version.
+        System.out.println("Quark Server 1.1 - Your own data storage."); // TODO: Hardcoded version.
         System.out.println(Compliments.random());
         System.out.println("-".repeat(50));
-        System.out.println("Type 'help' command to list existing commands.");
+        System.out.println("Type '/help' command to list existing commands.");
         System.out.println("Enjoy your experience with Quark!");
         System.out.println();
     }
