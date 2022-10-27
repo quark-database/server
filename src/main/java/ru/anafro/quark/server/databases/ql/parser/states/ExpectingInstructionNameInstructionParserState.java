@@ -16,7 +16,7 @@ public class ExpectingInstructionNameInstructionParserState extends InstructionP
             parser.setInstructionName(instructionNameToken.getValue());
             parser.switchState(new AfterInstructionNameInstructionParserState(parser));
         } else {
-            throwExcectationError("instruction name", token.getName());
+            throwExecutionError("instruction name", token.getName());
         }
     }
 }

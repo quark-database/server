@@ -16,19 +16,19 @@ public class AfterInstructionNameInstructionParserState extends InstructionParse
 
         if(token instanceof ColonInstructionToken colonToken) {
             if(parser.getInstruction().getParameters().hasGeneralParameter()) {
-                throwExcectationError("object", colonToken.getName());
+                throwExecutionError("object", colonToken.getName());
             }
 
             logger.debug("Found a colon, starting reading arguments");
             parser.switchState(new ReadingArgumentNameInstructionParserState(parser));
         } else if(!parser.getInstruction().getParameters().hasGeneralParameter()) {
-            throwExcectationError("colon or semicolon", token.getName());
+            throwExecutionError("colon or semicolon", token.getName());
         } else if(token instanceof LiteralInstructionToken || token instanceof ConstructorNameInstructionToken) {
             logger.debug("Found an object. It means that it's a general parameter. Let the 'reading argument value' deal with it");
             parser.letTheNextStateStartFromCurrentToken();
             parser.switchState(new ReadingArgumentValueInstructionParserState(parser, new ReadingArgumentNameInstructionParserState(parser), parser.getInstruction().getParameters().getGeneralParameter().getName()));
         } else {
-            throwExcectationError("colon or object", token.getName());
+            throwExecutionError("colon or object", token.getName());
         }
     }
 }
