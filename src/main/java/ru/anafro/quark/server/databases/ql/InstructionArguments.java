@@ -51,6 +51,10 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return this.<IntegerEntity>get(argumentName).getValue();
     }
 
+    public long getLong(String argumentName) {
+        return this.<LongEntity>get(argumentName).getValue();
+    }
+
     public boolean getBoolean(String argumentName) {
         return this.<BooleanEntity>get(argumentName).getValue();
     }
