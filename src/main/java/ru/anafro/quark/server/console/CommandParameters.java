@@ -81,4 +81,8 @@ public class CommandParameters implements Iterable<CommandParameter> {
     public int count() {
         return parameters.size();
     }
+
+    public boolean isEmpty() {
+        return count() == 0;
+    }
 }
