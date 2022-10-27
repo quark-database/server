@@ -1,19 +1,29 @@
 package ru.anafro.quark.server.networking;
 
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import ru.anafro.quark.server.databases.data.files.Savable;
 import ru.anafro.quark.server.networking.exceptions.ServerConfigurationCannotBeSavedException;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServerConfiguration implements Savable {
-    private String path = null;
+    @Expose
+    private transient String path = null;
+
+    @SerializedName(value = "name", alternate = {"server-name", "serverName"})
     private String name;
+
+    @SerializedName(value = "port")
     private int port;
+
+    @SerializedName(value = "strhash", alternate = {"string-hashing-function", "stringHashingFunction"})
+    private String stringHashingFunction;
+
+    @SerializedName(value = "inthash", alternate = {"integer-hashing-function", "integerHashingFunction"})
+    private String integerHashingFunction;
 
     /**
      * This function returns the name of the server
@@ -57,16 +67,30 @@ public class ServerConfiguration implements Savable {
 
     public void save() {
         try {
-            var options = new DumperOptions();
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            options.setPrettyFlow(true);
-
-            var yaml = new Yaml(options);
-
-            Map<String, String> mappedConfiguration = new HashMap<>();
-            yaml.dump(mappedConfiguration, new FileWriter(path));
+            var gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(this, new FileWriter(path));
         } catch (IOException exception) {
             throw new ServerConfigurationCannotBeSavedException(exception);
         }
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getStringHashingFunction() {
+        return stringHashingFunction;
+    }
+
+    public String getIntegerHashingFunction() {
+        return integerHashingFunction;
+    }
+
+    public void setStringHashingFunction(String stringHashingFunction) {
+        this.stringHashingFunction = stringHashingFunction;
+    }
+
+    public void setIntegerHashingFunction(String integerHashingFunction) {
+        this.integerHashingFunction = integerHashingFunction;
     }
 }
