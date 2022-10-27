@@ -7,6 +7,12 @@ public class Counter {
         count++;
     }
 
+    public void countIf(boolean condition) {
+        if(condition) {
+            count();
+        }
+    }
+
     public int getCount() {
         return count;
     }
