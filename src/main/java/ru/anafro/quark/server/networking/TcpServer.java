@@ -10,6 +10,9 @@ import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.networking.exceptions.MessageHeaderIsTooShortException;
 import ru.anafro.quark.server.networking.exceptions.ServerCannotBeRunTwiceException;
 import ru.anafro.quark.server.networking.exceptions.ServerCrashedException;
+import ru.anafro.quark.server.plugins.events.BeforeMiddlewareRun;
+import ru.anafro.quark.server.plugins.events.MiddlewareFinished;
+import ru.anafro.quark.server.plugins.events.ServerStopped;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.File;
@@ -25,12 +28,16 @@ import java.util.ArrayList;
  * but not handling - implement 'handle()' method to add
  * handling functionality.
  */
-public abstract class TcpServer implements AsyncService {
+public abstract class TcpServer extends AsyncService {
     private static final float DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS = 7;
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = Lists.empty();
     protected ServerSocket serverSocket;
     protected final Logger logger = new Logger(this.getClass());
+
+    public TcpServer() {
+        super("tcp-server");
+    }
 
     /**
      * This function adds a middleware to the list of middlewares
@@ -99,8 +106,10 @@ public abstract class TcpServer implements AsyncService {
                     for(Middleware middleware : middlewares) {
                         logger.debug("Running middleware...");
 
+                        Quark.fire(new BeforeMiddlewareRun(Quark.server(), client, clientRequest, middleware));
                         MiddlewareResponse middlewareResponse = middleware.filter(clientRequest);
 
+                        Quark.fire(new MiddlewareFinished(Quark.server(), middleware, client, clientRequest, middlewareResponse));
                         logger.debug("Completed! Passed? " + middlewareResponse.isPassed() + ", reason: " + middlewareResponse.getReason());
 
                         if(middlewareResponse.isDenied()) {
@@ -116,7 +125,7 @@ public abstract class TcpServer implements AsyncService {
                         Response serverResponse = onRequest(clientRequest);
                         client.sendMessage(serverResponse.data());
 
-                        logger.debug("All the middlewares are passed successfully! Sent a message");
+                        logger.debug("All the middlewares are passed successfully! Sent a message: " + serverResponse.data());
                     }
                 } catch(JSONException | MessageHeaderIsTooShortException exception) {
                     client.sendError(exception);
@@ -137,6 +146,7 @@ public abstract class TcpServer implements AsyncService {
         try {
             logger.debug("Server is stopping...");
             serverSocket.close();
+            Quark.fire(new ServerStopped(Quark.server()));
         } catch (IOException ignored) {
             // Ignored.
         }
