@@ -1,9 +1,13 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.InstructionNameInstructionToken;
 import ru.anafro.quark.server.utils.validation.Validators;
+
+import java.util.List;
 
 public class ReadingInstructionHeaderInstructionLexerState extends InstructionLexerState {
 
@@ -18,7 +22,7 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
         // TODO: Rewrite this, because it's too hard to read. Split to multiple states if needed
         stopSkippingLexerIgnoredCharacters();
 
-        if(Validators.validate(currentCharacter, Validators.IS_LATIN)) {
+        if(Validators.validate(currentCharacter, Validators.IS_LATIN) || currentCharacter == '_') {
             logger.debug("Appending this character to the instruction name");
             lexer.pushCurrentCharacterToBuffer();
         } else if(lexer.currentCharacterShouldBeIgnored() && !lexer.getBufferContent().endsWith(" ")) {
@@ -37,5 +41,15 @@ public class ReadingInstructionHeaderInstructionLexerState extends InstructionLe
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character " + currentCharacter, "You have a typo somewhere around this character.", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Quark.instructions()
+                .asList()
+                .stream()
+                .filter(instruction -> instruction.getName().startsWith(lexer.getBufferContent()))
+                .map(instruction -> InstructionHint.instruction(instruction.getName(), lexer.getBuffer().length()))
+                .toList();
     }
 }

@@ -1,8 +1,12 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.EqualsInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class ReadingEqualsSignInstructionLexerState extends InstructionLexerState {
     public ReadingEqualsSignInstructionLexerState(InstructionLexer lexer) {
@@ -19,5 +23,10 @@ public class ReadingEqualsSignInstructionLexerState extends InstructionLexerStat
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Equals sign expected, but %s met".formatted(currentCharacter), "Add an equals sign between the instruction parameter and its value", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }

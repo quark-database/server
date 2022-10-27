@@ -1,10 +1,15 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.FloatLiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.IntegerLiteralInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.LongLiteralInstructionToken;
+import ru.anafro.quark.server.utils.arrays.Arrays;
+
+import java.util.List;
 
 public class ReadingNumberInstructionLexerState extends InstructionLexerState {
     public ReadingNumberInstructionLexerState(InstructionLexer lexer, InstructionLexerState previousState) {
@@ -42,5 +47,16 @@ public class ReadingNumberInstructionLexerState extends InstructionLexerState {
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.restoreState();
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Quark.constructors()
+                .asList()
+                .stream()
+                .filter(constructor -> constructor.getName().startsWith(lexer.getBufferContent()))
+                .filter(constructor -> Arrays.contains(Arrays.of("long", "float", "int"), constructor.getReturnDescription().getType().getName()))
+                .map(constructor -> InstructionHint.constructor(constructor.getName(), lexer.getBuffer().length()))
+                .toList();
     }
 }

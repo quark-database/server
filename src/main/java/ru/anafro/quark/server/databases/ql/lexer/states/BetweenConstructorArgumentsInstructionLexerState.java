@@ -1,8 +1,12 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
+import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.CommaInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class BetweenConstructorArgumentsInstructionLexerState extends InstructionLexerState {
     public BetweenConstructorArgumentsInstructionLexerState(InstructionLexer lexer, InstructionLexerState previousState) {
@@ -23,5 +27,10 @@ public class BetweenConstructorArgumentsInstructionLexerState extends Instructio
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character '" + currentCharacter + "' between constructor arguments", "Did you put extra comma or forgot one? Or just typed an extra letter after argument?", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }

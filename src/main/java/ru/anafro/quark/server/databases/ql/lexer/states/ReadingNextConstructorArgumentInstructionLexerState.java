@@ -1,7 +1,11 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ClosingParenthesisInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class ReadingNextConstructorArgumentInstructionLexerState extends InstructionLexerState {
     public ReadingNextConstructorArgumentInstructionLexerState(InstructionLexer lexer, InstructionLexerState previousState) {
@@ -20,5 +24,10 @@ public class ReadingNextConstructorArgumentInstructionLexerState extends Instruc
             lexer.letTheNextStateStartFromCurrentCharacter();
             lexer.switchState(new ReadingObjectInstructionLexerState(lexer, new BetweenConstructorArgumentsInstructionLexerState(lexer, this)));
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }

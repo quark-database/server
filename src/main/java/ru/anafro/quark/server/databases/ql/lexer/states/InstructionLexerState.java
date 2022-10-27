@@ -1,7 +1,10 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.logging.Logger;
+
+import java.util.List;
 
 public abstract class InstructionLexerState {
     protected final InstructionLexer lexer;
@@ -20,6 +23,8 @@ public abstract class InstructionLexerState {
     }
 
     public abstract void handleCharacter(char currentCharacter);
+
+    public abstract List<InstructionHint> makeHints();
 
     public void skipLexerIgnoredCharacters() {
         this.skipLexerIgnoredCharacters = true;

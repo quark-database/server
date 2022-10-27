@@ -1,8 +1,14 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.parser.RecordCharacterEscapeService;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.StringLiteralInstructionToken;
+import ru.anafro.quark.server.utils.arrays.Arrays;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class ReadingStringInstructionLexerState extends InstructionLexerState {
     boolean inString = false;
@@ -36,6 +42,21 @@ public class ReadingStringInstructionLexerState extends InstructionLexerState {
             logger.debug("Appending this character to a string");
             lexer.pushCurrentCharacterToBuffer();
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        if(inString) {
+            return Lists.empty();
+        }
+
+        return Quark.constructors()
+                .asList()
+                .stream()
+                .filter(constructor -> constructor.getName().startsWith(lexer.getBufferContent()))
+                .filter(constructor -> Arrays.contains(Arrays.of("str"), constructor.getReturnDescription().getType().getName()))
+                .map(constructor -> InstructionHint.constructor(constructor.getName(), lexer.getBuffer().length()))
+                .toList();
     }
 
     public boolean isInString() {

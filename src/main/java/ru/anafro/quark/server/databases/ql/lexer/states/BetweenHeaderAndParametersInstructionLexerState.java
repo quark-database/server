@@ -1,9 +1,13 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
+import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ColonInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.SemicolonInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class BetweenHeaderAndParametersInstructionLexerState extends InstructionLexerState {
     public BetweenHeaderAndParametersInstructionLexerState(InstructionLexer lexer) {
@@ -24,5 +28,10 @@ public class BetweenHeaderAndParametersInstructionLexerState extends Instruction
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected character between instruction header and instruction's parameters", "Did you make a typo? Please, remove everything between the instruction name with general argument and instruction's additional parameters", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }

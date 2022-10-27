@@ -1,9 +1,13 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
+import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.CommaInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.SemicolonInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 public class BetweenInstructionParametersInstructionLexerState extends InstructionLexerState {
     public BetweenInstructionParametersInstructionLexerState(InstructionLexer lexer) {
@@ -24,5 +28,10 @@ public class BetweenInstructionParametersInstructionLexerState extends Instructi
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected symbol after reading parameter value", "Did you write something extra after your instruction's parameter value? Remove everything between value and the comma or the semicolon", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }

@@ -1,10 +1,15 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
 import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.OpeningParenthesisInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.validation.Validators;
+
+import java.util.List;
 
 public class ReadingConstructorNameInstructionLexerState extends InstructionLexerState {
     boolean markerFound = false;
@@ -36,6 +41,38 @@ public class ReadingConstructorNameInstructionLexerState extends InstructionLexe
             lexer.pushToken(new ConstructorNameInstructionToken(lexer.extractBufferContent().strip()));
             lexer.pushToken(new OpeningParenthesisInstructionToken());
             lexer.switchState(new ReadingNextConstructorArgumentInstructionLexerState(lexer, getPreviousState()));
+        }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        var instruction = Quark.instructions().get(lexer.getTokens().stream().filter(token -> token.is("instruction name")).findFirst().get().getValue());
+
+        var currentParameter = lexer.getTokens()
+                .stream()
+                .filter(token -> token.is("parameter name"))
+                .reduce((first, following) -> following);
+
+        if(currentParameter.isPresent()) {
+            var parameterType = instruction.getParameters().get(currentParameter.get().getValue()).getType();
+
+            return Quark.constructors()
+                    .asList()
+                    .stream()
+                    .filter(constructor -> parameterType.startsWith(constructor.getReturnDescription().getType().getName()))
+                    .filter(constructor -> constructor.getName().startsWith(lexer.getBufferContent().replaceFirst(String.valueOf(ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER), "")))
+                    .map(constructor -> InstructionHint.constructor(constructor.getName(), lexer.getBuffer().length()))
+                    .toList();
+        } else if(instruction.getParameters().hasGeneralParameter()) {
+            return Quark.constructors()
+                    .asList()
+                    .stream()
+                    .filter(constructor -> instruction.getParameters().getGeneralParameter().getType().startsWith(constructor.getReturnDescription().getType().getName()))
+                    .filter(constructor -> constructor.getName().startsWith(lexer.getBufferContent().replaceFirst(String.valueOf(ConstructorNameInstructionToken.CONSTRUCTOR_NAME_MARKER), "")))
+                    .map(constructor -> InstructionHint.constructor(constructor.getName(), lexer.getBuffer().length()))
+                    .toList();
+        } else {
+            return Lists.empty();
         }
     }
 

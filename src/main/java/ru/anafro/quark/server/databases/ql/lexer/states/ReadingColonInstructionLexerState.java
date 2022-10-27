@@ -1,8 +1,12 @@
 package ru.anafro.quark.server.databases.ql.lexer.states;
 
-import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.databases.ql.hints.InstructionHint;
+import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
 import ru.anafro.quark.server.databases.ql.lexer.tokens.ColonInstructionToken;
+import ru.anafro.quark.server.utils.containers.Lists;
+
+import java.util.List;
 
 @Deprecated
 public class ReadingColonInstructionLexerState extends InstructionLexerState {
@@ -21,5 +25,10 @@ public class ReadingColonInstructionLexerState extends InstructionLexerState {
         } else {
             throw new InstructionSyntaxException(this, lexer.getInstruction(), "Unexpected symbol '" + currentCharacter + "' instead of instruction parameter starting semicolon", "Did you add something extra between instruction name and its parameters?", lexer.getCurrentCharacterIndex(), 1);
         }
+    }
+
+    @Override
+    public List<InstructionHint> makeHints() {
+        return Lists.empty();
     }
 }
