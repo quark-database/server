@@ -9,7 +9,12 @@ package ru.anafro.quark.server.multithreading;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-public interface AsyncService extends Runnable {
+public abstract class AsyncService implements Runnable {
+    private final String name;
+
+    public AsyncService(String name) {
+        this.name = name;
+    }
 
     /**
      * Runs the service. Not that invoking this method outside
@@ -20,5 +25,9 @@ public interface AsyncService extends Runnable {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    void run();
+    public abstract void run();
+
+    public String getName() {
+        return name;
+    }
 }
