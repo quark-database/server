@@ -79,7 +79,7 @@ public class ConcatConstructor extends EntityConstructor {
         TextBuffer concatenated = new TextBuffer();
 
         for(var string : arguments.<ListEntity>get("strings")) {
-            concatenated.append(string);
+            concatenated.append(string.getValue());
         }
 
         return new StringEntity(concatenated.extractContent());
