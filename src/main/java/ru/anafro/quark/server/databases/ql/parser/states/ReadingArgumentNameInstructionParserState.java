@@ -20,7 +20,7 @@ public class ReadingArgumentNameInstructionParserState extends InstructionParser
             logger.debug("Found an argument name. Expecting an argument value next time");
             parser.switchState(new ReadingArgumentValueInstructionParserState(parser, this, parameterNameToken.getValue()));
         } else {
-            throwExcectationError("parameter name", token.getName());
+            throwExecutionError("parameter name", token.getName());
         }
     }
 }

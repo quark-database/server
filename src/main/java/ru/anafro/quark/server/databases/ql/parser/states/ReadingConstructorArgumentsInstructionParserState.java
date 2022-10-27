@@ -43,14 +43,14 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
                 computedEntity = constructor.eval(arguments);           // <- TODO: Repeated code! #2
                 afterEntityComputation(computedEntity);
             } else {
-                throwExcectationError("comma", token.getName());
+                throwExecutionError("comma", token.getName());
             }
         } else if(expectingOpeningParenthesis) {                        // <- TODO: Repeating code! #1
             if(token.is("opening parenthesis")) {
                 logger.debug("Stopping expecting opening parenthesis");
                 stopExpectingOpeningParenthesis();
             } else {
-                throwExcectationError("opening parenthesis", token.getName());
+                throwExecutionError("opening parenthesis", token.getName());
             }
         } else if(token instanceof LiteralInstructionToken literalToken) {
             if(getCurrentConstructorParameter().isVarargs()) {
@@ -78,7 +78,7 @@ public abstract class ReadingConstructorArgumentsInstructionParserState extends 
             computedEntity = constructor.eval(arguments);               // <- TODO: Repeated code! #2
             afterEntityComputation(computedEntity);
         } else {
-            throwExcectationError("object or comma", token.getName()); // TODO: Too ambiguous tip of expected object. Specify clearly.
+            throwExecutionError("object or comma", token.getName()); // TODO: Too ambiguous tip of expected object. Specify clearly.
         }
     }
 
