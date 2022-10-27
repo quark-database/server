@@ -3,6 +3,7 @@ package ru.anafro.quark.server.databases.data;
 import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.entities.InstructionEntityConstructorArguments;
 import ru.anafro.quark.server.databases.ql.types.EntityType;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,4 +67,14 @@ public abstract class ColumnModifier {
     public abstract boolean isFieldSuitable(Table table, RecordField field, InstructionEntityConstructorArguments arguments);
     public abstract void beforeRecordInsertion(Table table, RecordField field, InstructionEntityConstructorArguments arguments);
     public abstract boolean isColumnDeletionAllowed(Table table, String columnName, InstructionEntityConstructorArguments arguments);
+
+    @Override
+    public String toString() {
+        return "ColumnModifier{" +
+                "applicationPriority=" + applicationPriority +
+                ", allowedTypes=" + Lists.joinPresentations(allowedTypes, EntityType::getName) +
+                ", valuesShouldBeGenerated=" + valuesShouldBeGenerated +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
