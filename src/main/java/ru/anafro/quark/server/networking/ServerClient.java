@@ -1,7 +1,10 @@
 package ru.anafro.quark.server.networking;
 
 import org.json.JSONObject;
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.QueryExecutionStatus;
+import ru.anafro.quark.server.plugins.events.BeforeSendingMessage;
+import ru.anafro.quark.server.plugins.events.SendingMessageFinished;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
 
 import java.io.DataOutputStream;
@@ -17,8 +20,14 @@ public class ServerClient {
     }
 
     public void sendMessage(JSONObject json) throws IOException {
-        DataOutputStream clientDataOutputStream = new DataOutputStream(outputStream);
-        clientDataOutputStream.write(new Message(json.toString()).buildByteMessage());
+        var clientDataOutputStream = new DataOutputStream(outputStream);
+        var message = new Message(json.toString());
+
+        Quark.fire(new BeforeSendingMessage(Quark.server(), this, message));
+
+        clientDataOutputStream.write(message.buildByteMessage());
+
+        Quark.fire(new SendingMessageFinished(Quark.server(), this, message));
     }
 
     public void sendError(String errorMessage, QueryExecutionStatus status) throws IOException {
