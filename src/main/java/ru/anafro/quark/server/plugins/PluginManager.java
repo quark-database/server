@@ -99,11 +99,8 @@ public class PluginManager {
         });
     }
 
-    public ArrayList<Plugin> getLoadedPlugins() {
-        return loadedPlugins;
-    }
-
-    public void forEach(Consumer<Plugin> pluginConsumer) {
-        loadedPlugins.forEach(pluginConsumer);
+    @Override
+    protected String getNameOf(Plugin plugin) {
+        return plugin.getName();
     }
 }
