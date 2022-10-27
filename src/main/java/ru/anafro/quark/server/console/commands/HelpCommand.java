@@ -30,7 +30,7 @@ public class HelpCommand extends Command {
                 }
                 logger.info("Syntax: " + command.getSyntax());
 
-                if(command.getParameters().count() != 0) { // TODO: Change to !.isEmpty()
+                if(!command.getParameters().isEmpty()) {
                     logger.info("Parameters:");
                     for(var parameter : command.getParameters()) {
                         logger.info("\t[%s] %s - %s".formatted(parameter.required() ? "Required" : "Optional", quoted(parameter.name()), parameter.longDescription()));
@@ -40,14 +40,16 @@ public class HelpCommand extends Command {
                 error("There is no command with name %s. To open the list of existing commands, write %s command with no arguments.".formatted(quoted(arguments.get("command")), quoted(this.getPrimaryName())));
             }
         } else {
-            for(var command : Quark.commands()) {
-                logger.info(command.getShortDescription());
-                logger.info(command.getSyntax());
-                for(var parameter : command.getParameters()) {
-                    logger.info("\t[%s] %s - %s".formatted(parameter.required() ? "Required" : "Optional", quoted(parameter.name()), parameter.longDescription()));
-                }
+            synchronized (Quark.commands().asList()) {
+                for (var command : Quark.commands()) {
+                    logger.info(command.getShortDescription());
+                    logger.info(command.getSyntax());
+                    for (var parameter : command.getParameters()) {
+                        logger.info("\t[%s] %s - %s".formatted(parameter.required() ? "Required" : "Optional", quoted(parameter.name()), parameter.longDescription()));
+                    }
 
-                logger.info("");
+                    logger.info("");
+                }
             }
         }
     }
