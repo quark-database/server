@@ -42,4 +42,9 @@ public class CompoundedTableName {
     public String toCompoundedString() {
         return databaseName + SEPARATOR + tableName;
     }
+
+    @Override
+    public String toString() {
+        return toCompoundedString();
+    }
 }
