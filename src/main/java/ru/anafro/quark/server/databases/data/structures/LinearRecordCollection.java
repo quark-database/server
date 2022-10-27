@@ -1,13 +1,13 @@
 package ru.anafro.quark.server.databases.data.structures;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.RecordIterationLimiter;
 import ru.anafro.quark.server.databases.data.RecordLambda;
 import ru.anafro.quark.server.databases.data.TableRecord;
-import ru.anafro.quark.server.utils.containers.Lists;
+import ru.anafro.quark.server.databases.data.TableRecordFinder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class LinearRecordCollection extends RecordCollection {
     private final ArrayList<TableRecord> records = new ArrayList<>();
@@ -67,5 +67,16 @@ public class LinearRecordCollection extends RecordCollection {
     @Override
     public int count() {
         return records.size();
+    }
+
+    @Override
+    public Optional<TableRecord> find(TableRecordFinder finder) {
+        for(var record : records) {
+            if(finder.apply(record)) {
+                return Optional.of(record);
+            }
+        }
+
+        return Optional.empty();
     }
 }
