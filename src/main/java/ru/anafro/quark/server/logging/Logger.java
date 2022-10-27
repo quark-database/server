@@ -20,7 +20,7 @@ public class Logger {
 
     private final String label;
     private String format = "@level @time, @label | @message";
-    private LogLevel logFrom = LogLevel.INFO;
+    private LogLevel logFrom;
 
     public Logger(String label, LogLevel logFrom) {
         this.label = label;
