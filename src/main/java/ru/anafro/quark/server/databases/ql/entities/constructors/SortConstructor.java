@@ -54,7 +54,7 @@ public class SortConstructor extends EntityConstructor {
 
                 returns("the sorted list", "list"),
 
-                required("list to sort", "list of ?")
+                required("list to sort", "list")
         );
     }
 
