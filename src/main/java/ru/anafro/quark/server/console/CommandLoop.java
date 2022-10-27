@@ -3,9 +3,11 @@ package ru.anafro.quark.server.console;
 import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.exceptions.CommandException;
 import ru.anafro.quark.server.console.parser.CommandParser;
+import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.utils.Console;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.Scanner;
@@ -19,7 +21,7 @@ import java.util.Scanner;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-public class CommandLoop implements AsyncService {
+public class CommandLoop extends AsyncService {
 
     /**
      * The delay in seconds to wait before running command loops.
@@ -55,6 +57,8 @@ public class CommandLoop implements AsyncService {
      */
     private boolean isReadingNextCommandsStopped;
 
+    private final String commandPrefix = "/";
+
     /**
      * Creates a new command loop. It does not run by default.
      * To run it, use {@link CommandLoop#run()}.
@@ -68,6 +72,7 @@ public class CommandLoop implements AsyncService {
      */
     @Deprecated
     public CommandLoop(Server server) {
+        super("command-loop");
         this.server = server;
     }
 
@@ -82,11 +87,21 @@ public class CommandLoop implements AsyncService {
         Threads.freezeFor(DELAY_BEFORE_RUNNING_SECONDS);
 
         while(!isReadingNextCommandsStopped()) {
-            try {
-                System.out.print("> ");
-                Quark.runCommand(scanner.nextLine().strip());
-            } catch(CommandException exception) {
-                Quark.logger().error(exception.getMessage());
+            Console.synchronizedPrint("Quark Server > ");
+            var input = scanner.nextLine().strip();
+
+            if(input.startsWith(commandPrefix)) {
+                try {
+                    Quark.runCommand(input.substring(commandPrefix.length()));
+                } catch(CommandException exception) {
+                    Quark.logger().error(exception.getMessage());
+                }
+            } else if(!input.isBlank()) {
+                try {
+                    Quark.info(Quark.runInstruction(input).toString());
+                } catch(QuarkException exception) {
+                    Quark.error(exception.getMessage());
+                }
             }
         }
     }
