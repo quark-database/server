@@ -40,7 +40,7 @@ public class InstructionParameter {
     }
 
     public static InstructionParameter optional(String name) {
-        return required(name, Types.STRING);
+        return optional(name, Types.STRING);
     }
 
     public String getName() {
