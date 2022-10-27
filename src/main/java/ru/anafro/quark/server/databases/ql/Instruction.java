@@ -2,9 +2,12 @@ package ru.anafro.quark.server.databases.ql;
 
 import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
+import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.views.TableView;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.plugins.events.BeforeTableViewCollection;
+import ru.anafro.quark.server.plugins.events.TableViewCollectionFinished;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
@@ -40,6 +43,12 @@ public abstract class Instruction {
     public final InstructionParameters parameters;
 
     /**
+     * The short instruction description.
+     * @since Quark 1.1
+     */
+    public final String description;
+
+    /**
      * Creates a new instruction object. You should not use it anywhere
      * but in the registering ({@code Quark.instructions().add(new YourInstruction()}).
      *
@@ -50,8 +59,9 @@ public abstract class Instruction {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public Instruction(String name, String permission, InstructionParameter... parameters) {
+    public Instruction(String name, String description, String permission, InstructionParameter... parameters) {
         this.name = name;
+        this.description = description;
         this.permission = permission;
         this.parameters = new InstructionParameters(parameters);
     }
@@ -84,35 +94,42 @@ public abstract class Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public InstructionResult execute(InstructionArguments arguments) {
-        for(var argument : arguments) {
-            if(!parameters.has(argument.name())) {
-                throw new DatabaseException("There's no instruction parameter %s. Follow this instruction syntax: %s".formatted(argument.name(), getSyntax()));
-            }
-        }
-
-        for(var parameter : parameters) {
-            if(parameter.isRequired() && !arguments.has(parameter.getName())) {
-                throw new DatabaseException("The instruction parameter %s is required, but you didn't provide it".formatted(parameter.getName()));
-            }
-
-            if(arguments.has(parameter.getName()) && !parameter.isWildcard() && !arguments.get(parameter.getName()).getExactTypeName().equals(parameter.getType())) {
-                throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s."
-                        .formatted(
-                                parameter.getName(),
-                                parameter.getType(),
-                                arguments.get(parameter.getName()).toInstructionForm(),
-                                arguments.get(parameter.getName()).getExactTypeName()
-                        )
-                );
-            }
-        }
-
         try {
+            for(var argument : arguments) {
+                if(!parameters.has(argument.name())) {
+                    throw new DatabaseException("There's no instruction parameter %s. Follow this instruction syntax: %s".formatted(argument.name(), getSyntax()));
+                }
+            }
+
+            for(var parameter : parameters) {
+                if(parameter.isRequired() && !arguments.has(parameter.getName())) {
+                    throw new DatabaseException("The instruction parameter %s is required, but you didn't provide it".formatted(parameter.getName()));
+                }
+
+                if(arguments.has(parameter.getName()) && !parameter.isWildcard() && !arguments.get(parameter.getName()).getExactTypeName().equals(parameter.getType()) &&
+                  (arguments.get(parameter.getName()).hasType("list") && !((ListEntity) arguments.get(parameter.getName())).isEmpty())) { // TODO: Remove explicit list type check from here.
+                    throw new DatabaseException("The instruction parameter %s has type %s, but you passed value %s to it, which type is %s."
+                            .formatted(
+                                    parameter.getName(),
+                                    parameter.getType(),
+                                    arguments.get(parameter.getName()).toInstructionForm(),
+                                    arguments.get(parameter.getName()).getExactTypeName()
+                            )
+                    );
+                }
+            }
+
+
             InstructionResultRecorder resultRecorder = new InstructionResultRecorder();
 
-            this.action(arguments, Quark.server(), resultRecorder);
+            Quark.fire(new BeforeTableViewCollection(resultRecorder));
 
-            return resultRecorder.collectResult();
+            this.action(arguments, Quark.server(), resultRecorder);
+            var result = resultRecorder.collectResult();
+
+            Quark.fire(new TableViewCollectionFinished(result.tableView()));
+
+            return result;
         } catch(QuarkException exception) {
             return new InstructionResult(QueryExecutionStatus.SYNTAX_ERROR, exception.getMessage(), 0, TableView.empty());
         } catch(Exception exception) {
@@ -181,5 +198,9 @@ public abstract class Instruction {
      */
     public InstructionParameters getParameters() {
         return parameters;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
