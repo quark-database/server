@@ -4,7 +4,7 @@ import ru.anafro.quark.server.files.Plugins;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.plugins.events.Event;
 import ru.anafro.quark.server.plugins.exceptions.*;
-import ru.anafro.quark.server.utils.containers.Lists;
+import ru.anafro.quark.server.utils.patterns.NamedObjectsRegistry;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,13 +14,10 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
-public class PluginManager {
-    private final ArrayList<Plugin> loadedPlugins = Lists.empty();
+public class PluginManager extends NamedObjectsRegistry<Plugin> implements Iterable<Plugin> {
     private final Logger logger = new Logger(this.getClass());
     private boolean isLoaded = false;
     public static final String PLUGIN_CLASS_PATH_FILE_NAME = "Plugin Class Path.txt";
@@ -56,7 +53,7 @@ public class PluginManager {
 
                 Plugin plugin = (Plugin) classToLoad.getDeclaredConstructor().newInstance();
 
-                loadedPlugins.add(plugin);
+                add(plugin);
                 logger.info("Plugin %s by %s is successfully loaded!".formatted(quoted(plugin.getName()), plugin.getAuthor()));
             } catch(Exception exception) {
                 logger.error("Loading of the plugin %s is failed, because of %s occurred: %s".formatted(
@@ -86,7 +83,9 @@ public class PluginManager {
                     }
 
                     try {
-                        method.invoke(plugin, event);
+                        if(method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                            method.invoke(plugin, method.getParameterTypes()[0].cast(event));
+                        }
                     } catch (IllegalAccessException | InvocationTargetException exception) {
                         throw new PluginReflectionException(exception, event, plugin, method);
                     } catch(Exception exception) {
