@@ -20,6 +20,7 @@ public class InstructionLexer {
      private InstructionLexerState state = new ReadingInstructionHeaderInstructionLexerState(this);
      private int currentCharacterIndex;
      public static final Character[] CHARACTERS_SHOULD_BE_IGNORED = {' ', '\n', '\t'};
+     private boolean allowBufferTrash = false;
 
      public synchronized ArrayList<InstructionToken> lex(String instruction) {
           this.instruction = instruction;
@@ -67,7 +68,8 @@ public class InstructionLexer {
                }
           }
 
-          if(!buffer.isEmpty()) {
+          if(!buffer.isEmpty() && !isBufferTrashAllowed()) {
+               // TODO: Message is not descriptive.
                throw new InstructionSyntaxException(state, instruction, "Instruction syntax is invalid", "Please, read this instruction carefully again to figure out, what is wrong. Your instruction should look like this: instruction name <general parameter (sometimes there's no general parameter in an instruction)>: firstparameter = <first parameter value>, secondparameter = <second parameter value>, ...; (sometimes there are no parameters at all).", 0, instruction.length());
           }
 
@@ -143,5 +145,17 @@ public class InstructionLexer {
 
      public Logger getLogger() {
           return logger;
+     }
+
+     public ArrayList<InstructionToken> getTokens() {
+          return tokens;
+     }
+
+     public boolean isBufferTrashAllowed() {
+          return allowBufferTrash;
+     }
+
+     public void allowBufferTrash() {
+          this.allowBufferTrash = true;
      }
 }
