@@ -6,14 +6,17 @@ import ru.anafro.quark.server.utils.patterns.exceptions.ObjectAlreadyExistsInReg
 import ru.anafro.quark.server.utils.patterns.exceptions.ObjectIsMissingInRegistryException;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A named object registry can be used to store the same object type inside.
  * But the difference from any collection is that any object has a name. Implement
  * the {@link NamedObjectsRegistry#getNameOf(Object)} to let the registry know
  * how to name all the objects you will put into the registry.
+ *
+ * @param  <E> an object type.
  *
  * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
@@ -22,7 +25,7 @@ import java.util.Iterator;
  * @see    NamedObjectsRegistry#asList()
  */
 public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
-    protected final ArrayList<E> registeredObjects;
+    protected final List<E> registeredObjects;
 
     /**
      * Creates a new named object registry with <code>objectsToRegister</code> objects.
@@ -37,7 +40,7 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      */
     @SafeVarargs
     public NamedObjectsRegistry(E... objectsToRegister) {
-        registeredObjects = Lists.empty();
+        registeredObjects = Collections.synchronizedList(Lists.empty());
 
         for(var objectToRegister : objectsToRegister) {
             add(objectToRegister);
@@ -195,7 +198,7 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
      * @see    NamedObjectsRegistry#get(String)
      * @see    NamedObjectsRegistry#has(String)
      */
-    public ArrayList<E> asList() {
+    public List<E> asList() {
         return registeredObjects;
     }
 
