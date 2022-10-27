@@ -36,7 +36,7 @@ public abstract class InstructionParserState {
         return previousState;
     }
 
-    protected void throwExcectationError(String expected, String met) {
+    protected void throwExecutionError(String expected, String met) {
         throw new InstructionSyntaxException(this, Strings.capitalize("%s %s expected, but %s %s met".formatted(English.articleFor(expected), expected, English.articleFor(met), met)), "You probably missed something, or need to remove something, or put something in a bad order");
     }
 }
