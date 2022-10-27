@@ -24,8 +24,9 @@ public class OpenDebugCommand extends Command {
 
         var frame = Quark.debugFrames().get(arguments.get("for"));
 
-        if(frame.isEnabled()) {
+        if(frame.isVisible()) {
             logger.info("Debug dialog %s is already opened. Check out your taskbar.".formatted(frame.getName()));
+            frame.pullToTop();
         } else {
             logger.info("Opening the %s debug dialog...".formatted(frame.getName()));
             frame.open();
