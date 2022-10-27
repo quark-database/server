@@ -26,4 +26,8 @@ public final class Integers {
 
         return Math.max(Math.min(integer, max), min);
     }
+
+    public static int positiveModulus(int integer, int divisor) {
+        return ((integer % divisor) + divisor) % divisor;
+    }
 }
