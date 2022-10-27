@@ -57,4 +57,12 @@ public abstract class DebugFrame extends JFrame {
     public String getName() {
         return name;
     }
+
+    public void pullToTop() {
+        EventQueue.invokeLater(() -> {
+            setState(NORMAL);
+            toFront();
+            repaint();
+        });
+    }
 }
