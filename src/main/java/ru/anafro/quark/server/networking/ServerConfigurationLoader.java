@@ -1,33 +1,24 @@
 package ru.anafro.quark.server.networking;
 
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.error.YAMLException;
-import ru.anafro.quark.server.networking.exceptions.BadServerConfigurationFormatException;
+import com.google.gson.Gson;
 import ru.anafro.quark.server.networking.exceptions.ServerConfigurationCannotBeLoadedException;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class ServerConfigurationLoader {
     /**
-     * It loads a YAML file and returns a ServerConfiguration object
+     * It loads a JSON file and returns a ServerConfiguration object
      * 
      * @param path The path to the configuration file.
      * @return A ServerConfiguration object.
      */
     public ServerConfiguration load(String path) {
-        Yaml yaml = new Yaml(new Constructor(ServerConfiguration.class));
-
-        try(FileInputStream configurationFileInputStream = new FileInputStream(path)) {
-            var configuration = (ServerConfiguration) yaml.load(configurationFileInputStream);
-            configuration.setPath(path);
-
-            return configuration;
+        try {
+            var gson = new Gson();
+            return gson.fromJson(new FileReader(path), ServerConfiguration.class);
         } catch(IOException exception) {
             throw new ServerConfigurationCannotBeLoadedException(path, exception);
-        } catch(YAMLException exception) {
-            throw new BadServerConfigurationFormatException(path, exception);
         }
     }
 }
