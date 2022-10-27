@@ -43,7 +43,7 @@ public class AsyncServicePool {
      * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public AsyncServicePool(AsyncService... services) {
-        this.services = Collections.synchronizedList(List.of(services));
+        this.services = Collections.synchronizedList(new ArrayList<>(List.of(services)));
         this.pool = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -55,7 +55,7 @@ public class AsyncServicePool {
      */
     public void run() {
         for(var service : services) {
-            pool.add(new Thread(service));
+            pool.add(new Thread(service, service.getName()));
         }
 
         for(var thread : pool) {
@@ -91,5 +91,9 @@ public class AsyncServicePool {
      */
     public List<Thread> getPool() {
         return pool;
+    }
+
+    public void add(AsyncService service) {
+        services.add(service);
     }
 }
