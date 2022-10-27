@@ -1,9 +1,6 @@
 package ru.anafro.quark.server.api;
 
-import ru.anafro.quark.server.console.Command;
-import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.console.CommandLoop;
-import ru.anafro.quark.server.console.CommandRegistry;
+import ru.anafro.quark.server.console.*;
 import ru.anafro.quark.server.console.commands.*;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
@@ -450,8 +447,7 @@ public final class Quark {
         tableSchemeRegistry.add(new ScheduledCommandsTableScheme());
         tableSchemeRegistry.add(new ScheduledQueriesTableScheme());
 
-        runCommand("repair-files");
-        runCommand("clear-maven");
+        runCommandScript("Before Start-Up");
         runCommandsFromCommandLineArguments(args);
 
         for(var scheme : tableSchemes()) {
@@ -846,5 +842,10 @@ public final class Quark {
 
     public static ScheduledTaskPool taskPool() {
         return scheduledTaskPool;
+    }
+
+    public static void runCommandScript(String name) {
+        var script = new CommandScriptFile(name);
+        script.run();
     }
 }
