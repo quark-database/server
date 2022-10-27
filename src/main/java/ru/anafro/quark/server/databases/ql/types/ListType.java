@@ -3,6 +3,7 @@ package ru.anafro.quark.server.databases.ql.types;
 import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
 import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
@@ -23,11 +24,21 @@ public class ListType extends EntityType {
     }
 
     @Override
-    public String toInstructionForm(Entity list) {
-        return new StringConstructorBuilder()       // TODO: type check (list)
-                .name(list.getType().getName())             // list
-                .arguments(((ListEntity) list).getValue())  // values
-                .build();
+    public String toInstructionForm(Entity entity) {
+        var list = (ListEntity) entity;
+        var builder = new StringConstructorBuilder();
+
+        if(list.isEmpty()) {
+            return builder
+                    .name("empty list of")
+                    .argument(new StringEntity(list.getTypeOfValuesInside()))
+                    .build();
+        } else {
+            return builder                                      // TODO: type check (list)
+                    .name(list.getTypeName())                   // list
+                    .arguments(list.getValue())                 // values
+                    .build();
+        }
     }
 
     @Override
