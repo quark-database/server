@@ -8,12 +8,7 @@ public class RecordCollectionResolver {
     }
 
     public RecordCollection createEmptyCollection() {
-        return switch(resolverCase) {
-            case FIND_KEY_IN_SMALL_TABLE -> new HashMapRecordCollection();
-            case FIND_KEY_IN_BIG_TABLE -> new TreeRecordCollection();
-
-            default -> new LinearRecordCollection();
-        };
+        return new LinearRecordCollection();
     }
 
     public RecordCollectionResolverCase getResolverCase() {
@@ -23,8 +18,8 @@ public class RecordCollectionResolver {
     public enum RecordCollectionResolverCase {
         SELECTOR_IS_TOO_COMPLEX,
         JUST_SELECT_EVERYTHING,
-        FIND_KEY_IN_BIG_TABLE,
-        FIND_KEY_IN_SMALL_TABLE,
+        FIND_UNIQUE,
+        FIND_REPEATING,
         NO_FURTHER_MANIPULATIONS
     }
 }
