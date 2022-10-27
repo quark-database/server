@@ -1,7 +1,6 @@
 package ru.anafro.quark.server.files;
 
 import ru.anafro.quark.server.files.exceptions.CannotCreateDirectoryException;
-import ru.anafro.quark.server.files.exceptions.CannotDeleteDirectoryException;
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
 import java.io.File;
@@ -52,19 +51,28 @@ public final class FileSystem {
 
     public static void deleteIfExists(String... paths) {
         for (var stringPath : paths) {
-            try {
-                if(isFile(stringPath) && exists(stringPath)) {
-                    new File(stringPath).delete();
-                }
-
-                if(isDirectory(stringPath) && exists(stringPath)) {
-                    var path = Path.of(stringPath);
-
-                    Files.walk(path).map(Path::toFile).forEach(File::delete);
-                }
-            } catch(IOException exception) {
-                throw new CannotDeleteDirectoryException(stringPath, exception);
+//            try {
+            if(isFile(stringPath) && exists(stringPath)) {
+                new File(stringPath).delete();
             }
+
+            if(isDirectory(stringPath) && exists(stringPath)) {
+                var path = Path.of(stringPath);
+
+                var directory = new File(path.toUri());
+                var content = directory.listFiles();
+
+                if(content != null) {
+                    for (var fileInside : content) {
+                        deleteIfExists(fileInside.getAbsolutePath());
+                    }
+                }
+
+                directory.delete();
+            }
+//            } catch(IOException exception) {
+//                throw new CannotDeleteDirectoryException(stringPath, exception);
+//            }
         }
     }
 }
