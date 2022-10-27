@@ -4,6 +4,8 @@ import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
 import ru.anafro.quark.server.logging.LogLevel;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.plugins.events.BeforeRunCommand;
+import ru.anafro.quark.server.plugins.events.CommandFinished;
 import ru.anafro.quark.server.utils.containers.UniqueList;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
@@ -49,9 +51,12 @@ public abstract class Command {
     public abstract void action(CommandArguments arguments);
 
     public void run(CommandArguments arguments) {
-        parameters.checkArgumentsValidity(arguments);
+        Quark.fire(new BeforeRunCommand(this, arguments));
 
+        parameters.checkArgumentsValidity(arguments);
         action(arguments);
+
+        Quark.fire(new CommandFinished(this, arguments));
     }
 
     public boolean hasAliases() {
