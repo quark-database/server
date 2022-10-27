@@ -2,7 +2,9 @@ package ru.anafro.quark.server.utils.arrays;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
+import java.lang.reflect.Array;
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * Arrays class contains uncategorized utility methods for
@@ -79,5 +81,10 @@ public final class Arrays {
     @SafeVarargs
     public static <T> T[] of(T... objects) {
         return objects;
+    }
+
+    public static <T> T[] concat(T[] first, T[] second) {
+        return Stream.concat(java.util.Arrays.stream(first), java.util.Arrays.stream(second))
+                .toArray(size -> (T[]) Array.newInstance(first.getClass().getComponentType(), size));
     }
 }
