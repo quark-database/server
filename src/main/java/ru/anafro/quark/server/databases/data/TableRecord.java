@@ -128,4 +128,9 @@ public class TableRecord implements Iterable<RecordField> {
         fields.clear();
         fields.addAll(reorderedFields);
     }
+
+    @Override
+    public String toString() {
+        return Lists.joinPresentations(fields, field -> field.getValue().toInstructionForm());
+    }
 }
