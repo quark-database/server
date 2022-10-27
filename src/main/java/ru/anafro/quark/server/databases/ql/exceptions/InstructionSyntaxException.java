@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.databases.ql.exceptions;
 
 import ru.anafro.quark.server.databases.ql.lexer.exceptions.LexerException;
+import ru.anafro.quark.server.utils.integers.Integers;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 public class InstructionSyntaxException extends LexerException {
@@ -32,7 +33,7 @@ public class InstructionSyntaxException extends LexerException {
         formattedMessage.appendLine("Lexing state: " + stateClass.getSimpleName()); // TODO: Split class name by words with spaces
         formattedMessage.appendLine("-".repeat(instruction.length()));
         formattedMessage.appendLine(instruction);
-        formattedMessage.append(" ".repeat(errorBeginningCharacterIndex));
+        formattedMessage.append(" ".repeat(Integers.limit(errorBeginningCharacterIndex, 0, Integer.MAX_VALUE)));
         formattedMessage.append("~".repeat(errorLength));
         formattedMessage.nextLine();
         formattedMessage.appendLine("-".repeat(instruction.length()));
