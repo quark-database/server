@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
+
 public class NullEntity extends Entity {
     private final String exactNullType;
 
@@ -21,5 +23,15 @@ public class NullEntity extends Entity {
     @Override
     public String toRecordForm() {
         return "@";
+    }
+
+    @Override
+    public int rawCompare(Entity entity) {
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Quark.stringHashingFunction().hash("null");
     }
 }

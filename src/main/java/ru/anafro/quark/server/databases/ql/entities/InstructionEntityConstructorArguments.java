@@ -2,6 +2,7 @@ package ru.anafro.quark.server.databases.ql.entities;
 
 import ru.anafro.quark.server.databases.exceptions.DatabaseException;
 import ru.anafro.quark.server.databases.ql.parser.exceptions.InstructionParserException;
+import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,5 +90,10 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
 
     public long getLong(String argumentName) {
         return this.<LongEntity>get(argumentName).getValue();
+    }
+
+    @Override
+    public String toString() {
+        return Lists.joinPresentations(arguments, argument -> argument.getName() + " = " + argument.getEntity().toInstructionForm());
     }
 }

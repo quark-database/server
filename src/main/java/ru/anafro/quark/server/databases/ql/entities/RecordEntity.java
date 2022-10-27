@@ -42,6 +42,34 @@ public class RecordEntity extends Entity implements Iterable<Entity> {
     }
 
     @Override
+    public int rawCompare(Entity entity) {
+        var record = (RecordEntity) entity;
+
+        for(int index = 0; index < Math.min(values.size(), record.getValues().size()); index += 1) {
+            if(values.get(index).compareTo(record.getValues().get(index)) != 0) {
+                return values.get(index).compareTo(record.getValues().get(index));
+            }
+        }
+
+        if(values.size() == record.getValues().size()) {
+            return 0;
+        } else {
+            return values.size() - record.getValues().size();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+
+        for(var entity : values) {
+            hash += entity.hashCode();
+        }
+
+        return hash;
+    }
+
+    @Override
     public Iterator<Entity> iterator() {
         return values.iterator();
     }

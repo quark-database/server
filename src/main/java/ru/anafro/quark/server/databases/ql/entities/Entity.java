@@ -1,10 +1,13 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
 import ru.anafro.quark.server.api.Quark;
+import ru.anafro.quark.server.databases.ql.entities.exceptions.EntitiesCannotBeComparedException;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.InstructionEntityCastException;
 import ru.anafro.quark.server.databases.ql.types.EntityType;
 
-public abstract class Entity {
+import java.util.Objects;
+
+public abstract class Entity implements Comparable<Entity> {
     public static final String WILDCARD_TYPE = "?";
     private final EntityType type;
 
@@ -56,4 +59,36 @@ public abstract class Entity {
     public abstract String getExactTypeName();
 
     public abstract String toRecordForm();
+    public abstract int rawCompare(Entity entity);
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+
+        if(obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        var entity = (Entity) obj;
+        return Objects.equals(getValue(), entity.getValue());
+    }
+
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public int compareTo(Entity entity) {
+        if(entity.mismatchesType(getType())) {
+            throw new EntitiesCannotBeComparedException(this, entity);
+        }
+
+        return rawCompare(entity);
+    }
+
+    @Override
+    public String toString() {
+        return toInstructionForm();
+    }
 }

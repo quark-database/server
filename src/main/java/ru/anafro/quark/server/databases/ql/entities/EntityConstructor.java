@@ -30,6 +30,10 @@ public abstract class EntityConstructor {
 
     protected abstract Entity invoke(InstructionEntityConstructorArguments arguments);
 
+    public Entity eval(InstructionEntityConstructorArgument... arguments) {
+        return eval(new InstructionEntityConstructorArguments(arguments));
+    }
+
     public Entity eval(InstructionEntityConstructorArguments arguments) {
         if(parameters.hasVarargs() && !arguments.has(parameters.getVarargs().name())) {
             arguments.add(new InstructionEntityConstructorArgument(parameters.getVarargs().name(), new ListEntity(parameters.getVarargs().type())));
@@ -44,7 +48,7 @@ public abstract class EntityConstructor {
                 }
 
                 if(!argument.getEntity().getTypeName().equals(parameter.type()) && !parameter.isWildcard()) {
-                    if(Quark.types().get(parameter.type()).castableFrom(argument.getEntity().getType())) {
+                    if(Quark.types().getOrThrow(parameter.type(), "No such type for parameter: " + parameter.type()).castableFrom(argument.getEntity().getType())) {
                          argument.setEntity(Quark.types().get(parameter.type()).cast(argument.getEntity()));
                     } else if(parameter.isVarargs() && !((ListEntity) argument.getEntity()).getTypeOfValuesInside().equals(parameter.type())) {
                         throw new ConstructorEvaluationException(this, "An argument you passed has type %s, but must have type %s".formatted(quoted(argument.getEntity().getType().getName()), quoted(parameters.getParameter(argument.getName()).type())));
@@ -102,7 +106,7 @@ public abstract class EntityConstructor {
             syntax.append(parameter.name() + " is " + (parameter.required() ? "" : "optional " ) + parameter.type() + (parameter.isVarargs() ? InstructionEntityConstructorParameter.VARARGS_TYPE_MARKER : ""));
 
             if(index + 1 != parameters.asList().size()) {
-                syntax.append(',');
+                syntax.append(", ");
             }
 
             syntax.nextLine();

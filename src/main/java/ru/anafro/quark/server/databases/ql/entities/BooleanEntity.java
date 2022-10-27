@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
+
 public class BooleanEntity extends Entity {
     private final boolean value;
 
@@ -21,5 +23,15 @@ public class BooleanEntity extends Entity {
     @Override
     public String toRecordForm() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public int rawCompare(Entity entity) {
+        return Boolean.compare(value, ((BooleanEntity) entity).getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Quark.stringHashingFunction().hash(Boolean.toString(value));
     }
 }

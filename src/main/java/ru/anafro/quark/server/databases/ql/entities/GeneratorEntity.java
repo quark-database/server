@@ -1,10 +1,11 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.RecordFieldGenerator;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
 
 public class GeneratorEntity extends Entity {
-    private RecordFieldGenerator generator;
+    private final RecordFieldGenerator generator;
 
     public GeneratorEntity(RecordFieldGenerator generator) {
         super("generator");
@@ -27,6 +28,16 @@ public class GeneratorEntity extends Entity {
                 .name("generator")
                 .argument(new StringEntity(generator.expression()))
                 .build();
+    }
+
+    @Override
+    public int rawCompare(Entity entity) {
+        return generator.expression().compareTo(((GeneratorEntity) entity).getGenerator().expression());
+    }
+
+    @Override
+    public int hashCode() {
+        return Quark.stringHashingFunction().hash(generator.expression());
     }
 
     public RecordFieldGenerator getGenerator() {

@@ -1,5 +1,7 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
+
 public class FloatEntity extends Entity {
     private final float value;
 
@@ -30,5 +32,15 @@ public class FloatEntity extends Entity {
     @Override
     public String toRecordForm() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public int rawCompare(Entity entity) {
+        return Float.compare(value, ((FloatEntity) entity).getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Quark.integerHashingFunction().hash((int) value);
     }
 }

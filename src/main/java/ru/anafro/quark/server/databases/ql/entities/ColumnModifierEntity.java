@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.databases.ql.entities;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.ColumnModifier;
 import ru.anafro.quark.server.databases.ql.entities.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.databases.ql.entities.exceptions.TypeCanNotBeUsedInRecordsException;
@@ -39,7 +40,7 @@ public class ColumnModifierEntity extends Entity {
         return new StringConstructorBuilder()
                 .name(modifier.getName())
                 .argument(new StringEntity(columnName))
-                .arguments(modifierArguments)
+//                .arguments(modifierArguments)         TODO
                 .build();
     }
 
@@ -51,6 +52,16 @@ public class ColumnModifierEntity extends Entity {
     @Override
     public String toRecordForm() {
         throw new TypeCanNotBeUsedInRecordsException(getType());
+    }
+
+    @Override
+    public int rawCompare(Entity entity) {
+        return modifier.getName().compareTo(((ColumnModifierEntity) entity).getModifier().getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Quark.stringHashingFunction().hash(toInstructionForm());
     }
 
     public InstructionEntityConstructorArguments getModifierArguments() {
