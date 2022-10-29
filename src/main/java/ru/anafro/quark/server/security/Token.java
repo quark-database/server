@@ -4,6 +4,8 @@ import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
+import static ru.anafro.quark.server.security.TokenPermission.ALLOWED_FOR_ALL_TOKENS;
+
 /**
  * Tokens are used for separating the access to Quark databases.
  * Some tokens can do everything, but some can do less - this
@@ -46,6 +48,10 @@ public record Token(String token) {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public boolean hasPermission(String permission) {
+        if(permission.equals(ALLOWED_FOR_ALL_TOKENS)) {
+            return true;
+        }
+
         var result = Quark.runInstruction("""
                 select from "Quark.Tokens": selector = @selector("@equals(:token, \\"%s\\")");
         """.formatted(token));
