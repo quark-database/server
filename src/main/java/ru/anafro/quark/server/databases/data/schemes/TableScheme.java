@@ -7,6 +7,10 @@ import ru.anafro.quark.server.databases.data.Table;
 import ru.anafro.quark.server.databases.ql.InstructionTemplate;
 import ru.anafro.quark.server.databases.ql.entities.ListEntity;
 import ru.anafro.quark.server.databases.ql.entities.StringEntity;
+import ru.anafro.quark.server.files.Databases;
+import ru.anafro.quark.server.files.FileSystem;
+
+import java.nio.file.Path;
 
 public class TableScheme {
     private final CompoundedTableName tableName;
@@ -25,13 +29,11 @@ public class TableScheme {
     }
 
     public void deploy() {
-        if(Table.exists(tableName)) {
-            return;
-        }
-
         if(!Database.exists(tableName.getDatabaseName())) {
             Database.create(tableName.getDatabaseName());
         }
+
+        FileSystem.deleteIfExists(Path.of(Databases.FOLDER, tableName.getDatabaseName(), tableName.getTableName()).toString());
 
         Quark.info("System table '%s' is missing, creating a new one...".formatted(
                 tableName
