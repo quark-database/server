@@ -19,6 +19,6 @@ public class HoursConstructor extends EntityConstructor {
 
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return new FloatEntity(arguments.getFloat("seconds") * 360_000.0F);
+        return new FloatEntity(arguments.getFloat("hours") * 360_000.0F);
     }
 }

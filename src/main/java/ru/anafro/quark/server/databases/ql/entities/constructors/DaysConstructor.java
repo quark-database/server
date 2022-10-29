@@ -18,6 +18,6 @@ public class DaysConstructor extends EntityConstructor {
 
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return new FloatEntity(arguments.getFloat("seconds") * 1000.0F * 3600.0F * 24);
+        return new FloatEntity(arguments.getFloat("days") * 1000.0F * 3600.0F * 24);
     }
 }

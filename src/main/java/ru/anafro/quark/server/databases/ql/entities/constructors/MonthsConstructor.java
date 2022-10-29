@@ -19,6 +19,6 @@ public class MonthsConstructor extends EntityConstructor {
 
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return new FloatEntity(arguments.getFloat("seconds") * 1000.0F * 3600.0F * 24 * 30);
+        return new FloatEntity(arguments.getFloat("months") * 1000.0F * 3600.0F * 24 * 30);
     }
 }
