@@ -1,14 +1,11 @@
 package ru.anafro.quark.server.databases.data;
 
-import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileException;
 import ru.anafro.quark.server.files.Databases;
+import ru.anafro.quark.server.files.FileSystem;
 import ru.anafro.quark.server.utils.containers.Lists;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,14 +45,7 @@ public class Database {
     }
 
     public static void delete(String databaseName) {
-        try {
-            Files.walk(Path.of(Databases.get(databaseName)))
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-        } catch (IOException exception) {
-            throw new DatabaseFileException("Database %s cannot be deleted, because of: " + exception);
-        }
+        FileSystem.deleteIfExists(Path.of(Databases.get(databaseName)).toString());
     }
 
     public Table getTable(String tableName) {
