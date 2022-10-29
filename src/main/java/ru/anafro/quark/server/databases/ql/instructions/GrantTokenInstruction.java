@@ -2,6 +2,7 @@ package ru.anafro.quark.server.databases.ql.instructions;
 
 import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.ql.*;
+import ru.anafro.quark.server.databases.ql.entities.StringEntity;
 import ru.anafro.quark.server.networking.Server;
 
 /**
@@ -79,10 +80,13 @@ public class GrantTokenInstruction extends Instruction {
         var token = arguments.getString("token");
         var permission = arguments.getString("permission");
 
-        Quark.runInstruction("""
-                insert into "Quark.Tokens": record = @record(:token, :permission);
-        """.replace(":token", token).replace(":permission", permission));
+        Quark.runInstruction(new InstructionTemplate("""
+                insert into "Quark.Tokens": record = @record(%s, %s);
+        """).format(
+                new StringEntity(token),
+                new StringEntity(permission)
+        ));
 
-        result.status(QueryExecutionStatus.OK, "");
+        result.status(QueryExecutionStatus.OK, "A new permission for the token has been granted.");
     }
 }
