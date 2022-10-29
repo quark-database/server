@@ -27,7 +27,6 @@ import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
  * @version Quark 1.1
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
-@Deprecated(since = "Quark 1.1")
 public class ReloadServerInstruction extends Instruction {
 
     /**
