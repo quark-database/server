@@ -6,6 +6,7 @@ import ru.anafro.quark.server.databases.data.exceptions.VariableFileValueSetting
 import ru.anafro.quark.server.databases.data.exceptions.VariableFileWrongLinesCountException;
 import ru.anafro.quark.server.databases.exceptions.VariableFileValueGettingFailedException;
 import ru.anafro.quark.server.databases.ql.entities.Entity;
+import ru.anafro.quark.server.files.FileSystem;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.io.File;
@@ -46,6 +47,10 @@ public class VariableFile {
         }
     }
 
+    public <T extends Entity> T get() {
+        return get(null);
+    }
+
     public void set(Entity newValue) {
         try {
             FileWriter variableVariable = new FileWriter(file, false);
@@ -76,5 +81,9 @@ public class VariableFile {
 
     public File getFile() {
         return file;
+    }
+
+    public void delete() {
+        FileSystem.deleteIfExists(file.getAbsolutePath());
     }
 }
