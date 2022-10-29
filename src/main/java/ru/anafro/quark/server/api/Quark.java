@@ -312,6 +312,24 @@ public final class Quark {
         constructorRegistry.add(new NullConstructor());
         constructorRegistry.add(new GeneratorConstructor());
         constructorRegistry.add(new FinderConstructor());
+        constructorRegistry.add(new DateFromStampConstructor());
+        constructorRegistry.add(new MillisecondsConstructor());
+        constructorRegistry.add(new SecondsConstructor());
+        constructorRegistry.add(new MinutesConstructor());
+        constructorRegistry.add(new HoursConstructor());
+        constructorRegistry.add(new DaysConstructor());
+        constructorRegistry.add(new WeeksConstructor());
+        constructorRegistry.add(new MonthsConstructor());
+        constructorRegistry.add(new YearsConstructor());
+        constructorRegistry.add(new DateFromFormatConstructor());
+        constructorRegistry.add(new MillisecondConstructor());
+        constructorRegistry.add(new SecondConstructor());
+        constructorRegistry.add(new MinuteConstructor());
+        constructorRegistry.add(new HourConstructor());
+        constructorRegistry.add(new DayConstructor());
+        constructorRegistry.add(new WeekConstructor());
+        constructorRegistry.add(new MonthConstructor());
+        constructorRegistry.add(new YearConstructor());
         // ...including column constructors...
         constructorRegistry.add(new IdColumnConstructor());
         constructorRegistry.add(new StringColumnConstructor());
@@ -342,16 +360,6 @@ public final class Quark {
         constructorRegistry.add(new HexColorModifierConstructor());
         constructorRegistry.add(new UrlColumnModifierConstructor());
         constructorRegistry.add(new RequireUniqueModifierConstructor());
-        constructorRegistry.add(new DateFromStampConstructor());
-        constructorRegistry.add(new MillisecondsConstructor());
-        constructorRegistry.add(new SecondsConstructor());
-        constructorRegistry.add(new MinutesConstructor());
-        constructorRegistry.add(new HoursConstructor());
-        constructorRegistry.add(new DaysConstructor());
-        constructorRegistry.add(new WeeksConstructor());
-        constructorRegistry.add(new MonthsConstructor());
-        constructorRegistry.add(new YearsConstructor());
-        constructorRegistry.add(new DateFromFormatConstructor());
 
         // Instruction registering
         instructionRegistry.add(new AddColumnInstruction());
@@ -379,7 +387,7 @@ public final class Quark {
         instructionRegistry.add(new ListTablesInstruction());
         instructionRegistry.add(new RedefineColumnInstruction());
         instructionRegistry.add(new RedefinePermissionsForTokenInstruction());
-//        instructionRegistry.add(new ReloadServerInstruction());  TODO: Not working
+        instructionRegistry.add(new ReloadServerInstruction());
         instructionRegistry.add(new RenameColumnInInstruction());
         instructionRegistry.add(new RenameDatabaseInstruction());
         instructionRegistry.add(new RenameServerInstruction());
@@ -402,6 +410,12 @@ public final class Quark {
         instructionRegistry.add(new FindInInstruction());
         instructionRegistry.add(new CountInInstruction());
         instructionRegistry.add(new DescribeModifiersOfInstruction());
+        instructionRegistry.add(new ClearScheduledCommandsInstruction());
+        instructionRegistry.add(new ClearScheduledQueriesInstruction());
+        instructionRegistry.add(new GetVariableInInstruction());
+        instructionRegistry.add(new SetVariableInInstruction());
+        instructionRegistry.add(new ListVariablesInInstruction());
+        instructionRegistry.add(new DeleteVariableInInstruction());
 
         // Command registering
         commandRegistry.add(new ExitCommand());
@@ -421,7 +435,7 @@ public final class Quark {
         commandRegistry.add(new CheckIntegrityCommand());
         commandRegistry.add(new ClearMavenOutputCommand());
         commandRegistry.add(new ListScheduledTasksCommand());
-//        commandRegistry.add(new ReloadCommand());        TODO: Not working yet
+        commandRegistry.add(new ReloadCommand());
 
         debugFrameRegistry.add(new InstructionLexerDebugFrame());
         debugFrameRegistry.add(new InstructionParserDebugFrame());
