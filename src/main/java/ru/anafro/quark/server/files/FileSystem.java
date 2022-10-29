@@ -51,7 +51,6 @@ public final class FileSystem {
 
     public static void deleteIfExists(String... paths) {
         for (var stringPath : paths) {
-//            try {
             if(isFile(stringPath) && exists(stringPath)) {
                 new File(stringPath).delete();
             }
@@ -70,9 +69,6 @@ public final class FileSystem {
 
                 directory.delete();
             }
-//            } catch(IOException exception) {
-//                throw new CannotDeleteDirectoryException(stringPath, exception);
-//            }
         }
     }
 }
