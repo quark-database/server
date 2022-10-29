@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.databases.ql.instructions;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.ColumnDescription;
 import ru.anafro.quark.server.databases.data.CompoundedTableName;
 import ru.anafro.quark.server.databases.data.Table;
