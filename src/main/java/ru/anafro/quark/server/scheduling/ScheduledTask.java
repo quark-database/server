@@ -14,8 +14,8 @@ public abstract class ScheduledTask extends AsyncService {
     @Override
     public void run() {
         while(true) {
-            action();
             Threads.freezeFor(period / 1000.0);
+            action();
         }
     }
 
