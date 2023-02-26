@@ -1,9 +1,11 @@
 package ru.anafro.quark.server.databases.data.structures;
 
+import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.databases.data.RecordIterationLimiter;
 import ru.anafro.quark.server.databases.data.RecordLambda;
 import ru.anafro.quark.server.databases.data.TableRecord;
 import ru.anafro.quark.server.databases.data.TableRecordFinder;
+import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.integers.Integers;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.Optional;
 
 public class HashtableRecordCollection extends RecordCollection {
     private final String keyColumn;
-    public final int HASHTABLE_SIZE = 256;
+    public final int HASHTABLE_SIZE = 16;
     private final HashtableRecordCollectionChain[] recordChains;
 
     public static class HashtableRecordCollectionChain implements Iterable<TableRecord> {
@@ -36,6 +38,7 @@ public class HashtableRecordCollection extends RecordCollection {
         }
     }
 
+    @Deprecated(since = "Quark 1.2")
     public static class HashtableRecordCollectionIterator implements Iterator<TableRecord> {
         private final HashtableRecordCollection hashtable;
         private int currentChain = 0;
@@ -47,19 +50,30 @@ public class HashtableRecordCollection extends RecordCollection {
 
         @Override
         public boolean hasNext() {
-            return currentChain >= hashtable.getRecordChains().length;
+            return currentChain < hashtable.getRecordChains().length;
         }
 
         @Override
         public TableRecord next() {
-            var record = hashtable.chainAt(currentChain).getRecords().get(currentIndex++);
+            TableRecord record = null;
 
-            if(currentIndex >= hashtable.chainAt(currentChain).getRecords().size()) {
+            while(hasNext() && hashtable.chainAt(currentChain).getRecords().isEmpty()) {
                 currentChain += 1;
-                currentIndex = 0;
             }
 
-            return record;
+            while(hasNext() && hashtable.chainAt(currentChain).getRecords().get(currentIndex) == null) {
+                if(currentIndex < hashtable.chainAt(currentChain).getRecords().size()) {
+                    record = hashtable.chainAt(currentChain).getRecords().get(currentIndex);
+                    currentIndex += 1;
+                } else {
+                    currentChain += 1;
+                    currentIndex = 0;
+                }
+            }
+
+
+            Quark.warning(record == null ? "null" : record.toString());
+            return hashtable.chainAt(currentChain).getRecords().get(currentIndex);
         }
 
         public HashtableRecordCollection getHashtable() {
@@ -152,8 +166,20 @@ public class HashtableRecordCollection extends RecordCollection {
     }
 
     @Override
-    public Iterator<TableRecord> iterator() {
-        return new HashtableRecordCollectionIterator(this);
+    public void exclude(TableRecordFinder finder) {
+        var chain = chainAt(Integers.positiveModulus(finder.getFindingValue().hashCode(), HASHTABLE_SIZE));
+        chain.getRecords().removeIf(record -> record.getField(finder.getColumnName()).getValue().equals(finder.getFindingValue()));
+    }
+
+    @Override
+    public ArrayList<TableRecord> toList() {
+        var list = Lists.<TableRecord>empty();
+
+        for(var chain : recordChains) {
+            list.addAll(chain.getRecords());
+        }
+
+        return list;
     }
 
     public HashtableRecordCollectionChain[] getRecordChains() {
