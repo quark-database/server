@@ -17,6 +17,7 @@ public class LinearRecordCollection extends RecordCollection {
         return records.iterator();
     }
 
+    @Override
     public ArrayList<TableRecord> toList() {
         return new ArrayList<>(records);
     }
@@ -78,5 +79,10 @@ public class LinearRecordCollection extends RecordCollection {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void exclude(TableRecordFinder finder) {
+        remove(finder, RecordIterationLimiter.UNLIMITED);
     }
 }
