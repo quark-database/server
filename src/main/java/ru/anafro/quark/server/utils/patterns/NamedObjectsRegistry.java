@@ -158,6 +158,25 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
     }
 
     /**
+     * Adds new objects to the registry. If any object has the same
+     * name as the passed object does, ObjectAlreadyExistsInRegistryException will be thrown.
+     *
+     * @param  objects                                objects to add to the registry.
+     * @throws ObjectAlreadyExistsInRegistryException when any object with such name is already present in this registry.
+     *
+     * @since  Quark 1.1
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @see    NamedObjectsRegistry#get(String)
+     * @see    NamedObjectsRegistry#has(String)
+     * @see    NamedObjectsRegistry#asList()
+     */
+    public void add(E... objects) {
+        for(var object : objects) {
+            this.add(object);
+        }
+    }
+
+    /**
      * Returns the register objects iterator. Appending order is guaranteed.
      *
      * @return the register objects iterator.
