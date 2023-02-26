@@ -138,7 +138,7 @@ public abstract class NamedObjectsRegistry<E> implements Iterable<E> {
 
     /**
      * Adds a new object to the registry. If any object has the same
-     * name as the passed object do, ObjectAlreadyExistsInRegistryException will be thrown.
+     * name as the passed object does, ObjectAlreadyExistsInRegistryException will be thrown.
      *
      * @param object                                  an object to add to the registry.
      * @throws ObjectAlreadyExistsInRegistryException when object with such name is already present in this registry.
