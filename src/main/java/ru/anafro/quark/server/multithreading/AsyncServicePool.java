@@ -2,6 +2,7 @@ package ru.anafro.quark.server.multithreading;
 
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.exceptions.MultithreadingException;
+import ru.anafro.quark.server.scheduling.ScheduledTaskPool;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,5 +96,11 @@ public class AsyncServicePool {
 
     public void add(AsyncService service) {
         services.add(service);
+    }
+
+    public void add(ScheduledTaskPool taskPool) {
+        for(var service : taskPool) {
+            this.add(service);
+        }
     }
 }
