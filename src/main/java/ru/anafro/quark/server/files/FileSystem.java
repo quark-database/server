@@ -51,23 +51,25 @@ public final class FileSystem {
 
     public static void deleteIfExists(String... paths) {
         for (var stringPath : paths) {
-            if(isFile(stringPath) && exists(stringPath)) {
-                new File(stringPath).delete();
-            }
-
-            if(isDirectory(stringPath) && exists(stringPath)) {
-                var path = Path.of(stringPath);
-
-                var directory = new File(path.toUri());
-                var content = directory.listFiles();
-
-                if(content != null) {
-                    for (var fileInside : content) {
-                        deleteIfExists(fileInside.getAbsolutePath());
-                    }
+            if (exists(stringPath)) {
+                if (isFile(stringPath)) {
+                    new File(stringPath).delete();
                 }
 
-                directory.delete();
+                if (isDirectory(stringPath)) {
+                    var directory = new File(stringPath);
+
+                    var contents = directory.listFiles();
+                    if (contents != null) {
+                        for (File file : contents) {
+                            if (!Files.isSymbolicLink(file.toPath())) {
+                                deleteIfExists(file.getAbsolutePath());
+                            }
+                        }
+                    }
+
+                    directory.delete();
+                }
             }
         }
     }
