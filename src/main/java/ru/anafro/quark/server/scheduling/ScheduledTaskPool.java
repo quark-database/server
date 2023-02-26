@@ -20,9 +20,8 @@ public class ScheduledTaskPool implements Iterable<ScheduledTask> {
     }
 
     public void load() {
-        if(Table.exists("Quark.Scheduled Queries")) {
-
-        }
+        Table.ensureExists("Quark.Scheduled Queries");
+        Table.ensureExists("Quark.Scheduled Commands");
 
         var queries = Table.byName("Quark.Scheduled Queries").loadRecords();
         var commands = Table.byName("Quark.Scheduled Commands").loadRecords();
