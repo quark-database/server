@@ -8,7 +8,7 @@ import ru.anafro.quark.server.databases.ql.entities.Entity;
 import ru.anafro.quark.server.utils.containers.BTree;
 import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class PageTreeRecordCollection extends RecordCollection {
@@ -50,9 +50,18 @@ public class PageTreeRecordCollection extends RecordCollection {
         }
     }
 
+    /**
+     * @since Quark 1.2
+     * @param finder
+     */
     @Override
-    public Iterator<TableRecord> iterator() {
-        throw new NotImplementedException();
+    public void exclude(TableRecordFinder finder) {
+        tree.remove(finder.getFindingValue());
+    }
+
+    @Override
+    public ArrayList<TableRecord> toList() {
+        return tree.toList();
     }
 
     public BTree<Entity, TableRecord> getTree() {
