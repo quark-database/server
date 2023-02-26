@@ -5,7 +5,7 @@
   <artifactId>QuarkServer</artifactId>
   <version>1.1-SNAPSHOT</version>
   <build>
-    <directory>D:\Quark Server</directory>
+    <directory>D:\Quark</directory>
     <finalName>Quark Server</finalName>
     <plugins>
       <plugin>
