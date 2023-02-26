@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.logging;
 
-import ru.anafro.quark.server.utils.Console;
+import ru.anafro.quark.server.console.Console;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.debug.CallStack;
 
