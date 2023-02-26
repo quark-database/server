@@ -189,8 +189,11 @@ public class TextBuffer implements CharSequence {
      * @see    TextBuffer#isEmpty()
      * @see    TextBuffer#extractContent()
      */
-    public <T> TextBuffer append(T appendingValue) {
-        builder.append(appendingValue);
+    public <T> TextBuffer append(T... appendingValues) {
+        for(var appendingValue : appendingValues) {
+            builder.append(appendingValue);
+        }
+
         return this;
     }
 
