@@ -7,7 +7,6 @@ import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.networking.Server;
-import ru.anafro.quark.server.utils.Console;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
 
 import java.util.Scanner;
