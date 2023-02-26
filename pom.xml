@@ -62,6 +62,6 @@
         </plugins>
 
         <finalName>Quark Server</finalName>
-        <directory>D:\Quark Server</directory>
+        <directory>D:\Quark</directory>
     </build>
 </project>
