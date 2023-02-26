@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.databases.data;
 
 import ru.anafro.quark.server.databases.data.exceptions.DatabaseFileException;
+import ru.anafro.quark.server.databases.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.databases.data.files.HeaderFile;
 import ru.anafro.quark.server.databases.data.files.RecordsFile;
 import ru.anafro.quark.server.databases.data.files.VariableFolder;
@@ -45,6 +46,12 @@ public class Table {
 
         var tableDirectory = new File(Path.of(Databases.get(name.getDatabaseName()), name.getTableName()).toUri());
         return tableDirectory.exists() && tableDirectory.isDirectory();
+    }
+
+    public static void ensureExists(String compoundedName) {
+        if(!exists(compoundedName)) {
+            throw new TableNotFoundException(compoundedName);
+        }
     }
 
     public static boolean exists(CompoundedTableName tableName) {
@@ -148,7 +155,7 @@ public class Table {
 
     public void delete() {
 //        boolean ignored = new File(Path.of(database.getFolder().getPath(), name).toUri()).delete();
-        FileSystem.deleteIfExists(Path.of(database.getFolder().getPath(), name).toString());
+        FileSystem.deleteIfExists(Path.of(Databases.get(database.getName()), name).toString());
     }
 
     public void clear() {
