@@ -1,4 +1,4 @@
-package ru.anafro.quark.server.utils;
+package ru.anafro.quark.server.console;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 
