@@ -49,6 +49,7 @@ import ru.anafro.quark.server.utils.hashing.integers.DefaultIntegerHashingFuncti
 import ru.anafro.quark.server.utils.hashing.integers.SevenShiftsHashingFunction;
 import ru.anafro.quark.server.utils.hashing.integers.ThomasWangHashingFunction;
 import ru.anafro.quark.server.utils.hashing.strings.*;
+import ru.anafro.quark.server.utils.product.Version;
 
 /**
  * Provides the easiest way of communicating with the Quark Server by having
@@ -61,6 +62,12 @@ import ru.anafro.quark.server.utils.hashing.strings.*;
  * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  */
 public final class Quark {
+
+    /**
+     * The version of Quark.
+     * @since Quark 1.2
+     */
+    private static final Version version = new Version(2, 0, 0, "in development");
 
     /**
      * The server of Quark.
@@ -86,43 +93,43 @@ public final class Quark {
      * The registry of all commands of Quark.
      * @since Quark 1.1
      */
-    private static final CommandRegistry commandRegistry = new CommandRegistry();
+    private static final CommandRegistry commands = new CommandRegistry();
 
     /**
      * The registry of all constructors existing in Quark.
      * @since Quark 1.1
      */
-    private static final EntityConstructorRegistry constructorRegistry = new EntityConstructorRegistry();
+    private static final EntityConstructorRegistry constructors = new EntityConstructorRegistry();
 
     /**
      * The registry of all instructions of Quark.
      * @since Quark 1.1
      */
-    private static final InstructionRegistry instructionRegistry = new InstructionRegistry();
+    private static final InstructionRegistry instructions = new InstructionRegistry();
 
     /**
      * The registry of all column modifiers of Quark.
      * @since Quark 1.1
      */
-    private static final ColumnModifierRegistry modifierRegistry = new ColumnModifierRegistry();
+    private static final ColumnModifierRegistry modifiers = new ColumnModifierRegistry();
 
     /**
      * The registry of all types existing in Quark.
      * @since Quark 1.1
      */
-    private static final TypeRegistry typeRegistry = new TypeRegistry();
+    private static final TypeRegistry types = new TypeRegistry();
 
     /**
      * The registry of all debug frames in Quark.
      * @since Quark 1.1
      */
-    private static final DebugFrameRegistry debugFrameRegistry = new DebugFrameRegistry();
+    private static final DebugFrameRegistry debugFrames = new DebugFrameRegistry();
 
     /**
      * The registry group of all hashing functions registries used in Quark.
      * @since Quark 1.1
      */
-    private static final HashingFunctionRegistryGroup hashingFunctionRegistryGroup = new HashingFunctionRegistryGroup();
+    private static final HashingFunctionRegistryGroup hashingFunctions = new HashingFunctionRegistryGroup();
 
     /**
      * The command loop reading Quark commands.
@@ -130,9 +137,18 @@ public final class Quark {
      */
     private static final CommandLoop commandLoop = new CommandLoop(server);
 
+    /**
+     * The pool of all the scheduled tasks running
+     * inside the Quark Server.
+     * @since Quark 1.1
+     */
     private static final ScheduledTaskPool scheduledTaskPool = new ScheduledTaskPool();
 
-    private static final TableSchemeRegistry tableSchemeRegistry = new TableSchemeRegistry();
+    /**
+     * Contains all the default table schemes of Quark.
+     * @since Quark 1.1
+     */
+    private static final TableSchemeRegistry schemes = new TableSchemeRegistry();
 
     /**
      * The pool of all asynchronous services running in Quark.
@@ -173,308 +189,319 @@ public final class Quark {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public static void init(String[] args) {
-        Greeter.greet();
-
-        Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
-
         if(initialized) {
             throw new QuarkException("You cannot call Quark.init() twice. If you are writing a plugin, please do not call Quark.init() by yourself - it is called automatically on Quark Server start up.");
         }
 
-        // Entity type registering
-        typeRegistry.add(new BooleanType());
-        typeRegistry.add(new ChangerType());
-        typeRegistry.add(new ColumnModifierType());
-        typeRegistry.add(new ColumnType());
-        typeRegistry.add(new FloatType());
-        typeRegistry.add(new IntegerType());
-        typeRegistry.add(new ListType());
-        typeRegistry.add(new SelectorType());
-        typeRegistry.add(new StringType());
-        typeRegistry.add(new RecordType());
-        typeRegistry.add(new AnyType());
-        typeRegistry.add(new NullType());
-        typeRegistry.add(new GeneratorType());
-        typeRegistry.add(new LongType());
-        typeRegistry.add(new DateType());
-        typeRegistry.add(new FinderType());
+        Greeter.greet();
+        Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
 
-        // Modifier registering
-        modifierRegistry.add(new RequireUniqueColumnModifier());
-        modifierRegistry.add(new IncrementingColumnModifier());
-        modifierRegistry.add(new PositiveColumnModifier());
-        modifierRegistry.add(new NotPositiveColumnModifier());
-        modifierRegistry.add(new NegativeColumnModifier());
-        modifierRegistry.add(new NotNegativeColumnModifier());
-        modifierRegistry.add(new BetweenColumnModifier());
-        modifierRegistry.add(new ConstantColumnModifier());
-        modifierRegistry.add(new AlphaDashDotUnderscoreModifier());
-        modifierRegistry.add(new AlphaDashModifier());
-        modifierRegistry.add(new AlphaDashNumericModifier());
-        modifierRegistry.add(new AlphaDashUnderscoreModifier());
-        modifierRegistry.add(new AlphaDotModifier());
-        modifierRegistry.add(new AlphaDotUnderscoreModifier());
-        modifierRegistry.add(new EmailModifier());
-        modifierRegistry.add(new NotBlankModifier());
-        modifierRegistry.add(new RequiredModifier());
-        modifierRegistry.add(new HexColorModifier());
-        modifierRegistry.add(new UrlColumnModifier());
+        types.add(
+            new BooleanType(),
+            new ChangerType(),
+            new ColumnModifierType(),
+            new ColumnType(),
+            new FloatType(),
+            new IntegerType(),
+            new ListType(),
+            new SelectorType(),
+            new StringType(),
+            new RecordType(),
+            new AnyType(),
+            new NullType(),
+            new GeneratorType(),
+            new LongType(),
+            new DateType(),
+            new FinderType()
+        );
 
-        // Entity constructor registering
-        constructorRegistry.add(new UpperConstructor());
-        constructorRegistry.add(new LowerConstructor());
-        constructorRegistry.add(new ListConstructor());
-        constructorRegistry.add(new YesConstructor());
-        constructorRegistry.add(new NoConstructor());
-        constructorRegistry.add(new ConcatConstructor());
-        constructorRegistry.add(new SelectorConstructor());
-        constructorRegistry.add(new AbsConstructor());
-        constructorRegistry.add(new AcosConstructor());
-        constructorRegistry.add(new AndConstructor());
-        constructorRegistry.add(new AsinConstructor());
-        constructorRegistry.add(new Atan2Constructor());
-        constructorRegistry.add(new CapitalizeConstructor());
-        constructorRegistry.add(new InvertCaseConstructor());
-        constructorRegistry.add(new CbrtConstructor());
-        constructorRegistry.add(new CeilConstructor());
-        constructorRegistry.add(new CopySignConstructor());
-        constructorRegistry.add(new CosConstructor());
-        constructorRegistry.add(new CoshConstructor());
-        constructorRegistry.add(new CountConstructor());
-        constructorRegistry.add(new DigitCountConstructor());
-        constructorRegistry.add(new EConstructor());
-        constructorRegistry.add(new EmptyListOfConstructor());
-        constructorRegistry.add(new EndsWithConstructor());
-        constructorRegistry.add(new EqualsConstructor());
-        constructorRegistry.add(new ExpConstructor());
-        constructorRegistry.add(new ExpMinusOneConstructor());
-        constructorRegistry.add(new FloorConstructor());
-        constructorRegistry.add(new FloorDivConstructor());
-        constructorRegistry.add(new FloorModConstructor());
-        constructorRegistry.add(new FromBinaryStringConstructor());
-        constructorRegistry.add(new FromHexStringConstructor());
-        constructorRegistry.add(new FromOctalStringConstructor());
-        constructorRegistry.add(new GetExponentConstructor());
-        constructorRegistry.add(new GreaterConstructor());
-        constructorRegistry.add(new GreaterOrEqualsConstructor());
-        constructorRegistry.add(new FastHypotConstructor());
-        constructorRegistry.add(new IEEERemainderConstructor());
-        constructorRegistry.add(new IsStringEmptyConstructor());
-        constructorRegistry.add(new JoinConstructor());
-        constructorRegistry.add(new LeftTrimConstructor());
-        constructorRegistry.add(new LengthConstructor());
-        constructorRegistry.add(new LessConstructor());
-        constructorRegistry.add(new LessOrEqualsConstructor());
-        constructorRegistry.add(new Log1PConstructor());
-        constructorRegistry.add(new Log10Constructor());
-        constructorRegistry.add(new LogConstructor());
-        constructorRegistry.add(new MatchesConstructor());
-        constructorRegistry.add(new MaxConstructor());
-        constructorRegistry.add(new MinConstructor());
-        constructorRegistry.add(new ReverseStringConstructor());
-        constructorRegistry.add(new NextAfterConstructor());
-        constructorRegistry.add(new NextDownConstructor());
-        constructorRegistry.add(new NextUpConstructor());
-        constructorRegistry.add(new OrConstructor());
-        constructorRegistry.add(new PiConstructor());
-        constructorRegistry.add(new RandomBetweenConstructor());
-        constructorRegistry.add(new RepeatConstructor());
-        constructorRegistry.add(new ReplaceConstructor());
-        constructorRegistry.add(new RightTrimConstructor());
-        constructorRegistry.add(new RintConstructor());
-        constructorRegistry.add(new RoundConstructor());
-        constructorRegistry.add(new ScalbConstructor());
-        constructorRegistry.add(new SignumConstructor());
-        constructorRegistry.add(new SinConstructor());
-        constructorRegistry.add(new SortConstructor());
-        constructorRegistry.add(new SplitConstructor());
-        constructorRegistry.add(new StartsWithConstructor());
-        constructorRegistry.add(new StringContainsConstructor());
-        constructorRegistry.add(new TanConstructor());
-        constructorRegistry.add(new TanhConstructor());
-        constructorRegistry.add(new ToBinaryStringConstructor());
-        constructorRegistry.add(new ToBooleanConstructor());
-        constructorRegistry.add(new ToDegreesConstructor());
-        constructorRegistry.add(new ToFloatConstructor());
-        constructorRegistry.add(new ToHexStringConstructor());
-        constructorRegistry.add(new ToIntConstructor());
-        constructorRegistry.add(new ToOctalStringConstructor());
-        constructorRegistry.add(new ToRadiansConstructor());
-        constructorRegistry.add(new TrimConstructor());
-        constructorRegistry.add(new UlpConstructor());
-        constructorRegistry.add(new DivideConstructor());
-        constructorRegistry.add(new MultiplyConstructor());
-        constructorRegistry.add(new NotConstructor());
-        constructorRegistry.add(new SubtractConstructor());
-        constructorRegistry.add(new SumConstructor());
-        constructorRegistry.add(new RecordConstructor());
-        constructorRegistry.add(new ChangerConstructor());
-        constructorRegistry.add(new NullConstructor());
-        constructorRegistry.add(new GeneratorConstructor());
-        constructorRegistry.add(new FinderConstructor());
-        constructorRegistry.add(new DateFromStampConstructor());
-        constructorRegistry.add(new MillisecondsConstructor());
-        constructorRegistry.add(new SecondsConstructor());
-        constructorRegistry.add(new MinutesConstructor());
-        constructorRegistry.add(new HoursConstructor());
-        constructorRegistry.add(new DaysConstructor());
-        constructorRegistry.add(new WeeksConstructor());
-        constructorRegistry.add(new MonthsConstructor());
-        constructorRegistry.add(new YearsConstructor());
-        constructorRegistry.add(new DateFromFormatConstructor());
-        constructorRegistry.add(new MillisecondConstructor());
-        constructorRegistry.add(new SecondConstructor());
-        constructorRegistry.add(new MinuteConstructor());
-        constructorRegistry.add(new HourConstructor());
-        constructorRegistry.add(new DayConstructor());
-        constructorRegistry.add(new WeekConstructor());
-        constructorRegistry.add(new MonthConstructor());
-        constructorRegistry.add(new YearConstructor());
-        // ...including column constructors...
-        constructorRegistry.add(new IdColumnConstructor());
-        constructorRegistry.add(new StringColumnConstructor());
-        constructorRegistry.add(new IntegerColumnConstructor());
-        constructorRegistry.add(new BooleanColumnConstructor());
-        constructorRegistry.add(new FloatColumnConstructor());
-        constructorRegistry.add(new DateColumnConstructor());
-        constructorRegistry.add(new LongColumnConstructor());
-        // ...including column modifiers...
-        constructorRegistry.add(new BetweenModifierConstructor());
-        constructorRegistry.add(new ConstantModifierConstructor());
-        constructorRegistry.add(new IncrementingModifierConstructor());
-        constructorRegistry.add(new NegativeModifierConstructor());
-        constructorRegistry.add(new NotNegativeModifierConstructor());
-        constructorRegistry.add(new PositiveModifierConstructor());
-        constructorRegistry.add(new NotPositiveModifierConstructor());
-        constructorRegistry.add(new AlphaDashDotUnderscoreModifierConstructor());
-        constructorRegistry.add(new AlphaDashModifierConstructor());
-        constructorRegistry.add(new AlphaDashNumericModifierConstructor());
-        constructorRegistry.add(new AlphaDashUnderscoreModifierConstructor());
-        constructorRegistry.add(new AlphaDotModifierConstructor());
-        constructorRegistry.add(new AlphaDotUnderscoreModifierConstructor());
-        constructorRegistry.add(new AlphaUnderscoreModifierConstructor());
-        constructorRegistry.add(new EmailModifierConstructor());
-        constructorRegistry.add(new NotBlankModifierConstructor());
-        constructorRegistry.add(new RequiredModifierConstructor());
-        constructorRegistry.add(new RegexModifierConstructor());
-        constructorRegistry.add(new HexColorModifierConstructor());
-        constructorRegistry.add(new UrlColumnModifierConstructor());
-        constructorRegistry.add(new RequireUniqueModifierConstructor());
+        modifiers.add(
+            new RequireUniqueColumnModifier(),
+            new IncrementingColumnModifier(),
+            new PositiveColumnModifier(),
+            new NotPositiveColumnModifier(),
+            new NegativeColumnModifier(),
+            new NotNegativeColumnModifier(),
+            new BetweenColumnModifier(),
+            new ConstantColumnModifier(),
+            new AlphaDashDotUnderscoreModifier(),
+            new AlphaDashModifier(),
+            new AlphaDashNumericModifier(),
+            new AlphaDashUnderscoreModifier(),
+            new AlphaDotModifier(),
+            new AlphaDotUnderscoreModifier(),
+            new EmailModifier(),
+            new NotBlankModifier(),
+            new RequiredModifier(),
+            new HexColorModifier(),
+            new UrlColumnModifier()
+        );
 
-        // Instruction registering
-        instructionRegistry.add(new AddColumnInstruction());
-        instructionRegistry.add(new ChangeInInstruction());
-        instructionRegistry.add(new ChangePortToInstruction());
-        instructionRegistry.add(new ClearDatabaseInstruction());
-        instructionRegistry.add(new ClearTableInstruction());
-        instructionRegistry.add(new CloneDatabaseInstruction());
-        instructionRegistry.add(new CloneTableInstruction());
-        instructionRegistry.add(new CloneTableSchemeInstruction());
-        instructionRegistry.add(new CreateDatabaseInstruction());
-        instructionRegistry.add(new CreateTableInstruction());
-        instructionRegistry.add(new CreateTokenInstruction());
-        instructionRegistry.add(new DebugInstruction());
-        instructionRegistry.add(new DeleteColumnInstruction());
-        instructionRegistry.add(new DeleteDatabaseInstruction());
-        instructionRegistry.add(new DeleteFromInstruction());
-        instructionRegistry.add(new DeleteTableInstruction());
-        instructionRegistry.add(new EvalInstruction());
-        instructionRegistry.add(new FactoryResetInstruction());
-        instructionRegistry.add(new GrantTokenInstruction());
-        instructionRegistry.add(new InsertIntoInstruction());
-        instructionRegistry.add(new ListColumnsInstruction());
-        instructionRegistry.add(new ListDatabasesInstruction());
-        instructionRegistry.add(new ListTablesInstruction());
-        instructionRegistry.add(new RedefineColumnInstruction());
-        instructionRegistry.add(new RedefinePermissionsForTokenInstruction());
-        instructionRegistry.add(new ReloadServerInstruction());
-        instructionRegistry.add(new RenameColumnInInstruction());
-        instructionRegistry.add(new RenameDatabaseInstruction());
-        instructionRegistry.add(new RenameServerInstruction());
-        instructionRegistry.add(new RenameTableInstruction());
-        instructionRegistry.add(new ReorderColumnsInstruction());
-        instructionRegistry.add(new RunCommandInstruction());
-        instructionRegistry.add(new ScheduleCommandInstruction());
-        instructionRegistry.add(new ScheduleQueryInstruction());
-        instructionRegistry.add(new SelectFromInstruction());
-        instructionRegistry.add(new StopServerInstruction());
-        instructionRegistry.add(new SwapColumnsInstruction());
-        instructionRegistry.add(new RemovePermissionFromTokenInstruction());
-        instructionRegistry.add(new DescribeInstructionsInstruction());
-        instructionRegistry.add(new DescribeConstructorsInstruction());
-        instructionRegistry.add(new HintNextElementsInstruction());
-        instructionRegistry.add(new GetServerNameInstruction());
-        instructionRegistry.add(new SecretInstruction());
-        instructionRegistry.add(new AddModifierInstruction());
-        instructionRegistry.add(new ListPluginsInstruction());
-        instructionRegistry.add(new FindInInstruction());
-        instructionRegistry.add(new CountInInstruction());
-        instructionRegistry.add(new DescribeModifiersOfInstruction());
-        instructionRegistry.add(new ClearScheduledCommandsInstruction());
-        instructionRegistry.add(new ClearScheduledQueriesInstruction());
-        instructionRegistry.add(new GetVariableInInstruction());
-        instructionRegistry.add(new SetVariableInInstruction());
-        instructionRegistry.add(new ListVariablesInInstruction());
-        instructionRegistry.add(new DeleteVariableInInstruction());
+        constructors.add(
+            new UpperConstructor(),
+            new LowerConstructor(),
+            new ListConstructor(),
+            new YesConstructor(),
+            new NoConstructor(),
+            new ConcatConstructor(),
+            new SelectorConstructor(),
+            new AbsConstructor(),
+            new AcosConstructor(),
+            new AndConstructor(),
+            new AsinConstructor(),
+            new Atan2Constructor(),
+            new CapitalizeConstructor(),
+            new InvertCaseConstructor(),
+            new CbrtConstructor(),
+            new CeilConstructor(),
+            new CopySignConstructor(),
+            new CosConstructor(),
+            new CoshConstructor(),
+            new CountConstructor(),
+            new DigitCountConstructor(),
+            new EConstructor(),
+            new EmptyListOfConstructor(),
+            new EndsWithConstructor(),
+            new EqualsConstructor(),
+            new ExpConstructor(),
+            new ExpMinusOneConstructor(),
+            new FloorConstructor(),
+            new FloorDivConstructor(),
+            new FloorModConstructor(),
+            new FromBinaryStringConstructor(),
+            new FromHexStringConstructor(),
+            new FromOctalStringConstructor(),
+            new GetExponentConstructor(),
+            new GreaterConstructor(),
+            new GreaterOrEqualsConstructor(),
+            new FastHypotConstructor(),
+            new IEEERemainderConstructor(),
+            new IsStringEmptyConstructor(),
+            new JoinConstructor(),
+            new LeftTrimConstructor(),
+            new LengthConstructor(),
+            new LessConstructor(),
+            new LessOrEqualsConstructor(),
+            new Log1PConstructor(),
+            new Log10Constructor(),
+            new LogConstructor(),
+            new MatchesConstructor(),
+            new MaxConstructor(),
+            new MinConstructor(),
+            new ReverseStringConstructor(),
+            new NextAfterConstructor(),
+            new NextDownConstructor(),
+            new NextUpConstructor(),
+            new OrConstructor(),
+            new PiConstructor(),
+            new RandomBetweenConstructor(),
+            new RepeatConstructor(),
+            new ReplaceConstructor(),
+            new RightTrimConstructor(),
+            new RintConstructor(),
+            new RoundConstructor(),
+            new ScalbConstructor(),
+            new SignumConstructor(),
+            new SinConstructor(),
+            new SortConstructor(),
+            new SplitConstructor(),
+            new StartsWithConstructor(),
+            new StringContainsConstructor(),
+            new TanConstructor(),
+            new TanhConstructor(),
+            new ToBinaryStringConstructor(),
+            new ToBooleanConstructor(),
+            new ToDegreesConstructor(),
+            new ToFloatConstructor(),
+            new ToHexStringConstructor(),
+            new ToIntConstructor(),
+            new ToOctalStringConstructor(),
+            new ToRadiansConstructor(),
+            new TrimConstructor(),
+            new UlpConstructor(),
+            new DivideConstructor(),
+            new MultiplyConstructor(),
+            new NotConstructor(),
+            new SubtractConstructor(),
+            new SumConstructor(),
+            new RecordConstructor(),
+            new ChangerConstructor(),
+            new NullConstructor(),
+            new GeneratorConstructor(),
+            new FinderConstructor(),
+            new DateFromStampConstructor(),
+            new MillisecondsConstructor(),
+            new SecondsConstructor(),
+            new MinutesConstructor(),
+            new HoursConstructor(),
+            new DaysConstructor(),
+            new WeeksConstructor(),
+            new MonthsConstructor(),
+            new YearsConstructor(),
+            new DateFromFormatConstructor(),
+            new MillisecondConstructor(),
+            new SecondConstructor(),
+            new MinuteConstructor(),
+            new HourConstructor(),
+            new DayConstructor(),
+            new WeekConstructor(),
+            new MonthConstructor(),
+            new YearConstructor(),
 
-        // Command registering
-        commandRegistry.add(new ExitCommand());
-        commandRegistry.add(new HelpCommand());
-        commandRegistry.add(new ChangeLogLevelCommand());
-        commandRegistry.add(new OpenDebugCommand());
-        commandRegistry.add(new EnableDebugCommand());
-        commandRegistry.add(new DisableDebugCommand());
-        commandRegistry.add(new ConstructorsCommand());
-        commandRegistry.add(new InstructionsCommand());
-        commandRegistry.add(new RunCommand());
-        commandRegistry.add(new TestCommand());
-        commandRegistry.add(new EvalCommand());
-        commandRegistry.add(new ModifiersCommand());
-        commandRegistry.add(new AfterInstallationCommand());
-        commandRegistry.add(new FactoryResetCommand());
-        commandRegistry.add(new CheckIntegrityCommand());
-        commandRegistry.add(new ClearMavenOutputCommand());
-        commandRegistry.add(new ListScheduledTasksCommand());
-        commandRegistry.add(new ReloadCommand());
+            // ...including column constructors...
+            new IdColumnConstructor(),
+            new StringColumnConstructor(),
+            new IntegerColumnConstructor(),
+            new BooleanColumnConstructor(),
+            new FloatColumnConstructor(),
+            new DateColumnConstructor(),
+            new LongColumnConstructor(),
 
-        debugFrameRegistry.add(new InstructionLexerDebugFrame());
-        debugFrameRegistry.add(new InstructionParserDebugFrame());
-        debugFrameRegistry.add(new EntityConstructorDebugFrame());
-        debugFrameRegistry.add(new PermissionDebugFrame());
-        debugFrameRegistry.add(new HashtableDebugFrame());
-        debugFrameRegistry.add(new TreeDebugFrame());
+            // ...including column modifiers...
+            new BetweenModifierConstructor(),
+            new ConstantModifierConstructor(),
+            new IncrementingModifierConstructor(),
+            new NegativeModifierConstructor(),
+            new NotNegativeModifierConstructor(),
+            new PositiveModifierConstructor(),
+            new NotPositiveModifierConstructor(),
+            new AlphaDashDotUnderscoreModifierConstructor(),
+            new AlphaDashModifierConstructor(),
+            new AlphaDashNumericModifierConstructor(),
+            new AlphaDashUnderscoreModifierConstructor(),
+            new AlphaDotModifierConstructor(),
+            new AlphaDotUnderscoreModifierConstructor(),
+            new AlphaUnderscoreModifierConstructor(),
+            new EmailModifierConstructor(),
+            new NotBlankModifierConstructor(),
+            new RequiredModifierConstructor(),
+            new RegexModifierConstructor(),
+            new HexColorModifierConstructor(),
+            new UrlColumnModifierConstructor(),
+            new RequireUniqueModifierConstructor()
+        );
 
-        // Hashing functions
-        hashingFunctionRegistryGroup.forIntegers().add(new DefaultIntegerHashingFunction());
-        hashingFunctionRegistryGroup.forIntegers().add(new SevenShiftsHashingFunction());
-        hashingFunctionRegistryGroup.forIntegers().add(new ThomasWangHashingFunction());
-        hashingFunctionRegistryGroup.forIntegers().add(new BitMixerHashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new DefaultStringHashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new PearsonHashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new LoseLoseHashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new DJB2HashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new FoldHashingFunction());
-        hashingFunctionRegistryGroup.forStrings().add(new SDBMHashingFunction());
+        instructions.add(
+            new AddColumnInstruction(),
+            new ChangeInInstruction(),
+            new ChangePortToInstruction(),
+            new ClearDatabaseInstruction(),
+            new ClearTableInstruction(),
+            new CloneDatabaseInstruction(),
+            new CloneTableInstruction(),
+            new CloneTableSchemeInstruction(),
+            new CreateDatabaseInstruction(),
+            new CreateTableInstruction(),
+            new CreateTokenInstruction(),
+            new DebugInstruction(),
+            new DeleteColumnInstruction(),
+            new DeleteDatabaseInstruction(),
+            new DeleteFromInstruction(),
+            new DeleteTableInstruction(),
+            new EvalInstruction(),
+            new FactoryResetInstruction(),
+            new GrantTokenInstruction(),
+            new InsertIntoInstruction(),
+            new ListColumnsInstruction(),
+            new ListDatabasesInstruction(),
+            new ListTablesInstruction(),
+            new RedefineColumnInstruction(),
+            new RedefinePermissionsForTokenInstruction(),
+            new ReloadServerInstruction(),
+            new RenameColumnInInstruction(),
+            new RenameDatabaseInstruction(),
+            new RenameServerInstruction(),
+            new RenameTableInstruction(),
+            new ReorderColumnsInstruction(),
+            new RunCommandInstruction(),
+            new ScheduleCommandInstruction(),
+            new ScheduleQueryInstruction(),
+            new SelectFromInstruction(),
+            new StopServerInstruction(),
+            new SwapColumnsInstruction(),
+            new RemovePermissionFromTokenInstruction(),
+            new DescribeInstructionsInstruction(),
+            new DescribeConstructorsInstruction(),
+            new HintNextElementsInstruction(),
+            new GetServerNameInstruction(),
+            new SecretInstruction(),
+            new AddModifierInstruction(),
+            new ListPluginsInstruction(),
+            new FindInInstruction(),
+            new CountInInstruction(),
+            new DescribeModifiersOfInstruction(),
+            new ClearScheduledCommandsInstruction(),
+            new ClearScheduledQueriesInstruction(),
+            new GetVariableInInstruction(),
+            new SetVariableInInstruction(),
+            new ListVariablesInInstruction(),
+            new DeleteVariableInInstruction(),
+            new ExcludeFromInstruction(),
+            new GetVersionInstruction()
+        );
 
-        // Table schemes
-        tableSchemeRegistry.add(new TokensTableScheme());
-        tableSchemeRegistry.add(new ScheduledCommandsTableScheme());
-        tableSchemeRegistry.add(new ScheduledQueriesTableScheme());
+        commands.add(
+            new ExitCommand(),
+            new HelpCommand(),
+            new ChangeLogLevelCommand(),
+            new OpenDebugCommand(),
+            new EnableDebugCommand(),
+            new DisableDebugCommand(),
+            new ConstructorsCommand(),
+            new InstructionsCommand(),
+            new RunCommand(),
+            new TestCommand(),
+            new EvalCommand(),
+            new ModifiersCommand(),
+            new AfterInstallationCommand(),
+            new FactoryResetCommand(),
+            new CheckIntegrityCommand(),
+            new ClearMavenOutputCommand(),
+            new ListScheduledTasksCommand(),
+            new ReloadCommand(),
+            new ClearCommand()
+        );
+        
+        debugFrames.add(
+            new InstructionLexerDebugFrame(),
+            new InstructionParserDebugFrame(),
+            new EntityConstructorDebugFrame(),
+            new PermissionDebugFrame(),
+            new HashtableDebugFrame(),
+            new TreeDebugFrame()
+        );
+
+        hashingFunctions.forIntegers().add(
+            new DefaultIntegerHashingFunction(),
+            new SevenShiftsHashingFunction(),
+            new ThomasWangHashingFunction(),
+            new BitMixerHashingFunction()
+        );
+
+        hashingFunctions.forStrings().add(
+            new DefaultStringHashingFunction(),
+            new PearsonHashingFunction(),
+            new LoseLoseHashingFunction(),
+            new DJB2HashingFunction(),
+            new FoldHashingFunction(),
+            new SDBMHashingFunction()
+        );
+
+        schemes.add(
+            new TokensTableScheme(),
+            new ScheduledCommandsTableScheme(),
+            new ScheduledQueriesTableScheme()
+        );
 
         runCommandScript("Before Start-Up");
         runCommandsFromCommandLineArguments(args);
 
-        for(var scheme : tableSchemes()) {
-            scheme.deploy();
-        }
-
-        scheduledTaskPool.load();
-
-        for(var task : scheduledTaskPool) {
-            pool.add(task);
-        }
+        schemes.deploy();
 
         pluginManager.loadPlugins();
+
+        scheduledTaskPool.load();
+        pool.add(scheduledTaskPool);
         pool.run();
 
         initialized = true;
@@ -506,6 +533,15 @@ public final class Quark {
         return pluginManager;
     }
 
+    /**
+     * Returns the plugin by its name. If plugin with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the name of the plugin being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The plugin object if any with such name, {@code null} otherwise.
+     */
     public static Plugin plugin(String name) {
         return pluginManager.get(name);
     }
@@ -536,11 +572,20 @@ public final class Quark {
      * @see CommandRegistry
      */
     public static CommandRegistry commands() {
-        return commandRegistry;
+        return commands;
     }
 
+    /**
+     * Returns the command by its name. If command with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the name of the command being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The command object if any with such name, {@code null} otherwise.
+     */
     public static Command command(String name) {
-        return commandRegistry.get(name);
+        return commands.get(name);
     }
 
     /**
@@ -556,11 +601,20 @@ public final class Quark {
      * @see EntityConstructor
      */
     public static EntityConstructorRegistry constructors() {
-        return constructorRegistry;
+        return constructors;
     }
 
+    /**
+     * Returns the constructor by its name. If constructor with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the name of the constructor being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The constructor object if any with such name, {@code null} otherwise.
+     */
     public static EntityConstructor constructor(String name) {
-        return constructorRegistry.get(name);
+        return constructors.get(name);
     }
 
     /**
@@ -576,11 +630,20 @@ public final class Quark {
      * @see Instruction
      */
     public static InstructionRegistry instructions() {
-        return instructionRegistry;
+        return instructions;
     }
 
+    /**
+     * Returns the instruction by its name. If instruction with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the name of the instruction being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The instruction object if any with such name, {@code null} otherwise.
+     */
     public static Instruction instruction(String name) {
-        return instructionRegistry.get(name);
+        return instructions.get(name);
     }
 
     /**
@@ -656,8 +719,8 @@ public final class Quark {
         String commandName = commandLoop.getParser().getCommandName();
         CommandArguments arguments = commandLoop.getParser().getArguments();
 
-        if(commandRegistry.has(commandName)) {
-            commandRegistry.get(commandName).run(arguments);
+        if(commands.has(commandName)) {
+            commands.get(commandName).run(arguments);
             System.out.println();
         } else {
             throw new NoSuchCommandException(commandLoop, commandName);
@@ -695,11 +758,20 @@ public final class Quark {
      * @see Instruction
      */
     public static TypeRegistry types() {
-        return typeRegistry;
+        return types;
     }
 
+    /**
+     * Returns the type by its name. If type with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the type of the instruction being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The type object if any with such name, {@code null} otherwise.
+     */
     public static EntityType type(String name) {
-        return typeRegistry.get(name);
+        return types.get(name);
     }
 
     /**
@@ -717,11 +789,20 @@ public final class Quark {
      * @see ColumnModifierConstructor
      */
     public static ColumnModifierRegistry modifiers() {
-        return modifierRegistry;
+        return modifiers;
     }
 
+    /**
+     * Returns the modifier by its name. If modifier with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the type of the modifier being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The modifier object if any with such name, {@code null} otherwise.
+     */
     public static ColumnModifier modifier(String name) {
-        return modifierRegistry.get(name);
+        return modifiers.get(name);
     }
 
     /**
@@ -736,15 +817,32 @@ public final class Quark {
      * @see DebugFrame
      */
     public static DebugFrameRegistry debugFrames() {
-        return debugFrameRegistry;
+        return debugFrames;
     }
 
+    /**
+     * Returns the debug frame by its name. If debug frame with such name
+     * does not exist, {@code null} will be returned.
+     *
+     * @param name the type of the debug frame being searched.
+     * @since      Quark 1.1
+     * @author     Anatoly Frolov <contact@anafro.ru>
+     * @return     The debug frame if any with such name, {@code null} otherwise.
+     */
     public static DebugFrame debugFrame(String name) {
-        return debugFrameRegistry.get(name);
+        return debugFrames.get(name);
     }
 
+    /**
+     * Returns all the hashing functions in Quark
+     * collected into the registry group.
+     *
+     * @since   Quark 2.0
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  the hashing functions wrapped into the registry group.
+     */
     public static HashingFunctionRegistryGroup hashingFunctions() {
-        return hashingFunctionRegistryGroup;
+        return hashingFunctions;
     }
 
     /**
@@ -778,6 +876,15 @@ public final class Quark {
         }
     }
 
+    /**
+     * Resets the Quark Server to the factory settings.
+     * It removes all the created tables, deletes all the access tokens
+     * and creates a new one with all the permissions. Moreover, it
+     * also tries to repair all the damaged files in directories and files.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     */
     public static void factoryReset() {
         Quark.info("Quark is about to factory reset.");
         Quark.info("It may take a while.");
@@ -818,48 +925,149 @@ public final class Quark {
         System.exit(0);
     }
 
+    /**
+     * Displays the debug message in the console.
+     *
+     * @param message the message to display
+     * @since         Quark 2.0
+     * @author        Anatoly Frolov <contact@anafro.ru>
+     */
     public static void debug(String message) {
         logger.debug(message);
     }
 
+    /**
+     * Displays the info message in the console.
+     *
+     * @param message the message to display
+     * @since         Quark 1.1
+     * @author        Anatoly Frolov <contact@anafro.ru>
+     */
     public static void info(String message) {
         logger.info(message);
     }
 
+    /**
+     * Displays the warning message in the console.
+     *
+     * @param message the message to display
+     * @since         Quark 1.1
+     * @author        Anatoly Frolov <contact@anafro.ru>
+     */
     public static void warning(String message) {
         logger.warning(message);
     }
 
+    /**
+     * Displays the error message in the console.
+     *
+     * @param message the message to display
+     * @since         Quark 1.1
+     * @author        Anatoly Frolov <contact@anafro.ru>
+     */
     public static void error(String message) {
         logger.error(message);
     }
 
+    /**
+     * Fires the event across the plugins to catch.
+     *
+     * @param event the event to be fired
+     * @since       Quark 1.1
+     * @author      Anatoly Frolov <contact@anafro.ru>
+     */
     public static void fire(Event event) {
         plugins().fireEvent(event);
     }
 
+    /**
+     * Returns the string hashing function currently using inside
+     * the Quark instructions.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  the string hashing function currently using inside
+     *          the Quark instructions.
+     */
     public static HashingFunction<String> stringHashingFunction() {
         return Quark.hashingFunctions().forStrings().getOrThrow(Quark.server().getConfiguration().getStringHashingFunction(), "There is no string hashing function with name %s.".formatted(
                 Quark.server().getConfiguration().getStringHashingFunction()
         ));
     }
 
+    /**
+     * Returns the integer hashing function currently using inside
+     * the Quark instructions.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  the integer hashing function currently using inside
+     *          the Quark instructions.
+     */
     public static HashingFunction<Integer> integerHashingFunction() {
         return Quark.hashingFunctions().forIntegers().getOrThrow(Quark.server().getConfiguration().getIntegerHashingFunction(), "There is no integer hashing function with name %s.".formatted(
                 Quark.server().getConfiguration().getIntegerHashingFunction()
         ));
     }
 
+    /**
+     * Returns all the default table schemes of Quark.
+     *
+     * @since   Quark 1.1
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  all the default table schemes of Quark.
+     */
     public static TableSchemeRegistry tableSchemes() {
-        return tableSchemeRegistry;
+        return schemes;
     }
 
+    /**
+     * Returns all the scheduled tasks running inside Quark.
+     *
+     * @since   Quark 2.0
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  Returns all the scheduled tasks running inside Quark.
+     */
     public static ScheduledTaskPool taskPool() {
         return scheduledTaskPool;
     }
 
+    /**
+     * Runs the command script by its name. You can find
+     * or create the command script in the {@code Commands/} folder.
+     * To create a new command script, create a new file inside
+     * the {@code Commands} folder with the following name:
+     * <br><br>
+     * <strong>{@code Commands/My Script.qcommandscript}</strong>
+     * <br><br>
+     * Paste all the commands you want to be run into this file
+     * separated by new lines (it means that all the commands should be
+     * at one line).
+     * <br><br>
+     * To run this file, use:
+     * <pre>
+     *     {@code
+     *     Quark.runCommandScript("My Script");
+     *     }
+     * </pre>
+     *
+     * @param   name the command script name.
+     * @since   Quark 2.0
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     */
     public static void runCommandScript(String name) {
         var script = new CommandScriptFile(name);
         script.run();
+    }
+
+    /**
+     * Returns the version of Quark Server.
+     *
+     * @since   Quark 2.0
+     * @author  Anatoly Frolov <contact@anafro.ru>
+     * @return  the version of Quark Server.
+     */
+    public static Version version() {
+        return version;
     }
 }
