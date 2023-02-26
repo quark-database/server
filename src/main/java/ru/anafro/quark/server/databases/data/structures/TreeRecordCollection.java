@@ -9,6 +9,7 @@ import ru.anafro.quark.server.logging.LogLevel;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Deprecated(forRemoval = true, since = "Quark 1.2")
 public class TreeRecordCollection extends RecordCollection {
     public static final int DEFAULT_PAGE_SIZE = 7;
     private final String keyColumn;
@@ -422,6 +424,20 @@ public class TreeRecordCollection extends RecordCollection {
         }
 
         return root.find(finder).map(treeRecordCollectionNode -> treeRecordCollectionNode.getRecords()[0]);
+    }
+
+    /**
+     * @since Quark 1.2
+     * @param finder
+     */
+    @Override
+    public void exclude(TableRecordFinder finder) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public ArrayList<TableRecord> toList() {
+        throw new NotImplementedException();
     }
 
     public TreeRecordCollection(String keyColumn) {
