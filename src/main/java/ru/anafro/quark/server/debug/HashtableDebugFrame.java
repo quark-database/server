@@ -7,6 +7,7 @@ import ru.anafro.quark.server.debug.components.DebugFrame;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
+import ru.anafro.quark.server.utils.integers.Integers;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import javax.swing.*;
@@ -44,7 +45,7 @@ public class HashtableDebugFrame extends DebugFrame {
     protected void updateHashtableOutput() {
         var tableName = tableInputField.getText();
         var columnName = columnNameInputField.getText();
-        var value = valueInputField.getText();
+        var stringValue = valueInputField.getText();
 
         try {
             var table = Table.byName(tableName);
@@ -53,7 +54,10 @@ public class HashtableDebugFrame extends DebugFrame {
 
             table.getRecords().forEach(hashtable::add);
 
-            var index = ConstructorEvaluator.eval(value).hashCode();
+            var value = ConstructorEvaluator.eval(stringValue);
+            var index = Integers.positiveModulus(value.hashCode(), hashtable.getRecordChains().length);
+
+            output.appendLine("Computed hash of " + value.toInstructionForm() + ": " + index);
 
             for (int i = 0; i < hashtable.getRecordChains().length; i++) {
                 var chain = hashtable.getRecordChains()[i];
