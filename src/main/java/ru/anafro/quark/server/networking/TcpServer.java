@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * handling functionality.
  */
 public abstract class TcpServer extends AsyncService {
-    private static final float DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS = 7;
+    private final TimeSpan delayBetweenAttemptsToRun = TimeSpan.seconds(7);
     private volatile boolean stopped = false;
     private final ArrayList<Middleware> middlewares = Lists.empty();
     protected ServerSocket serverSocket;
@@ -75,8 +75,8 @@ public abstract class TcpServer extends AsyncService {
         }
 
         while(Ports.isUnavailable(port)) {
-            logger.error("Port %d is unavailable. Waiting %.1f seconds before trying to start server again...".formatted(port, DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS));
-            Threads.freezeFor(DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER_IN_SECONDS);
+            logger.error("Port %d is unavailable. Waiting %.1f seconds before trying to start server again...".formatted(port, delayBetweenAttemptsToRun.getSeconds()));
+            Threads.freezeFor(DELAY_BETWEEN_ATTEMPTS_TO_RUN_SERVER);
         }
 
         logger.info("Server is started!");
@@ -86,40 +86,16 @@ public abstract class TcpServer extends AsyncService {
 
             onStartingCompleted();
 
-            while(isStarted()) {
-                logger.debug("Waiting for a client...");
+            while(started) {
                 Socket clientSocket = serverSocket.accept();
-
-                logger.debug("Connection from: " + clientSocket.getInetAddress().getHostAddress());
                 ServerClient client = new ServerClient(clientSocket);
-
-                logger.debug("Starting collecting message...");
                 Message clientRequestMessage = Message.collect(clientSocket.getInputStream());
 
-                logger.debug("Collected client request message: " + clientRequestMessage.getContents());
                 try {
                     Request clientRequest = new Request(new JSONObject(clientRequestMessage.getContents()), clientSocket.getInetAddress());
-
-                    logger.debug("Made a request...");
                     boolean middlewaresPassed = true;
 
-                    for(Middleware middleware : middlewares) {
-                        logger.debug("Running middleware...");
-
-                        Quark.fire(new BeforeMiddlewareRun(Quark.server(), client, clientRequest, middleware));
-                        MiddlewareResponse middlewareResponse = middleware.filter(clientRequest);
-
-                        Quark.fire(new MiddlewareFinished(Quark.server(), middleware, client, clientRequest, middlewareResponse));
-                        logger.debug("Completed! Passed? " + middlewareResponse.isPassed() + ", reason: " + middlewareResponse.getReason());
-
-                        if(middlewareResponse.isDenied()) {
-                            client.sendError(middlewareResponse.getReason(), QueryExecutionStatus.MIDDLEWARE_ERROR);
-                            middlewaresPassed = false;
-
-                            logger.debug("Sent an error message");
-                            break;
-                        }
-                    }
+                    
 
                     if(middlewaresPassed) {
                         Response serverResponse = onRequest(clientRequest);
@@ -137,6 +113,20 @@ public abstract class TcpServer extends AsyncService {
         } catch(IOException exception) {
             throw new ServerCrashedException(exception);
         }
+    }
+
+    private final void passThroughMiddlewares(ServerClient client, Request request) {
+        return middlewares.stream().allMatch(middleware -> {
+            Quark.fire(new BeforeMiddlewareRun(Quark.server(), client, request, middleware));
+
+            MiddlewareResponse middlewareResponse = middleware.filter(request);
+
+            Quark.fire(new MiddlewareFinished(Quark.server(), middleware, client, request, middlewareResponse));
+
+            if(middlewareResponse.isDenied()) {
+                client.sendError(middlewareResponse.getReason(), QueryExecutionStatus.MIDDLEWARE_ERROR);
+            }
+        });
     }
 
     /**

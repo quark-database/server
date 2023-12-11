@@ -193,9 +193,30 @@ public final class Quark {
             throw new QuarkException("You cannot call Quark.init() twice. If you are writing a plugin, please do not call Quark.init() by yourself - it is called automatically on Quark Server start up.");
         }
 
-        Greeter.greet();
-        Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
+        initializeDefaultExceptionHandler();
+        initializeTypes();
+        initializeModifiers();
+        initializeConstructors();
+        initializeInstructions();
+        initializeCommands();
+        initializeDebugFrames();
+        initializeHashingFunctions();
+        initializeSchemes();
+        initializeScheduler();
+        loadPlugins();
+        runCommandScript("Before Start-Up");
+        runCommandsFromCommandLineArguments(args);
 
+        Greeter.greet();
+
+        initialized = true;
+    }
+
+    private static void initializeDefaultExceptionHandler() {
+        Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
+    }
+
+    private static void initializeTypes() {
         types.add(
             new BooleanType(),
             new ChangerType(),
@@ -214,7 +235,9 @@ public final class Quark {
             new DateType(),
             new FinderType()
         );
+    }
 
+    private static void initializeModifiers() {
         modifiers.add(
             new RequireUniqueColumnModifier(),
             new IncrementingColumnModifier(),
@@ -236,7 +259,9 @@ public final class Quark {
             new HexColorModifier(),
             new UrlColumnModifier()
         );
+    }
 
+    private static void initializeConstructors() {
         constructors.add(
             new UpperConstructor(),
             new LowerConstructor(),
@@ -380,7 +405,9 @@ public final class Quark {
             new UrlColumnModifierConstructor(),
             new RequireUniqueModifierConstructor()
         );
+    }
 
+    private static void initializeInstructions() {
         instructions.add(
             new AddColumnInstruction(),
             new ChangeInInstruction(),
@@ -439,7 +466,9 @@ public final class Quark {
             new ExcludeFromInstruction(),
             new GetVersionInstruction()
         );
+    }
 
+    private static void initializeCommands() {
         commands.add(
             new ExitCommand(),
             new HelpCommand(),
@@ -461,7 +490,9 @@ public final class Quark {
             new ReloadCommand(),
             new ClearCommand()
         );
-        
+    }
+
+    private static void initializeDebugFrames() {
         debugFrames.add(
             new InstructionLexerDebugFrame(),
             new InstructionParserDebugFrame(),
@@ -470,7 +501,9 @@ public final class Quark {
             new HashtableDebugFrame(),
             new TreeDebugFrame()
         );
+    }
 
+    private static void initializeHashingFunctions() {
         hashingFunctions.forIntegers().add(
             new DefaultIntegerHashingFunction(),
             new SevenShiftsHashingFunction(),
@@ -486,25 +519,28 @@ public final class Quark {
             new FoldHashingFunction(),
             new SDBMHashingFunction()
         );
+    }
 
+    private static void initializeSchemes() {
         schemes.add(
             new TokensTableScheme(),
             new ScheduledCommandsTableScheme(),
             new ScheduledQueriesTableScheme()
         );
+    }
 
-        runCommandScript("Before Start-Up");
-        runCommandsFromCommandLineArguments(args);
-
+    private static void deploySchemes() {
         schemes.deploy();
+    }
 
+    private static void loadPlugins() {
         pluginManager.loadPlugins();
+    }
 
+    private static void initializeScheduler() {
         scheduledTaskPool.load();
         pool.add(scheduledTaskPool);
         pool.run();
-
-        initialized = true;
     }
 
     /**

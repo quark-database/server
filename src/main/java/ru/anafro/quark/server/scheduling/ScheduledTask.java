@@ -6,15 +6,15 @@ import ru.anafro.quark.server.multithreading.Threads;
 public abstract class ScheduledTask extends AsyncService {
     private final long period;
 
-    public ScheduledTask(String taskName, long period) {
+    public ScheduledTask(String taskName, TimeSpan interval) {
         super("scheduled-task: " + taskName);
         this.period = period;
     }
 
     @Override
-    public void run() {
+    public final void run() {
         while(true) {
-            Threads.freezeFor(period / 1000.0);
+            Threads.freezeFor(interval);
             action();
         }
     }

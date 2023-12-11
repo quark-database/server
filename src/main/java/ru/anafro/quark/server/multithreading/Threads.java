@@ -2,6 +2,7 @@ package ru.anafro.quark.server.multithreading;
 
 import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
 import ru.anafro.quark.server.utils.exceptions.UtilityException;
+import ru.anafro.quark.server.utils.time.TimeSpan;
 
 /**
  * Threads class contains methods to handle threads.
@@ -30,13 +31,13 @@ public final class Threads {
      * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
-    public synchronized static void freezeFor(double seconds) {
+    public synchronized static void freezeFor(TimeSpan delay) {
         if(seconds < 0) {
             throw new UtilityException("Threads.freezeFor(seconds) must receive a positive value, not %f.".formatted(seconds));
         }
 
         try {
-            Thread.sleep((long) (seconds * 1000.0)); // TODO: Add nanos
+            Thread.sleep(delay.getMilliseconds());
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
         }

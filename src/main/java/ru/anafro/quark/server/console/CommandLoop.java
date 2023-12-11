@@ -8,6 +8,7 @@ import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.utils.strings.StringSimilarityFinder;
+import ru.anafro.quark.server.utils.time.TimeSpan;
 
 import java.util.Scanner;
 
@@ -26,7 +27,7 @@ public class CommandLoop extends AsyncService {
      * The delay in seconds to wait before running command loops.
      * @since Quark 1.1
      */
-    private static final float DELAY_BEFORE_RUNNING_SECONDS = 0.6F;
+    private static final TimeSpan DELAY_BEFORE_RUNNING = TimeSpan.milliseconds(600);
 
     /**
      * The scanner that receives input from the console line.
@@ -83,7 +84,7 @@ public class CommandLoop extends AsyncService {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      */
     public void startReadingCommands() {
-        Threads.freezeFor(DELAY_BEFORE_RUNNING_SECONDS);
+        Threads.freezeFor(DELAY_BEFORE_RUNNING);
 
         while(!isReadingNextCommandsStopped()) {
             Console.synchronizedPrint("Quark Server > ");
