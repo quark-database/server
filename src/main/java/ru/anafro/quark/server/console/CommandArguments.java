@@ -1,8 +1,13 @@
 package ru.anafro.quark.server.console;
 
+import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.utils.collections.Collections;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class CommandArguments implements Iterable<CommandArgument> {
     private final ArrayList<CommandArgument> arguments;
@@ -12,8 +17,8 @@ public class CommandArguments implements Iterable<CommandArgument> {
     }
 
     public CommandArgument getArgument(String argumentName) {
-        for(var argument : arguments) {
-            if(argument.named(argumentName)) {
+        for (var argument : arguments) {
+            if (argument.named(argumentName)) {
                 return argument;
             }
         }
@@ -33,6 +38,10 @@ public class CommandArguments implements Iterable<CommandArgument> {
         return getArgument(argumentName) != null;
     }
 
+    public boolean doesntHave(String argumentName) {
+        return !has(argumentName);
+    }
+
     public String get(String argumentName) {
         return getArgument(argumentName).value();
     }
@@ -41,18 +50,11 @@ public class CommandArguments implements Iterable<CommandArgument> {
         return get(argumentValue);
     }
 
-    public int getInteger(String argumentName) {
-        return (int) getArgument(argumentName).as(CommandParameterType.INTEGER);
+    public boolean isNotEmpty() {
+        return !arguments.isEmpty();
     }
 
-    public float getFloat(String argumentName) {
-        return (float) getArgument(argumentName).as(CommandParameterType.FLOAT);
-    }
-
-    public boolean getBoolean(String argumentName) {
-        return (boolean) getArgument(argumentName).as(CommandParameterType.BOOLEAN);
-    }
-
+    @NotNull
     @Override
     public Iterator<CommandArgument> iterator() {
         return arguments.iterator();
@@ -60,5 +62,22 @@ public class CommandArguments implements Iterable<CommandArgument> {
 
     public ArrayList<CommandArgument> toList() {
         return arguments;
+    }
+
+    @Override
+    public String toString() {
+        return Collections.join(arguments, argument -> STR."\{argument.name()} = \{argument.value()}", ", ");
+    }
+
+    public Optional<CommandArgument> tryGet(String argumentName) {
+        if (doesntHave(argumentName)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(getArgument(argumentName));
+    }
+
+    public Stream<CommandArgument> stream() {
+        return arguments.stream();
     }
 }
