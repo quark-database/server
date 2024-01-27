@@ -1,13 +1,16 @@
 package ru.anafro.quark.server.fun;
 
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.console.Console;
+import ru.anafro.quark.server.console.commands.HelpCommand;
+import ru.anafro.quark.server.facade.Quark;
+import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 
 /**
  * Greeter greets a user at the Quark's startup.
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    Greeter#greet()
+ * @see Greeter#greet()
+ * @since Quark 1.1
  */
 public final class Greeter {
 
@@ -15,37 +18,68 @@ public final class Greeter {
      * This private constructor of Greeter class <strong>MUST NOT</strong> be ever
      * called, because Greeter is a utility class. Use static methods declared inside.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     private Greeter() {
-        throw new CallingUtilityConstructorException(getClass());
+        throw new UtilityClassInstantiationException(getClass());
     }
 
     /**
      * Greets the user in the console.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static void greet() {
-        System.out.println(
-                """
-        
-                     ______     __  __     ______     ______     __  __        ______     ______     ______     __   __   ______     ______   \s
-                    /\\  __ \\   /\\ \\/\\ \\   /\\  __ \\   /\\  == \\   /\\ \\/ /       /\\  ___\\   /\\  ___\\   /\\  == \\   /\\ \\ / /  /\\  ___\\   /\\  == \\  \s
-                    \\ \\ \\/\\_\\  \\ \\ \\_\\ \\  \\ \\  __ \\  \\ \\  __<   \\ \\  _"-.     \\ \\___  \\  \\ \\  __\\   \\ \\  __<   \\ \\ \\'/   \\ \\  __\\   \\ \\  __<  \s
-                     \\ \\___\\_\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\     \\/\\_____\\  \\ \\_____\\  \\ \\_\\ \\_\\  \\ \\__|    \\ \\_____\\  \\ \\_\\ \\_\\\s
-                      \\/___/_/   \\/_____/   \\/_/\\/_/   \\/_/ /_/   \\/_/\\/_/      \\/_____/   \\/_____/   \\/_/ /_/   \\/_/      \\/_____/   \\/_/ /_/\s
-                """
-        );
+        var version = Quark.version().toString();
+        var compliment = Compliments.random();
+        var helpCommand = new HelpCommand();
+        var port = Quark.server().getPort();
 
-        System.out.println("-".repeat(50));
-        System.out.println("Quark Server 1.1 - Your own data storage."); // TODO: Hardcoded version.
-        System.out.println(Compliments.random());
-        System.out.println("-".repeat(50));
-        System.out.println("Type '/help' command to list existing commands.");
-        System.out.println("Enjoy your experience with Quark!");
-        System.out.println();
+        Console.println(STR.
+                """
+                <blue>
+
+                                 ################################################              \s
+                                   ###############################################             \s
+                                    *##############################################            \s
+                                      ##############################################           \s
+                                        #############################################          \s
+                                          ############################################         \s
+                                                                       ###############         \s
+                                                                        ###############        \s
+                                                                         ###############       \s
+                                                                          ###############      \s
+                 ######                                                    ###############     \s
+                  #############                                            ###############.    \s
+                   ###############                                          ###############    \s
+                   ,###############                                          ###############   \s
+                    ###############                                           ###############  \s
+                     ###############                                           ############### \s
+                      ###############                                          ################\s
+                       ###############                                                #########\s
+                        ###############                                                       ##
+                        (###############                                                       \s
+                         ###############                                                       \s
+                          ###############                                                      \s
+                           ###########################################                         \s
+                            ############################################                       \s
+                            .#############################################                     \s
+                             ###############################################                   \s
+                              ###############################################                  \s
+                               ################################################                \s
+                </>
+
+                ------------------------------------------------------------------------------------------
+                Quark Server \{version} - Your own databases.
+                \{compliment}
+                ------------------------------------------------------------------------------------------
+
+                The server is running at port \{port}.
+                Type '\{helpCommand}' to see available commands.
+                Enjoy your experience with Quark!
+
+                """);
     }
 }
