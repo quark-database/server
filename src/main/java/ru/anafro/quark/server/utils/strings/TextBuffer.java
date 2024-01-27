@@ -1,10 +1,16 @@
 package ru.anafro.quark.server.utils.strings;
 
+import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.utils.collections.Collections;
+
+import java.util.Optional;
+import java.util.function.Function;
+
 /**
  * Quark text buffers provide more functionality than Java's "StringBuilder",
  * and makes the syntax of string buffer usage less verbose, especially in terms of buffer clearing.
  * <br><br>
- *
+ * <p>
  * If you have to generate a text by some algorithm, it is better to use a TextBuilder instead of
  * appending strings to a single string. For example:
  *
@@ -27,10 +33,10 @@ package ru.anafro.quark.server.utils.strings;
  * }
  * </pre>
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    TextBuffer#TextBuffer() 
- * @see    TextBuffer#TextBuffer(String) 
+ * @see TextBuffer#TextBuffer()
+ * @see TextBuffer#TextBuffer(String)
+ * @since Quark 1.1
  */
 public class TextBuffer implements CharSequence {
     private final StringBuilder builder = new StringBuilder();
@@ -44,12 +50,12 @@ public class TextBuffer implements CharSequence {
      * new TextBuffer().extractContent(); // .equals("")
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#TextBuffer(String)
+     * @see TextBuffer#TextBuffer(String)
+     * @since Quark 1.1
      */
     public TextBuffer() {
         //
@@ -63,51 +69,19 @@ public class TextBuffer implements CharSequence {
      * new TextBuffer(string).extractContent().equals(string); // always true
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to pass an empty string "" to create a text buffer
      * without content inside. Just use an empty constructor: {@link TextBuffer#TextBuffer()}.</i>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#TextBuffer()
+     * @see TextBuffer#TextBuffer()
+     * @since Quark 1.1
      */
     public TextBuffer(String initialString) {
         append(initialString);
-    }
-
-    /**
-     * Compares the string inside this text buffer with the string
-     * passed to the arguments of this method. If the buffer content and
-     * the string are equal, <code>true</code> will be returned. Otherwise,
-     * if the content and string are not equals, this method will return
-     * <code>false</code>.
-     *
-     * <pre>
-     * {@code
-     * var buffer = new TextBuffer();
-     * buffer.append("a");
-     * buffer.append("na");
-     * buffer.append("fro");
-     *
-     * buffer.contentEquals("anafro"); // true
-     * }
-     * </pre>
-     *
-     * To know how to use text buffers, read 's documentation.
-     * <br><br>
-     *
-     * <i>Note that you don't have to pass an empty string "" to check the buffer's emptiness
-     * Just use a special method: {@link TextBuffer#isEmpty()}.</i>
-     *
-     * @since  Quark 1.1
-     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#TextBuffer()
-     */
-    public boolean valueEquals(String value) {
-        return getContent().equals(value);
     }
 
     /**
@@ -123,13 +97,13 @@ public class TextBuffer implements CharSequence {
      * buffer.isEmpty(); // true
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#clear()
-     * @see    TextBuffer#getContent()
+     * @see TextBuffer#clear()
+     * @see TextBuffer#getContent()
+     * @since Quark 1.1
      */
     public String extractContent() {
         String extractedValue = getContent();
@@ -150,13 +124,13 @@ public class TextBuffer implements CharSequence {
      * buffer.isEmpty(); // true
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#isEmpty()
-     * @see    TextBuffer#extractContent()
+     * @see TextBuffer#isEmpty()
+     * @see TextBuffer#extractContent()
+     * @since Quark 1.1
      */
     public void clear() {
         builder.setLength(0);
@@ -176,25 +150,45 @@ public class TextBuffer implements CharSequence {
      * buffer.contentEquals("anafro5trueA"); // true
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to append a new line character "\n"
-     * to break the line. Just use special methods: {@link TextBuffer#appendLine(Object)},
+     * to break the line. Just use special methods: {@link TextBuffer#appendLine(Object...)},
      * and {@link TextBuffer#nextLine()}.</i>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#isEmpty()
-     * @see    TextBuffer#extractContent()
+     * @see TextBuffer#isEmpty()
+     * @see TextBuffer#extractContent()
+     * @since Quark 1.1
      */
-    public <T> TextBuffer append(T... appendingValues) {
-        for(var appendingValue : appendingValues) {
+    @SafeVarargs
+    public final <T> TextBuffer append(T... appendingValues) {
+        for (var appendingValue : appendingValues) {
             builder.append(appendingValue);
         }
 
         return this;
+    }
+
+    public final <T> void appendMany(Iterable<T> appendValues, Function<T, String> valueToString, String delimiter) {
+        append(Collections.join(appendValues, valueToString, delimiter));
+    }
+
+    public final <T> void appendMany(Iterable<T> appendValues, Function<T, String> valueToString) {
+        appendMany(appendValues, valueToString, "");
+    }
+
+    @SafeVarargs
+    public final <T> void appendIf(boolean condition, T... appendingValues) {
+        if (condition) {
+            append(appendingValues);
+        }
+    }
+
+    public final <T> void append(Optional<T> optional, Function<T, String> valueToString) {
+        optional.map(valueToString).ifPresent(this::append);
     }
 
     /**
@@ -215,22 +209,23 @@ public class TextBuffer implements CharSequence {
      * System.out.println(buffer);
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
      * <i>Note that you don't have to append an empty line ""
      * to break the line. Just a special method: {@link TextBuffer#nextLine()}.</i>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#nextLine()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#nextLine()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
-    public <T> TextBuffer appendLine(T appendingLine) {
+    @SafeVarargs
+    public final <T> void appendLine(T... appendingLine) {
         append("\t".repeat(getTabLevel()));
         append(appendingLine);
-        return nextLine();
+        nextLine();
     }
 
     /**
@@ -248,17 +243,17 @@ public class TextBuffer implements CharSequence {
      * System.out.print(buffer.extractContent());
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#appendLine(Object)
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#appendLine(Object...)
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
-    public TextBuffer nextLine() {
-        return append('\n');
+    public void nextLine() {
+        append('\n');
     }
 
     /**
@@ -276,14 +271,14 @@ public class TextBuffer implements CharSequence {
      * System.out.print(buffer.extractContent());
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#appendLine(Object)
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#appendLine(Object...)
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public String getContent() {
         return builder.toString();
@@ -300,34 +295,19 @@ public class TextBuffer implements CharSequence {
      * buffer.toString(); // 42
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
+    @NotNull
     @Override
     public String toString() {
         return getContent();
-    }
-
-    /**
-     * Returns the Java Core's {@code StringBuilder} used in this text buffer.
-     * Use it if you need specific functionality.
-     *
-     * To know how to use text buffers, read 's documentation.
-     * <br><br>
-     *
-     * @since  Quark 1.1
-     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
-     */
-    public StringBuilder getBuilder() {
-        return builder;
     }
 
     @Override
@@ -343,19 +323,20 @@ public class TextBuffer implements CharSequence {
     /**
      * Returns {@code true} if builder's content is empty, otherwise {@code false}.
      * <br><br>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public boolean isEmpty() {
         return builder.isEmpty();
     }
 
+    @NotNull
     @Override
     public CharSequence subSequence(int start, int end) {
         return builder.subSequence(start, end);
@@ -364,7 +345,7 @@ public class TextBuffer implements CharSequence {
     /**
      * Returns the current tab level of this text buffer.
      * Tab level is an amount of tabs ({@code "\t"}) that will be appended
-     * before the string passed to {@link TextBuffer#appendLine(Object)} method.
+     * before the string passed to {@link TextBuffer#appendLine(Object...)} method.
      * <br><br>
      *
      * <pre>
@@ -379,14 +360,14 @@ public class TextBuffer implements CharSequence {
      * buffer.getTabLevel(); // 2
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public int getTabLevel() {
         return tabLevel;
@@ -395,7 +376,7 @@ public class TextBuffer implements CharSequence {
     /**
      * Sets the current tab level of this text buffer.
      * Tab level is an amount of tabs ({@code "\t"}) that will be appended
-     * before the string passed to {@link TextBuffer#appendLine(Object)} method.
+     * before the string passed to {@link TextBuffer#appendLine(Object...)} method.
      * Buffer's tab level cannot be less than zero, so if a less value passed,
      * it will be increased to 0.
      * <br><br>
@@ -412,17 +393,17 @@ public class TextBuffer implements CharSequence {
      * buffer.appendLine("world"); // Appended line: \t\t\tworld
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public void setTabLevel(int tabLevel) {
-        if(tabLevel < 0) {
+        if (tabLevel < 0) {
             tabLevel = 0;
         }
 
@@ -432,7 +413,7 @@ public class TextBuffer implements CharSequence {
     /**
      * Increases the current tab level of this text buffer.
      * Tab level is an amount of tabs ({@code "\t"}) that will be appended
-     * before the string passed to {@link TextBuffer#appendLine(Object)} method.
+     * before the string passed to {@link TextBuffer#appendLine(Object...)} method.
      * Invoking this method is an equivalent of calling {@code setTabLevel(getTabLevel() + 1)}.
      * <br><br>
      *
@@ -444,60 +425,23 @@ public class TextBuffer implements CharSequence {
      * buffer.appendLine("world");   // \tworld
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public void increaseTabLevel() {
         setTabLevel(tabLevel + 1);
     }
 
     /**
-     * Decreases the current tab level of this text buffer.
-     * Tab level is an amount of tabs ({@code "\t"}) that will be appended
-     * before the string passed to {@link TextBuffer#appendLine(Object)} method.
-     * Invoking this method is an equivalent of calling {@code setTabLevel(getTabLevel() - 1)}.
-     * Buffer's tab level cannot be less than zero, so if the buffer's tab level already zero
-     * and {@code decreaseTabLevel()} is called, nothing will happen.
-     * <br><br>
-     *
-     * <pre>
-     * {@code
-     * var buffer = new TextBuffer();
-     * buffer.setTabLevel(3);
-     * while(buffer.getTabLevel() != 0) {
-     *     buffer.appendLine(buffer.getTabLevel());
-     *     buffer.decreaseTabLevel();
-     * }
-     *
-     * buffer.getContent();
-     * //           3
-     * //       2
-     * //   1
-     * }
-     * </pre>
-     *
-     * To know how to use text buffers, read 's documentation.
-     * <br><br>
-     *
-     * @since  Quark 1.1
-     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
-     */
-    public void decreaseTabLevel() {
-        setTabLevel(tabLevel - 1);
-    }
-
-    /**
      * Sets the current tab level back to zero.
      * Tab level is an amount of tabs ({@code "\t"}) that will be appended
-     * before the string passed to {@link TextBuffer#appendLine(Object)} method.
+     * before the string passed to {@link TextBuffer#appendLine(Object...)} method.
      * <br><br>
      *
      * <pre>
@@ -508,14 +452,14 @@ public class TextBuffer implements CharSequence {
      * buffer.getTabLevel(); // 0
      * }
      * </pre>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
     public void resetTabLevel() {
         setTabLevel(0);
@@ -524,16 +468,16 @@ public class TextBuffer implements CharSequence {
     /**
      * Returns {@code true} if builder's content is not empty, otherwise {@code false}.
      * <br><br>
-     *
+     * <p>
      * To know how to use text buffers, read 's documentation.
      * <br><br>
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    TextBuffer#getContent()
-     * @see    TextBuffer#append(Object)
+     * @see TextBuffer#getContent()
+     * @see TextBuffer#append(Object...)
+     * @since Quark 1.1
      */
-    public boolean containsSomething() {
+    public boolean isNotEmpty() {
         return !isEmpty();
     }
 }
