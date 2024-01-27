@@ -1,35 +1,43 @@
 package ru.anafro.quark.server.networking;
 
 import org.json.JSONObject;
-import ru.anafro.quark.server.databases.ql.QueryExecutionStatus;
+import ru.anafro.quark.server.database.language.InstructionResult;
+import ru.anafro.quark.server.database.language.ResponseStatus;
 
-public record Response(JSONObject data) {
-
-    public static Response error(String message) {
-        return create()
-                .add("status", QueryExecutionStatus.SERVER_ERROR.name())
-                .add("message", message);
+public record Response(JSONObject json) {
+    public static Response make(InstructionResult result) {
+        return Response.makeEmpty()
+                .set("status", result.responseStatus().name())
+                .set("message", result.message())
+                .set("time", result.milliseconds())
+                .set("table", result.tableView().toJson());
     }
 
-    public static Response ok() {
-        return create()
-                .add("status", QueryExecutionStatus.OK.name());
+    public static Response error(ResponseStatus status, Exception exception) {
+        return makeEmpty()
+                .set("status", status.name())
+                .set("message", exception.getMessage());
     }
-    public static Response create() {
+
+    public static Response makeEmpty() {
         return new Response(new JSONObject());
     }
 
-    public <T> Response add(String key, T value) {
-        data.put(key, value);
-        return this;
+    public static Response syntaxError(Exception exception) {
+        return error(ResponseStatus.SYNTAX_ERROR, exception);
     }
 
-    public Message toMessage() {
-        return new Message(toString());
+    public static Response serverError(Exception exception) {
+        return error(ResponseStatus.SERVER_ERROR, exception);
+    }
+
+    public <T> Response set(String key, T value) {
+        json.put(key, value);
+        return this;
     }
 
     @Override
     public String toString() {
-        return data.toString();
+        return json.toString();
     }
 }
