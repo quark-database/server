@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.networking;
 
-import ru.anafro.quark.server.networking.exceptions.ImpossiblePortNumberException;
+import ru.anafro.quark.server.networking.exceptions.InvalidPortException;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -15,11 +15,12 @@ public final class Ports {
     public static final int FIRST = 0, LAST = 65535;
 
     // A private constructor. It is used to prevent instantiation of the class.
-    private Ports() {}
+    private Ports() {
+    }
 
     /**
      * > The function returns true if the port number is between 0 and 65535, inclusive
-     * 
+     *
      * @param port the port number to be checked
      * @return A boolean value.
      */
@@ -29,7 +30,7 @@ public final class Ports {
 
     /**
      * Returns true if the given port is not valid
-     * 
+     *
      * @param port The port number to check.
      * @return The return value is a boolean.
      */
@@ -40,13 +41,13 @@ public final class Ports {
     /**
      * It tries to open a server socket and a datagram socket on the given port. If it succeeds, it
      * closes the sockets and returns true. If it fails, it returns false
-     * 
+     *
      * @param port The port number to check.
      * @return A boolean value.
      */
     public static boolean isAvailable(int port) {
-        if(isInvalid(port)) {
-            throw new ImpossiblePortNumberException(port);
+        if (isInvalid(port)) {
+            throw new InvalidPortException(port);
         }
 
         ServerSocket serverSocket = null;
@@ -60,17 +61,17 @@ public final class Ports {
             datagramSocket.setReuseAddress(true);
 
             return true;
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             // Exception is ignored;
         } finally {
-            if(datagramSocket != null) {
+            if (datagramSocket != null) {
                 datagramSocket.close();
             }
 
-            if(serverSocket != null) {
+            if (serverSocket != null) {
                 try {
                     serverSocket.close();
-                } catch(IOException exception) {
+                } catch (IOException exception) {
                     // This exception will never be thrown;
                 }
             }
@@ -79,13 +80,8 @@ public final class Ports {
         return false;
     }
 
-    /**
-     * > If the port is available, return false. Otherwise, return true
-     * 
-     * @param port The port to check
-     * @return A boolean value.
-     */
-    public static boolean isUnavailable(int port) {
-        return !Ports.isAvailable(port);
+    public static boolean isUsable(int port) {
+        return isValid(port) && isAvailable(port);
     }
+
 }
