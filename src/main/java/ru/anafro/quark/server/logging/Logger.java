@@ -1,100 +1,74 @@
 package ru.anafro.quark.server.logging;
 
 import ru.anafro.quark.server.console.Console;
-import ru.anafro.quark.server.utils.arrays.Arrays;
-import ru.anafro.quark.server.utils.debug.CallStack;
+import ru.anafro.quark.server.utils.exceptions.Exceptions;
+import ru.anafro.quark.server.utils.strings.Strings;
+import ru.anafro.quark.server.utils.time.Time;
+import ru.anafro.quark.server.utils.types.classes.Classes;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static ru.anafro.quark.server.utils.arrays.Arrays.array;
+import static ru.anafro.quark.server.utils.objects.Nulls.byDefault;
 
 public class Logger {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-
     private final String label;
-    private String format = "@level @time, @label | @message";
-    private LogLevel logFrom;
+    private LoggingLevel logFrom;
 
-    public Logger(String label, LogLevel logFrom) {
+    public Logger(String label, LoggingLevel logFrom) {
         this.label = label;
         this.logFrom = logFrom;
     }
 
-    public Logger(LogLevel logFrom) {
-        this("Unnamed Logger");
-        this.logFrom = logFrom;
-    }
-
-    public Logger(Class<?> clazz, LogLevel logFrom) {
-        this(clazz.getSimpleName());
+    public Logger(Class<?> type, LoggingLevel logFrom) {
+        this.label = Classes.getHumanReadableName(type);
         this.logFrom = logFrom;
     }
 
     public Logger(String label) {
-        this(label, LogLevel.INFO);
-    }
-
-    public Logger() {
-        this(LogLevel.INFO);
+        this(label, LoggingLevel.INFO);
     }
 
     public Logger(Class<?> clazz) {
-        this(clazz, LogLevel.INFO);
+        this(clazz, LoggingLevel.INFO);
     }
 
-    public String getLabel() {
-        return label;
-    }
+    public void log(LoggingLevel loggingLevel, String message) {
+        if (loggingLevel.ordinal() < logFrom.ordinal()) {
+            return;
+        }
 
-    public String getFormat() {
-        return format;
-    }
+        String[] lines = byDefault(message, Strings::lines, array("[a null is logged]"));
+        for (int i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            var color = loggingLevel.getColor();
+            var level = Strings.mask(loggingLevel.name(), ' ', i != 0);
+            var clock = Strings.mask(Time.clock(), ' ', i != 0);
+            var label = Strings.mask(this.label, ' ', i != 0);
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public void log(LogLevel logLevel, String message) {
-        var lines = message == null ? Arrays.of("<null message>") : message.split("\n");
-
-        if(logLevel.ordinal() >= logFrom.ordinal()) {
-            for(var line : lines) {
-                Console.synchronizedPrintln(
-                        (logLevel == LogLevel.DEBUG ? ANSI_PURPLE + "Logged from: " + CallStack.ofDepth(4) + ANSI_RESET + "\t" : "") +
-                        format
-                            .replace("@level", logLevel.getColor() + logLevel.name() + ANSI_RESET)
-                            .replace("@time", new SimpleDateFormat("HH:mm").format(new Date()))
-                            .replace("@label", label)
-                            .replace("@message", line)
-                );
-            }
+            Console.println(STR."\{color}\{level}</> <gray>\{clock}   \{label} │</> \{line}");
         }
     }
 
     public void debug(String message) {
-        log(LogLevel.DEBUG, message);
+        log(LoggingLevel.DEBUG, message);
     }
 
     public void info(String message) {
-        log(LogLevel.INFO, message);
+        log(LoggingLevel.INFO, message);
     }
 
     public void warning(String message) {
-        log(LogLevel.WARNING, message);
+        log(LoggingLevel.WARNING, message);
     }
 
     public void error(String message) {
-        log(LogLevel.ERROR, message);
+        log(LoggingLevel.ERROR, message);
     }
 
-    public void logFrom(LogLevel logFrom) {
+    public void error(Throwable throwable) {
+        error(Exceptions.format(throwable));
+    }
+
+    public void logFrom(LoggingLevel logFrom) {
         this.logFrom = logFrom;
     }
 }
