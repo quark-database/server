@@ -1,16 +1,14 @@
 package ru.anafro.quark.server.console;
 
-import ru.anafro.quark.server.console.exceptions.CommandArgumentIsNotTypeSuitableException;
-import ru.anafro.quark.server.console.exceptions.InvalidCommandException;
-import ru.anafro.quark.server.console.exceptions.NoSuchCommandArgumentInParametersException;
-import ru.anafro.quark.server.console.exceptions.NoSuchCommandParameterException;
-import ru.anafro.quark.server.utils.containers.Lists;
+import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.console.exceptions.CommandArgumentHasWrongTypeException;
+import ru.anafro.quark.server.console.exceptions.CommandDoesntHaveParametersException;
+import ru.anafro.quark.server.console.exceptions.CommandParameterIsMissedException;
+import ru.anafro.quark.server.console.exceptions.UnknownCommandParameterException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
 
 public class CommandParameters implements Iterable<CommandParameter> {
     private final ArrayList<CommandParameter> parameters;
@@ -24,8 +22,8 @@ public class CommandParameters implements Iterable<CommandParameter> {
     }
 
     public CommandParameter getParameter(String parameterName) {
-        for(var parameter : parameters) {
-            if(parameter.name().equals(parameterName)) {
+        for (var parameter : parameters) {
+            if (parameter.name().equals(parameterName)) {
                 return parameter;
             }
         }
@@ -33,49 +31,44 @@ public class CommandParameters implements Iterable<CommandParameter> {
         return null;
     }
 
-    public boolean hasParameter(String parameterName) {
-        return getParameter(parameterName) != null;
-    }
-
-    public CommandParameterType getTypeOf(String parameterName) {
-        if(!hasParameter(parameterName)) {
-            throw new NoSuchCommandParameterException(parameterName);
-        }
-
-        return getParameter(parameterName).type();
+    public boolean doesntHaveParameter(String parameterName) {
+        return getParameter(parameterName) == null;
     }
 
     public List<CommandParameter> toList() {
         return parameters;
     }
 
+    @NotNull
     @Override
     public Iterator<CommandParameter> iterator() {
         return parameters.iterator();
     }
 
-    public void checkArgumentsValidity(CommandArguments arguments) {
-        if(parameters.isEmpty() && !arguments.toList().isEmpty()) {
-            throw new InvalidCommandException("The command has no parameters, but following arguments are provided: " + Lists.join(arguments.toList()));
-        } else {
-            for(var parameter : this) {
-                if(!arguments.has(parameter.name()) && parameter.required()) {
-                    throw new InvalidCommandException("The parameter %s is required, but you didn't provide it".formatted(quoted(parameter.name())));
-                }
-
-                if(arguments.has(parameter.name())) {
-                    if(!parameter.type().isValueSuitable(arguments.get(parameter.name()))) {
-                        throw new CommandArgumentIsNotTypeSuitableException(parameter.name(), arguments.get(parameter.name()), parameter.type());
-                    }
-                }
-            }
-
-            for(var argument : arguments) {
-                if(!this.hasParameter(argument.name())) {
-                    throw new NoSuchCommandArgumentInParametersException(this, argument.name());
-                }
-            }
+    public void ensureArgumentsAreValid(CommandArguments arguments) {
+        if (parameters.isEmpty() && arguments.isNotEmpty()) {
+            throw new CommandDoesntHaveParametersException(arguments);
         }
+
+        for (var parameter : parameters) {
+            arguments.tryGet(parameter.name()).ifPresentOrElse(argument -> {
+                if (parameter.canNotContain(argument)) {
+                    throw new CommandArgumentHasWrongTypeException(parameter, argument);
+                }
+            }, () -> {
+                if (parameter.isRequired()) {
+                    throw new CommandParameterIsMissedException(parameter);
+                }
+            });
+        }
+
+        arguments.stream().filter(this::doesntHaveParameter).findFirst().ifPresent(argument -> {
+            throw new UnknownCommandParameterException(parameters, argument);
+        });
+    }
+
+    private boolean doesntHaveParameter(CommandArgument argument) {
+        return doesntHaveParameter(argument.name());
     }
 
     public int count() {
@@ -83,6 +76,6 @@ public class CommandParameters implements Iterable<CommandParameter> {
     }
 
     public boolean isEmpty() {
-        return count() == 0;
+        return parameters.isEmpty();
     }
 }
