@@ -1,38 +1,39 @@
 package ru.anafro.quark.server.console;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.exceptions.CommandRuntimeException;
-import ru.anafro.quark.server.logging.LogLevel;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.logging.Logger;
-import ru.anafro.quark.server.plugins.events.BeforeRunCommand;
-import ru.anafro.quark.server.plugins.events.CommandFinished;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.logging.LoggingLevel;
+import ru.anafro.quark.server.plugins.events.BeforeRunCommandEvent;
+import ru.anafro.quark.server.plugins.events.CommandFinishedEvent;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
+import java.util.HashSet;
 import java.util.List;
-
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
+import java.util.Set;
 
 public abstract class Command {
     protected final CommandLoop loop;
-    protected final UniqueList<String> names;
-    private final String shortDescription;
-    private final String longDescription;
+    protected final Set<String> names;
     protected final CommandParameters parameters;
     protected final Logger logger;
+    private final String primaryName;
+    private final String shortDescription;
+    private final String longDescription;
 
-    public Command(UniqueList<String> names, String shortDescription, String longDescription, CommandParameters parameters) {
+    public Command(List<String> names, String shortDescription, String longDescription, CommandParameters parameters) {
         this.loop = Quark.commandLoop();
-        this.names = names;
+        this.names = new HashSet<>(names);
+        this.primaryName = names.getFirst();
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.parameters = parameters;
-        this.logger = new Logger("Command " + quoted(this.getPrimaryName()));
+        this.logger = new Logger(loop.getCommandPrefix() + primaryName);
 
-        logger.logFrom(LogLevel.DEBUG);
+        logger.logFrom(LoggingLevel.DEBUG);
     }
 
-    public Command(UniqueList<String> names, String shortDescription, String longDescription, CommandParameter... parameters) {
+    public Command(List<String> names, String shortDescription, String longDescription, CommandParameter... parameters) {
         this(names, shortDescription, longDescription, new CommandParameters(parameters));
     }
 
@@ -44,19 +45,23 @@ public abstract class Command {
         return parameters;
     }
 
-    public UniqueList<String> getNames() {
+    public boolean hasParameters() {
+        return !parameters.isEmpty();
+    }
+
+    public Set<String> getNames() {
         return names;
     }
 
     public abstract void action(CommandArguments arguments);
 
     public void run(CommandArguments arguments) {
-        Quark.fire(new BeforeRunCommand(this, arguments));
+        Quark.fireEvent(new BeforeRunCommandEvent(this, arguments));
 
-        parameters.checkArgumentsValidity(arguments);
+        parameters.ensureArgumentsAreValid(arguments);
         action(arguments);
 
-        Quark.fire(new CommandFinished(this, arguments));
+        Quark.fireEvent(new CommandFinishedEvent(this, arguments));
     }
 
     public boolean hasAliases() {
@@ -64,19 +69,15 @@ public abstract class Command {
     }
 
     public String getPrimaryName() {
-        return names.get(0);
+        return primaryName;
     }
 
     public List<String> getAliases() {
-        return names.asList().subList(1, names.size());
+        return names.stream().toList().subList(1, names.size());
     }
 
     public int aliasCount() {
         return names.size() - 1;
-    }
-
-    public CommandLoop getLoop() {
-        return loop;
     }
 
     protected void error(String message) {
@@ -98,15 +99,20 @@ public abstract class Command {
     public String getSyntax() {
         TextBuffer syntax = new TextBuffer(getPrimaryName());
 
-        for(var parameter : parameters) {
+        for (var parameter : parameters) {
             syntax.append(" ");
             syntax.append(parameter.name());
             syntax.append(" ");
-            syntax.append(parameter.required() ? "[" : "<");
+            syntax.append(parameter.isRequired() ? "[" : "<");
             syntax.append(parameter.shortDescription());
-            syntax.append(parameter.required() ? "]" : ">");
+            syntax.append(parameter.isRequired() ? "]" : ">");
         }
 
         return syntax.extractContent();
+    }
+
+    @Override
+    public String toString() {
+        return STR."\{loop.getCommandPrefix()}\{primaryName}";
     }
 }
