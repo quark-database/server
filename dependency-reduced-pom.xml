@@ -3,11 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ru.anafro.quark.server</groupId>
   <artifactId>QuarkServer</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <build>
     <directory>D:\Quark</directory>
     <finalName>Quark Server</finalName>
     <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>--enable-preview</argLine>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
@@ -17,6 +23,19 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <filters>
+                <filter>
+                  <artifact>ru.anafro.quark.server:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.MF</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <transformers>
+                <transformer />
+              </transformers>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -33,10 +52,82 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <source>21</source>
+          <target>21</target>
+          <compilerArgs>
+            <arg>--enable-preview</arg>
+            <arg>-parameters</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>hamcrest-core</artifactId>
+          <groupId>org.hamcrest</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>RELEASE</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-params</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
   <properties>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <kotlin.version>2.0.0-Beta2</kotlin.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 </project>

@@ -8,11 +8,16 @@
         <outputRelativeToContentRoot value="true" />
       </profile>
       <profile name="Annotation profile for QuarkServer" enabled="true">
-        <sourceOutputDir name="../../Quark/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../Quark/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="../../../Quark/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../Quark/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="QuarkServer" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="QuarkServer" options="--enable-preview -parameters" />
+    </option>
   </component>
 </project>
