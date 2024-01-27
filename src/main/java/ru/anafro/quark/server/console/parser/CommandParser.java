@@ -1,22 +1,26 @@
 package ru.anafro.quark.server.console.parser;
 
-import ru.anafro.quark.server.console.exceptions.ParsingFailedException;
-import ru.anafro.quark.server.console.parser.states.ReadingCommandNameCommandParserState;
+import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
+import ru.anafro.quark.server.console.exceptions.NoSuchCommandException;
+import ru.anafro.quark.server.console.exceptions.ParsingFailedException;
 import ru.anafro.quark.server.console.parser.states.CommandParserState;
+import ru.anafro.quark.server.console.parser.states.ReadingCommandNameCommandParserState;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.logging.Logger;
-import ru.anafro.quark.server.utils.containers.Lists;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
+import ru.anafro.quark.server.utils.types.classes.Classes;
 
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
+import static ru.anafro.quark.server.utils.collections.Lists.join;
+import static ru.anafro.quark.server.utils.objects.Nulls.byDefault;
 
 public class CommandParser {
+    private final TextBuffer buffer = new TextBuffer();
+    private final Logger logger = new Logger(this.getClass());
     private CommandParserState state = new ReadingCommandNameCommandParserState(this);
     private String command;
     private String commandName;
     private CommandArguments arguments = new CommandArguments();
-    private final TextBuffer buffer = new TextBuffer();
-    private final Logger logger = new Logger(this.getClass());
     private int index = 0;
 
     public TextBuffer getBuffer() {
@@ -39,10 +43,6 @@ public class CommandParser {
         this.state = newState;
     }
 
-    public void setCommandName(String commandName) {
-        this.commandName = commandName;
-    }
-
     public CommandArguments getArguments() {
         return arguments;
     }
@@ -55,11 +55,15 @@ public class CommandParser {
         return commandName;
     }
 
+    public void setCommandName(String commandName) {
+        this.commandName = commandName;
+    }
+
     public String getCommandString() {
         return command;
     }
 
-    public void parse(String command) {
+    public Command parse(String command) {
         this.command = command;
         this.commandName = null;
         this.arguments = new CommandArguments();
@@ -67,38 +71,51 @@ public class CommandParser {
         this.state = new ReadingCommandNameCommandParserState(this);
         buffer.clear();
 
-        if(command.isBlank()) {
-            return;
+        if (command.isBlank()) {
+            return null;
         }
 
-        while(index != command.length()) {
-            logger.debug("State: " + state.getClass().getSimpleName());
-            logger.debug("Command name: " + (commandName == null ? "<was not set>" : commandName));
-            logger.debug("Arguments: " + Lists.join(arguments.toList()));
-            logger.debug("Buffer: " + quoted(getBufferContent()));
-            logger.debug("Character: " + quoted(String.valueOf(command.charAt(index))));
-            logger.debug(command);
-            logger.debug(" ".repeat(index) + "^");
-            logger.debug("-".repeat(50));
+        while (index != command.length()) {
+            var currentCharacter = this.command.charAt(index);
 
-            state.handleCharacter(this.command.charAt(index));
+            logger.debug(STR."""
+                    -----------------------------------------------------------------------
+
+                    \{command}
+                    \{" ".repeat(index)}^
+
+                    State:              \{Classes.getHumanReadableClassName(state)}
+                    Command name:       \{byDefault(commandName, "(unset)")}
+                    Arguments:          \{join(arguments.toList())}
+                    Buffer content:     \{buffer.getContent()}
+                    Current character:  \{currentCharacter}
+
+                    -----------------------------------------------------------------------
+                    """);
+
+            state.handleCharacter(currentCharacter);
             index++;
         }
 
-        if(!buffer.isEmpty()) {
+        if (buffer.isNotEmpty()) {
             state.whenParsingCompleteButBufferIsNotEmpty(buffer.getContent());
         }
 
-        if(commandName == null) {
+        if (commandName == null) {
             throw new ParsingFailedException("Command parsing failed, because command name was not set");
         }
+
+        var commands = Quark.commands();
+
+        if (commands.doesntHave(commandName)) {
+            throw new NoSuchCommandException(commandName);
+        }
+
+        Quark.commandLoop().forgetFailedCommand();
+        return commands.get(command);
     }
 
     public Logger getLogger() {
         return logger;
-    }
-
-    public String getCommand() {
-        return command;
     }
 }
