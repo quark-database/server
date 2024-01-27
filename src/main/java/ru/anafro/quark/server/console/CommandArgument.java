@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.console;
 
-import ru.anafro.quark.server.console.exceptions.CommandParameterTypeConvertWayUnregisteredException;
 import ru.anafro.quark.server.utils.strings.Converter;
 
 import java.util.Objects;
@@ -20,7 +19,6 @@ public final class CommandArgument {
             case INTEGER -> Converter.toInteger(value);
             case FLOAT -> Converter.toFloat(value);
             case BOOLEAN -> Converter.toBoolean(value);
-            default -> throw new CommandParameterTypeConvertWayUnregisteredException(this, type);
         };
     }
 
@@ -56,8 +54,6 @@ public final class CommandArgument {
 
     @Override
     public String toString() {
-        return "CommandArgument[" +
-                "name=" + name + ", " +
-                "value=" + value + ']';
+        return STR."CommandArgument[name=\{name}, value=\{value}\{']'}";
     }
 }
