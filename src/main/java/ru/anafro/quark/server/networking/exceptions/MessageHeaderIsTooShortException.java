@@ -6,7 +6,6 @@ package ru.anafro.quark.server.networking.exceptions;
  */
 public class MessageHeaderIsTooShortException extends NetworkingException {
     public MessageHeaderIsTooShortException(int headerLengthInBytes, int actualHeaderLength) {
-        super("Bytes cannot be converted to message, because an excepted header length is " + headerLengthInBytes + ", " +
-              "but only " + actualHeaderLength + " bytes were received.");
+        super(STR."Bytes cannot be converted to message, because an excepted header length is \{headerLengthInBytes}, but only \{actualHeaderLength} bytes were received.");
     }
 }

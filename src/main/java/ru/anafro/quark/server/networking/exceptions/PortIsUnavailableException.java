@@ -7,6 +7,6 @@ package ru.anafro.quark.server.networking.exceptions;
  */
 public class PortIsUnavailableException extends NetworkingException {
     public PortIsUnavailableException(int whichPortIsAlreadyUsed) {
-        super("Port is used or unavailable: " + whichPortIsAlreadyUsed);
+        super(STR."Port is used or unavailable: \{whichPortIsAlreadyUsed}");
     }
 }

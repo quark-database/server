@@ -6,9 +6,9 @@ package ru.anafro.quark.server.networking.exceptions;
  * first port number (usually 0) or higher than the last port number
  * (usually 65535).
  */
-public class ImpossiblePortNumberException extends NetworkingException {
+public class InvalidPortException extends NetworkingException {
 
-    public ImpossiblePortNumberException(int whichPortIsImpossible) {
-        super("This port is impossible: " + whichPortIsImpossible);
+    public InvalidPortException(int invalidPort) {
+        super(STR."The port \{invalidPort} is invalid.");
     }
 }
