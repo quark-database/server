@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.files;
 
 import ru.anafro.quark.server.files.exceptions.CannotCreateDirectoryException;
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public final class FileSystem {
     private FileSystem() {
-        throw new CallingUtilityConstructorException(getClass());
+        throw new UtilityClassInstantiationException(getClass());
     }
 
     public static boolean isFile(String path) {
@@ -32,7 +32,7 @@ public final class FileSystem {
     }
 
     public static void createDirectories(String... paths) {
-        for(var path : paths) {
+        for (var path : paths) {
             try {
                 Files.createDirectory(Path.of(path));
             } catch (IOException exception) {
@@ -42,18 +42,19 @@ public final class FileSystem {
     }
 
     public static void createDirectoriesIfMissing(String... paths) {
-        for(var path : paths) {
+        for (var path : paths) {
             if (missing(path)) {
                 createDirectories(path);
             }
         }
     }
 
+    @SuppressWarnings("unused")
     public static void deleteIfExists(String... paths) {
         for (var stringPath : paths) {
             if (exists(stringPath)) {
                 if (isFile(stringPath)) {
-                    new File(stringPath).delete();
+                    var _ = new File(stringPath).delete();
                 }
 
                 if (isDirectory(stringPath)) {
@@ -68,7 +69,7 @@ public final class FileSystem {
                         }
                     }
 
-                    directory.delete();
+                    var _ = directory.delete();
                 }
             }
         }
