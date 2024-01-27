@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.utils.strings;
 
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 import ru.anafro.quark.server.utils.strings.exceptions.ObjectFormatException;
 
 /**
@@ -8,8 +8,8 @@ import ru.anafro.quark.server.utils.strings.exceptions.ObjectFormatException;
  * you need in one place. We think that Xxx.toXxx() Java syntax is
  * a bit verbose, so we recommend to use this class instead.
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since Quark 1.1
  */
 public final class Converter {
 
@@ -17,11 +17,11 @@ public final class Converter {
      * This private constructor of Converter class <strong>MUST NOT</strong> be ever
      * called, because Converter is a utility class. Use static methods declared inside.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     private Converter() {
-        throw new CallingUtilityConstructorException(getClass());
+        throw new UtilityClassInstantiationException(getClass());
     }
 
     /**
@@ -29,15 +29,14 @@ public final class Converter {
      * will be thrown.
      *
      * @param string a string that has to be converted to an integer.
-     * @return       the conversation result.
-     *
-     * @since  Quark 1.1
+     * @return the conversation result.
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static int toInteger(String string) {
         try {
             return Integer.parseInt(string);
-        } catch(NumberFormatException exception) {
+        } catch (NumberFormatException exception) {
             throw new ObjectFormatException(string, Integer.class);
         }
     }
@@ -47,15 +46,14 @@ public final class Converter {
      * will be thrown.
      *
      * @param string a string that has to be converted to a float.
-     * @return       the conversation result.
-     *
-     * @since  Quark 1.1
+     * @return the conversation result.
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static float toFloat(String string) {
         try {
             return Float.parseFloat(string);
-        } catch(NumberFormatException exception) {
+        } catch (NumberFormatException exception) {
             throw new ObjectFormatException(string, Float.class);
         }
     }
@@ -65,15 +63,31 @@ public final class Converter {
      * will be thrown.
      *
      * @param string a string that has to be converted to a long.
-     * @return       the conversation result.
-     *
-     * @since  Quark 1.1
+     * @return the conversation result.
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static long toLong(String string) {
         try {
             return Long.parseLong(string);
-        } catch(NumberFormatException exception) {
+        } catch (NumberFormatException exception) {
+            throw new ObjectFormatException(string, Long.class);
+        }
+    }
+
+    /**
+     * Converts a string to a double. If conversation fails, {@link ObjectFormatException}
+     * will be thrown.
+     *
+     * @param string a string that has to be converted to a double.
+     * @return the conversation result.
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
+     */
+    public static double toDouble(String string) {
+        try {
+            return Double.parseDouble(string);
+        } catch (NumberFormatException exception) {
             throw new ObjectFormatException(string, Long.class);
         }
     }
@@ -83,17 +97,17 @@ public final class Converter {
      * will be thrown.
      *
      * @param string a string that has to be converted to a boolean.
-     * @return       the conversation result.
-     *
-     * @since  Quark 1.1
+     * @return the conversation result.
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static boolean toBoolean(String string) {
         // TODO: It seems like this can fail in some cases. Please, read this code carefully to ensure that this code is fine or rewrite it if it doesn't
 
         try {
             return Boolean.parseBoolean(string);
-        } catch(NumberFormatException exception) {  // TODO: Boolean.parseBoolean does not throw NumberFormatException for sure :)
+        } catch (
+                NumberFormatException exception) {  // TODO: Boolean.parseBoolean does not throw NumberFormatException for sure :)
             throw new ObjectFormatException(string, Boolean.class);
         }
     }
