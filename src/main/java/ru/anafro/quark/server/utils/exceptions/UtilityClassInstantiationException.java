@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.utils.exceptions;
 
 /**
- * {@link CallingUtilityConstructorException} is only used as the single line
+ * {@link UtilityClassInstantiationException} is only used as the single line
  * in utility classes when there are only static methods inside. See an example below:
  *
  * <pre>
@@ -21,20 +21,19 @@ package ru.anafro.quark.server.utils.exceptions;
  * }
  * </pre>
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since Quark 1.1
  */
-public class CallingUtilityConstructorException extends UtilityException {
+public class UtilityClassInstantiationException extends UtilityException {
 
     /**
      * Creates an exception instance.
      *
      * @param utilityClass a type of the utility class.
-     *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
-    public CallingUtilityConstructorException(Class<?> utilityClass) {
-        super("new " + utilityClass.getSimpleName() + "(...) call is illegal, because " + utilityClass.getName() + " is a utility class. Call static methods inside instead.");
+    public UtilityClassInstantiationException(Class<?> utilityClass) {
+        super(STR."new \{utilityClass.getSimpleName()}(...) call is illegal, because \{utilityClass.getName()} is a utility class. Call static methods inside instead.");
     }
 }
