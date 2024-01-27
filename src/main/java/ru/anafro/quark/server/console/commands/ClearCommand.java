@@ -3,16 +3,16 @@ package ru.anafro.quark.server.console.commands;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.Console;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
         super(
-                new UniqueList<>(
+                list(
                         "clear",
                         "clean",
                         "clr",
-                        "clrscr",
                         "cl",
                         "c",
                         "clear-console",
@@ -30,6 +30,6 @@ public class ClearCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        Console.synchronizedPrintln("\n".repeat(200));
+        Console.clear();
     }
 }

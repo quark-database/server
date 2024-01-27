@@ -1,14 +1,15 @@
 package ru.anafro.quark.server.console.commands;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class OpenDebugCommand extends Command {
     public OpenDebugCommand() {
-        super(new UniqueList<>("open-debug", "show-debug", "open-debug-window", "show-debug-window", "show-debug-window", "show-debug-dialog", "dd"),
+        super(list("open-debug", "show-debug", "open-debug-window", "show-debug-window", "show-debug-window", "show-debug-dialog", "dd"),
                 "Opens up a debug dialog",
                 "Opens up a debug dialog 'named'",
 
@@ -18,18 +19,6 @@ public class OpenDebugCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        if(Quark.debugFrames().missing(arguments.get("for"))) {
-            error("No such debug frame. Did you mean %s?".formatted(Quark.debugFrames().suggest(arguments.get("for")).getName()));
-        }
-
-        var frame = Quark.debugFrames().get(arguments.get("for"));
-
-        if(frame.isVisible()) {
-            logger.info("Debug dialog %s is already opened. Check out your taskbar.".formatted(frame.getName()));
-            frame.pullToTop();
-        } else {
-            logger.info("Opening the %s debug dialog...".formatted(frame.getName()));
-            frame.open();
-        }
+        Quark.debugger(arguments.get("for")).open();
     }
 }

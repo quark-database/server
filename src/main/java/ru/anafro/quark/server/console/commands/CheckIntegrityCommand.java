@@ -2,13 +2,14 @@ package ru.anafro.quark.server.console.commands;
 
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.files.FileSystem;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class CheckIntegrityCommand extends Command {
     public CheckIntegrityCommand() {
         super(
-                new UniqueList<>(
+                list(
                         "repair",
                         "fix",
                         "mend",
@@ -24,14 +25,7 @@ public class CheckIntegrityCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        FileSystem.createDirectoriesIfMissing(
-                "Plugins",
-                "Databases",
-                "Libraries",
-                "Commands",
-                "Trash",
-                "Scripts",
-                "Assets"
-        );
+        Quark.repairDirectories();
+        logger.info("The directories are repaired.");
     }
 }

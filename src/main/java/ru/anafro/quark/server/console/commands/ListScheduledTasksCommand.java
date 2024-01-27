@@ -2,14 +2,15 @@ package ru.anafro.quark.server.console.commands;
 
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.databases.data.Table;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.database.data.Table;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class ListScheduledTasksCommand extends Command {
     public ListScheduledTasksCommand() {
         super(
-                new UniqueList<>(
-                 "list-scheduled-tasks",
+                list(
+                        "list-scheduled-tasks",
                         "scheduled-list",
                         "task-list",
                         "sch",
@@ -33,23 +34,22 @@ public class ListScheduledTasksCommand extends Command {
         var commands = Table.byName("Quark.Scheduled Commands").loadRecords();
 
         queries.forEach(record -> {
-            logger.info("Scheduled query: %s with period %d milliseconds".formatted(
-                    record.getField("query").getValue().valueAs(String.class),
-                    record.getField("period").getValue().valueAs(Long.class)
-            ));
+            var query = record.getString("query");
+            var period = record.getLong("period");
+
+            logger.info(STR."Scheduled query: \{query} with period \{period} milliseconds");
         });
 
         commands.forEach(record -> {
-            logger.info("Scheduled command: %s with period %d milliseconds".formatted(
-                    record.getField("command").getValue().valueAs(String.class),
-                    record.getField("period").getValue().valueAs(Long.class)
-            ));
+            var command = record.getString("command");
+            var period = record.getLong("period");
+
+            logger.info(STR."Scheduled command: \{command} with period \{period} milliseconds");
         });
 
-        logger.info("%d tasks in total: %d queries and %d commands.".formatted(
-                queries.count() + commands.count(),
-                queries.count(),
-                commands.count()
-        ));
+        var queriesCount = queries.count();
+        var commandsCount = commands.count();
+
+        logger.info(STR."\{queriesCount + commandsCount} tasks in total: \{queriesCount} queries and \{commandsCount} commands.");
     }
 }

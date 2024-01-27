@@ -2,13 +2,14 @@ package ru.anafro.quark.server.console.commands;
 
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.files.FileSystem;
-import ru.anafro.quark.server.utils.containers.UniqueList;
+import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class ClearMavenOutputCommand extends Command {
     public ClearMavenOutputCommand() {
         super(
-                new UniqueList<>(
+                list(
                         "clear-maven-output",
                         "clear-maven-build-files",
                         "flush-maven-output",
@@ -26,14 +27,7 @@ public class ClearMavenOutputCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        FileSystem.deleteIfExists(
-                "maven-status",
-                "classes",
-                "generated-sources",
-                "maven-archiver",
-                "maven-status",
-                "original-Quark Server.jar",
-                "QuarkServer-1.1-SNAPSHOT-shaded.jar"
-        );
+        Quark.clearMavenOutput();
+        logger.info("Maven output is cleared.");
     }
 }
