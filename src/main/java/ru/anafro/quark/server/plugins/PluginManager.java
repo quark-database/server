@@ -1,99 +1,68 @@
 package ru.anafro.quark.server.plugins;
 
-import ru.anafro.quark.server.files.Plugins;
+import ru.anafro.quark.server.files.PluginDirectory;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.plugins.events.Event;
-import ru.anafro.quark.server.plugins.exceptions.*;
-import ru.anafro.quark.server.utils.patterns.NamedObjectsRegistry;
+import ru.anafro.quark.server.utils.arrays.Arrays;
+import ru.anafro.quark.server.utils.patterns.NamedObjectsList;
+import ru.anafro.quark.server.utils.reflection.Reflection;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
-
-public class PluginManager extends NamedObjectsRegistry<Plugin> implements Iterable<Plugin> {
-    private final Logger logger = new Logger(this.getClass());
-    private boolean isLoaded = false;
+public final class PluginManager extends NamedObjectsList<Plugin> implements Iterable<Plugin> {
     public static final String PLUGIN_CLASS_PATH_FILE_NAME = "Plugin Class Path.txt";
+    public static final Class<?>[] PLUGIN_EVENT_LISTENER_SIGNATURE = Arrays.<Class<?>>array(Event.class);
+    private final PluginDirectory directory = PluginDirectory.getInstance();
+    private final Logger logger = new Logger(this.getClass());
+    private boolean arePluginsLoaded = false;
 
-    public void loadPlugins() {
-        if(isLoaded) {
-            throw new PluginLoaderUsedTwiceException();
-        }
+    public void load() {
+        assert !arePluginsLoaded : "Plugin manager cannot load plugins twice.";
 
-        Plugins.forEachPluginFile(path -> {
-            logger.info("Loading the plugin %s...".formatted(path.getFileName()));
-
+        directory.forEach(file -> {
             try {
-                URLClassLoader child = new URLClassLoader(
-                        new URL[]{ path.toUri().toURL() },
-                        this.getClass().getClassLoader()
-                );
+                logger.info(STR."Loading the plugin \{file.getName()}...");
 
-                InputStream stream = child.getResourceAsStream(PLUGIN_CLASS_PATH_FILE_NAME);
+                var classLoader = Reflection.createURLClassLoader(getClass(), file);
+                var classPath = Reflection.readResource(classLoader, PLUGIN_CLASS_PATH_FILE_NAME).strip();
+                var pluginClass = Reflection.loadClass(Plugin.class, classLoader, classPath);
+                var plugin = Reflection.newInstance(pluginClass);
 
-                if(stream == null) {
-                    throw new NoPluginClassPathFileException(path);
-                }
+                var pluginName = plugin.getName();
+                var pluginAuthor = plugin.getAuthor();
 
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                this.add(plugin);
 
-                for (int result = bufferedInputStream.read(); result != -1; result = bufferedInputStream.read()) {
-                    byteArrayOutputStream.write((byte) result);
-                }
-
-                Class<?> classToLoad = Class.forName(byteArrayOutputStream.toString(StandardCharsets.UTF_8).strip(), true, child);
-
-                Plugin plugin = (Plugin) classToLoad.getDeclaredConstructor().newInstance();
-
-                add(plugin);
-                logger.info("Plugin %s by %s is successfully loaded!".formatted(quoted(plugin.getName()), plugin.getAuthor()));
-            } catch(Exception exception) {
-                logger.error("Loading of the plugin %s is failed, because of %s occurred: %s".formatted(
-                        path.toAbsolutePath().toString(),
-                        exception.getClass().getSimpleName(),
-                        exception.getMessage()
-                ));
-
-                exception.printStackTrace();
+                logger.info(STR."Plugin '\{pluginName}' by \{pluginAuthor} is loaded.");
+            } catch (Exception exception) {
+                logger.error(exception);
             }
         });
 
-        isLoaded = true;
+        arePluginsLoaded = true;
+    }
+
+    public void enableAll() {
+        forEach(Plugin::onEnable);
     }
 
     public void fireEvent(Event event) {
-        forEach(plugin -> {
-            for (Method method : plugin.getClass().getDeclaredMethods()) {
-                logger.debug("Checking if the method " + method.getName() + " is an event handler");
-                if(method.isAnnotationPresent(EventHandler.class)) {
-                    if(method.getParameterCount() != 1) {
-                        throw new BadPluginEventHandlerParameterLengthException(plugin, method);
-                    }
+        this.forEach(plugin -> {
+            var pluginMethods = plugin.getClass().getDeclaredMethods();
 
-                    if(!Event.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                        throw new BadPluginEventHandlerParameterTypeException(plugin, method);
-                    }
-
-                    try {
-                        if(method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                            method.invoke(plugin, method.getParameterTypes()[0].cast(event));
-                        }
-                    } catch (IllegalAccessException | InvocationTargetException exception) {
-                        throw new PluginReflectionException(exception, event, plugin, method);
-                    } catch(Exception exception) {
-                        throw new PluginEventException(exception, event, plugin, method);
-                    }
-                } else {
-                    logger.debug("It's not marked with @" + EventHandler.class.getSimpleName());
+            for (var method : pluginMethods) {
+                if (!Reflection.hasAnnotation(method, EventHandler.class)) {
+                    continue;
                 }
+
+                if (Reflection.doesntHaveParameters(method, PLUGIN_EVENT_LISTENER_SIGNATURE)) {
+                    var methodSignature = Reflection.getSignature(method);
+                    var pluginName = plugin.getName();
+
+                    logger.error(STR."The plugin '\{pluginName}' has a wrong event handler signature:");
+                    logger.error(methodSignature);
+                    continue;
+                }
+
+                Reflection.invoke(plugin, method, event);
             }
         });
     }
