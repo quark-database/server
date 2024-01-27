@@ -6,7 +6,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class TextField extends JTextField {
-    protected Runnable onEdit;
+    protected final Runnable onEdit;
 
     public TextField(Rectangle boundaries, Font font, Color background, Color foreground, Runnable onEdit) {
         this.onEdit = onEdit;
@@ -36,13 +36,5 @@ public class TextField extends JTextField {
 
     public static TextField console(int locationX, int locationY, int width, int height, Runnable onEdit) {
         return new TextField(new Rectangle(locationX, locationY, width, height), DefaultInterfaceProperties.CONSOLE_FONT, DefaultInterfaceProperties.COLOR_WHITE, DefaultInterfaceProperties.COLOR_BLACK, onEdit);
-    }
-
-    public Runnable getOnEdit() {
-        return onEdit;
-    }
-
-    public void setOnEdit(Runnable onEdit) {
-        this.onEdit = onEdit;
     }
 }
