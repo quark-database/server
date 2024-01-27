@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.console;
 
-import ru.anafro.quark.server.api.Quark;
 import ru.anafro.quark.server.console.exceptions.CommandScriptFileCannotBeReadException;
+import ru.anafro.quark.server.facade.Quark;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +15,10 @@ public class CommandScriptFile implements Runnable {
 
     public CommandScriptFile(String name) {
         this.path = Path.of(FOLDER, name + EXTENSION).toAbsolutePath().toString();
+    }
+
+    public static void run(String name) {
+        new CommandScriptFile(name).run();
     }
 
     public String getPath() {
@@ -33,7 +37,7 @@ public class CommandScriptFile implements Runnable {
     public void run() {
         var commands = read();
 
-        for(var command : commands) {
+        for (var command : commands) {
             Quark.runCommand(command);
         }
     }
