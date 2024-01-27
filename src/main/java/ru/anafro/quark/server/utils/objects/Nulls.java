@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.utils.objects;
 
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 
 import java.util.function.Function;
 
@@ -21,12 +21,12 @@ import java.util.function.Function;
  * logger.info(evalOrDefault(user, User::name, "<no name>");
  * }
  * </pre>
- *
+ * <p>
  * It's totally fine to static import methods to shorten your code.
  *
- * @since   Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  * @version Quark 1.1
- * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @since Quark 1.1
  */
 public final class Nulls {
 
@@ -34,11 +34,11 @@ public final class Nulls {
      * This private constructor of Nulls class <strong>MUST NOT</strong> be ever
      * called, because Nulls is a utility class. Use static methods declared inside.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     private Nulls() {
-        throw new CallingUtilityConstructorException(getClass());
+        throw new UtilityClassInstantiationException(getClass());
     }
 
     /**
@@ -47,13 +47,12 @@ public final class Nulls {
      *
      * @param object       an object to check for the null value.
      * @param defaultValue a default value that will be returned if <code>object == null</code>
-     * @return             (see the description above)
      * @param <T>          the type of both objects
-     *
-     * @since  Quark 1.1
+     * @return (see the description above)
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
-    public static <T> T nullOrDefault(T object, T defaultValue) {
+    public static <T> T byDefault(T object, T defaultValue) {
         return object == null ? defaultValue : object;
     }
 
@@ -64,22 +63,21 @@ public final class Nulls {
      * @param nullableObject an object to check for the null value.
      * @param ifNotNull      a function that will be invoked on <code>nullableObject</code> if it is present (not null).
      * @param ifNull         an object that will be returned if <code>nullableObject</code> is null.
-     * @return               (see description above)
      * @param <T>            a type of the checking object
      * @param <U>            a type of the returning object
-     *
-     * @since  Quark 1.1
+     * @return (see description above)
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
-    public static <T, U> U evalOrDefault(T nullableObject, Function<T, U> ifNotNull, U ifNull) {
-        if(nullableObject == null) {
+    public static <T, U> U byDefault(T nullableObject, Function<T, U> ifNotNull, U ifNull) {
+        if (nullableObject == null) {
             return ifNull;
         } else {
             return ifNotNull.apply(nullableObject);
         }
     }
 
-    public static <T, U> U evalOrNull(T nullableObject, Function<T, U> ifNotNull) {
-        return evalOrDefault(nullableObject, ifNotNull, null);
+    public static <T, U> U nullByDefault(T nullableObject, Function<T, U> ifNotNull) {
+        return byDefault(nullableObject, ifNotNull, null);
     }
 }
