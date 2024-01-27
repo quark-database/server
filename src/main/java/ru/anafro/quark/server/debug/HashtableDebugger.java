@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.debug;
 
-import ru.anafro.quark.server.databases.data.Table;
-import ru.anafro.quark.server.databases.data.structures.HashtableRecordCollection;
-import ru.anafro.quark.server.databases.ql.ConstructorEvaluator;
-import ru.anafro.quark.server.debug.components.DebugFrame;
+import ru.anafro.quark.server.database.data.Table;
+import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
+import ru.anafro.quark.server.database.language.Expressions;
+import ru.anafro.quark.server.debug.components.Debugger;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
@@ -13,18 +13,15 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 import javax.swing.*;
 import java.awt.*;
 
-public class HashtableDebugFrame extends DebugFrame {
-    private TextArea hashtableOutputArea;
-    private TextField tableInputField;
-    private TextField columnNameInputField;
-    private TextField valueInputField;
+public class HashtableDebugger extends Debugger {
+    private final TextArea hashtableOutputArea;
+    private final TextField tableInputField;
+    private final TextField columnNameInputField;
+    private final TextField valueInputField;
 
-    public HashtableDebugFrame() {
+    public HashtableDebugger() {
         super("Hashtable", "hashtable", 600, 700);
-    }
 
-    @Override
-    protected void constructInterface() {
         hashtableOutputArea = TextArea.console(0, 0, 600, 640);
         hashtableOutputArea.setEditable(false);
         hashtableOutputArea.setLineWrap(true);
@@ -54,23 +51,23 @@ public class HashtableDebugFrame extends DebugFrame {
 
             table.getRecords().forEach(hashtable::add);
 
-            var value = ConstructorEvaluator.eval(stringValue);
+            var value = Expressions.eval(stringValue);
             var index = Integers.positiveModulus(value.hashCode(), hashtable.getRecordChains().length);
 
-            output.appendLine("Computed hash of " + value.toInstructionForm() + ": " + index);
+            output.appendLine(STR."Computed hash of \{value.toInstructionForm()}: \{index}");
 
             for (int i = 0; i < hashtable.getRecordChains().length; i++) {
                 var chain = hashtable.getRecordChains()[i];
-                output.append(i + ": ");
+                output.append(STR."\{i}: ");
 
-                if (chain.getRecords().size() == 0) {
+                if (chain.getRecords().isEmpty()) {
                     output.appendLine("<empty>");
                 } else {
-                    if(index == i) {
+                    if (index == i) {
                         output.append("[FOUND] ");
                     }
-                    for(var record : chain) {
-                        output.append(record.getField(columnName).getValue().toInstructionForm() + ", ");
+                    for (var record : chain) {
+                        output.append(STR."\{record.getField(columnName).getEntity().toInstructionForm()}, ");
                     }
 
                     output.nextLine();
@@ -79,8 +76,8 @@ public class HashtableDebugFrame extends DebugFrame {
 
             hashtableOutputArea.setText(output.extractContent());
             hashtableOutputArea.setForeground(Color.BLACK);
-        } catch(Exception exception) {
-            hashtableOutputArea.setText(Exceptions.getTraceAsString(exception));
+        } catch (Exception exception) {
+            hashtableOutputArea.setText(Exceptions.getTrace(exception));
             hashtableOutputArea.setForeground(Color.RED);
         }
     }
