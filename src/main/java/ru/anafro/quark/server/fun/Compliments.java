@@ -7,12 +7,12 @@ import ru.anafro.quark.server.utils.arrays.Arrays;
  * say compliments to users? Quark dealt with this too! You
  * can use the compliments inside to remind users how cool they are.
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    Compliments#random()
+ * @see Compliments#random()
+ * @since Quark 1.1
  */
 public class Compliments {
-    private static final String[] COMPLIMENTS = { 
+    private static final String[] COMPLIMENTS = {
             "Lie down, chill out, make yourself at home.",
             "Beep-beep. Booting up.",
             "Have a pleasant journey with us!",
@@ -20,9 +20,6 @@ public class Compliments {
             "Quark (not quack) is here. Totally not sponsored by ducks.",
             "Hi! Gosh, you look so handsome today! ;)",
             "Keep smiling!",
-
-            // These were taken from https://www.verywellmind.com/positivity-boosting-compliments-1717559
-            // Thanks a lot for these cute and charming compliments <3
             "Your smile is contagious.",
             "You have the best laugh.",
             "You light up the room.",
@@ -59,11 +56,10 @@ public class Compliments {
      * Returns a random compliment.
      *
      * @return a compliment.
-     *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     public static String random() {
-        return Arrays.random(COMPLIMENTS);
+        return Arrays.pick(COMPLIMENTS);
     }
 }
