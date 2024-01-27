@@ -1,18 +1,17 @@
 package ru.anafro.quark.server;
 
-import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.facade.Quark;
 
 /**
  * Main class is a starting point of Quark server. This class
  * must never be used anywhere from code, because it is being
  * handled by Java VM automatically.
  *
- * @since   Quark 1.1
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
  * @version Quark 1.1
- * @author  Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see     Main#main(String[])
- * @see     Quark#init(String[])
+ * @see Main#main(String[])
+ * @see Quark#run(String[])
+ * @since Quark 1.1
  */
 public final class Main {
 
@@ -20,12 +19,11 @@ public final class Main {
      * This private constructor of Main class <strong>MUST NOT</strong> be ever
      * called, because Main is a starting point.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Main#main(String[]) 
+     * @see Main#main(String[])
+     * @since Quark 1.1
      */
     private Main() {
-        throw new CallingUtilityConstructorException(getClass());
     }
 
     /**
@@ -37,12 +35,11 @@ public final class Main {
      *
      * @param args the command line arguments. All the arguments
      *             will be run as Quark commands.
-     *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Quark#init(String[])
+     * @see Quark#run(String[])
+     * @since Quark 1.1
      */
     public static void main(String[] args) {
-        Quark.init(args);
+        Quark.run(args);
     }
 }
