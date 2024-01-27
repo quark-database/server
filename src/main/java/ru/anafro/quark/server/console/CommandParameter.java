@@ -29,6 +29,14 @@ public final class CommandParameter {
         this(name, shortDescription, longDescription, CommandParameterType.STRING, required);
     }
 
+    public static CommandParameter required(String name, String shortDescription, String longDescription) {
+        return new CommandParameter(name, shortDescription, longDescription, true);
+    }
+
+    public static CommandParameter optional(String name, String shortDescription, String longDescription) {
+        return new CommandParameter(name, shortDescription, longDescription, false);
+    }
+
     public String name() {
         return name;
     }
@@ -45,8 +53,12 @@ public final class CommandParameter {
         return type;
     }
 
-    public boolean required() {
+    public boolean isRequired() {
         return required;
+    }
+
+    public boolean canNotContain(CommandArgument argument) {
+        return !type.isValueSuitable(argument.value());
     }
 
     @Override
@@ -66,9 +78,8 @@ public final class CommandParameter {
 
     @Override
     public String toString() {
-        return "CommandParameter[" +
-                "name=" + name + ", " +
-                "type=" + type + ", " +
-                "required=" + required + ']';
+        var parameterOptionality = required ? "Required" : "Optional";
+
+        return STR."[\{parameterOptionality}] \{name}: \{shortDescription}";
     }
 }
