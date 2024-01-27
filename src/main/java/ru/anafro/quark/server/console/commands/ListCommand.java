@@ -4,7 +4,7 @@ import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.facade.Quark;
 
-import static ru.anafro.quark.server.console.CommandParameter.isRequired;
+import static ru.anafro.quark.server.console.CommandParameter.required;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class ListCommand extends Command {
@@ -13,7 +13,7 @@ public class ListCommand extends Command {
                 list("list"),
                 "Lists objects",
                 "Lists objects of type you specify",
-                isRequired("of", "Object type", "Type of objects you want to specify")
+                required("of", "Object type", "Type of objects you want to specify")
         );
     }
 
