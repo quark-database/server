@@ -1,26 +1,48 @@
 package ru.anafro.quark.server.exceptions;
 
-import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.logging.Logger;
-import ru.anafro.quark.server.plugins.events.ServerCrashed;
+import ru.anafro.quark.server.console.Console;
+import ru.anafro.quark.server.facade.Quark;
+import ru.anafro.quark.server.utils.exceptions.Exceptions;
+import ru.anafro.quark.server.utils.runtime.ExitCodes;
+import ru.anafro.quark.server.utils.types.classes.Classes;
 
 public class QuarkExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private final Logger logger = Quark.logger();
 
     @Override
     public void uncaughtException(Thread thread, Throwable error) {
-        Quark.fire(new ServerCrashed(Quark.server(), error));
+        var exceptionName = Classes.getHumanReadableClassName(error);
+        var exceptionMessage = error.getMessage();
+        var exceptionStackTrace = Exceptions.getPrettyTrace(error);
 
-        logger.error("Server has crashed because of an exception, here is why: " + error.getMessage());
-        logger.error("The thread called " + thread.getName() + " has thrown an error, which was not expected by us");
-        logger.error("Reading a stacktrace may help you to figure out the reason better:");
+        Console.clear();
+        Console.print(STR."""
+                ---------------------------------------------------------------------
+                |                                                                   |
+                |   W E   A R E   S O R R Y   :(                                    |
+                |                                                                   |
+                ---------------------------------------------------------------------
 
-        error.printStackTrace();
 
-        logger.error("Because of this error, we have to stop the Quark Server.");
-        logger.error("\tIf you think that it's a bug (99% it is our fault), please, report it on the project's GitHub: github.com/anafro/quark");
-        logger.error("\tIf you can't solve this problem by your own, please, feel free to write me on email: contact@anafro.ru (but please, add 'Quark Help' words to the message's theme, thanks)");
+                Unfortunately, the error occurred
+                that makes server work impossible.
 
-        System.exit(-1);
+                This is a bug. Please, report:
+                <purple>\{Quark.EMAIL}</>
+
+
+                TECHNICAL INFORMATION:
+
+                The exception name:
+                <cyan>\{exceptionName}</>
+
+                The exception message:
+                <cyan>\{exceptionMessage}</>
+
+                The stack trace:
+                <cyan>\{exceptionStackTrace}</>
+                """);
+
+
+        System.exit(Console.promptBoolean("Reload?") ? ExitCodes.RELOAD : ExitCodes.ERROR);
     }
 }
