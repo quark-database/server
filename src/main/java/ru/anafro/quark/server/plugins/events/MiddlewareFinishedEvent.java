@@ -1,31 +1,28 @@
 package ru.anafro.quark.server.plugins.events;
 
-import ru.anafro.quark.server.networking.*;
+import ru.anafro.quark.server.networking.Client;
+import ru.anafro.quark.server.networking.MiddlewareResponse;
+import ru.anafro.quark.server.networking.Request;
+import ru.anafro.quark.server.networking.middlewares.Middleware;
 
-public class MiddlewareFinished extends Event {
-    private final Server server;
+public class MiddlewareFinishedEvent extends Event {
     private final Middleware middleware;
-    private final ServerClient client;
+    private final Client client;
     private final Request request;
     private final MiddlewareResponse response;
 
-    public MiddlewareFinished(Server server, Middleware middleware, ServerClient client, Request request, MiddlewareResponse response) {
-        this.server = server;
+    public MiddlewareFinishedEvent(Middleware middleware, Client client, Request request, MiddlewareResponse response) {
         this.middleware = middleware;
         this.client = client;
         this.request = request;
         this.response = response;
     }
 
-    public Server getServer() {
-        return server;
-    }
-
     public Middleware getMiddleware() {
         return middleware;
     }
 
-    public ServerClient getClient() {
+    public Client getClient() {
         return client;
     }
 
