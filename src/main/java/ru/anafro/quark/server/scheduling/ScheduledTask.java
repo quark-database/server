@@ -1,27 +1,30 @@
 package ru.anafro.quark.server.scheduling;
 
-import ru.anafro.quark.server.multithreading.AsyncService;
 import ru.anafro.quark.server.multithreading.Threads;
+import ru.anafro.quark.server.utils.time.TimeSpan;
 
-public abstract class ScheduledTask extends AsyncService {
-    private final long period;
+public abstract class ScheduledTask implements Runnable {
+    private final TimeSpan interval;
+    private boolean isRunning = false;
 
-    public ScheduledTask(String taskName, TimeSpan interval) {
-        super("scheduled-task: " + taskName);
-        this.period = period;
+    public ScheduledTask(TimeSpan interval) {
+        this.interval = interval;
     }
 
     @Override
-    public final void run() {
-        while(true) {
-            Threads.freezeFor(interval);
-            action();
+    public void run() {
+        this.isRunning = true;
+
+        while (this.isRunning) {
+            Threads.sleepFor(interval);
+            this.performAction();
         }
     }
 
-    public abstract void action();
+    public abstract void performAction();
 
-    public long getPeriod() {
-        return period;
+    @SuppressWarnings("unused")
+    public void stop() {
+        this.isRunning = false;
     }
 }
