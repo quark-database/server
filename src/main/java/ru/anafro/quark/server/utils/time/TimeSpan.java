@@ -1,17 +1,14 @@
 package ru.anafro.quark.server.utils.time;
 
-import ru.anafro.quark.server.utils.guard.Guard;
 import static ru.anafro.quark.server.utils.time.TimeUnit.*;
 
-public final class TimeSpan {
-    private final long milliseconds;
-
+public record TimeSpan(long milliseconds) {
     public TimeSpan(long milliseconds) {
-        this.milliseconds = Guard.notNegative(milliseconds);
+        this.milliseconds = Math.max(0, milliseconds);
     }
 
     public static TimeSpan of(long time, TimeUnit unit) {
-        return new TimeSpan(time * unit.milliseconds());
+        return new TimeSpan(time * unit.milliseconds);
     }
 
     public static TimeSpan milliseconds(long milliseconds) {
@@ -19,58 +16,43 @@ public final class TimeSpan {
     }
 
     public static TimeSpan seconds(long seconds) {
-        return new TimeSpan(seconds, SECONDS);
+        return TimeSpan.of(seconds, SECONDS);
     }
 
     public static TimeSpan minutes(long minutes) {
-        return new TimeSpan(minutes, MINUTES);
+        return TimeSpan.of(minutes, MINUTES);
     }
 
     public static TimeSpan hours(long hours) {
-        return new TimeSpan(hours, HOURS);
+        return TimeSpan.of(hours, HOURS);
     }
 
     public static TimeSpan days(long days) {
-        return new TimeSpan(days, DAYS);
+        return TimeSpan.of(days, DAYS);
+    }
+
+    public static TimeSpan weeks(long weeks) {
+        return TimeSpan.of(weeks, WEEKS);
     }
 
     public static TimeSpan months(long months) {
-        return new TimeSpan(months, MONTHS);
+        return TimeSpan.of(months, MONTHS);
     }
 
     public static TimeSpan years(long years) {
-        return new TimeSpan(years, YEARS);
+        return TimeSpan.of(years, YEARS);
     }
 
-    public boolean isInstant() {
-        return this.milliseconds == 0;
+    public long convertTo(TimeUnit unit) {
+        return milliseconds / unit.milliseconds;
     }
 
     public long getMilliseconds() {
-        return TimeSpan.of(milliseconds, MILLISECONDS);
+        return milliseconds;
     }
 
-    public long getSeconds() {
-        return new TimeSpan(seconds, SECONDS);
-    }
-
-    public long getMinutes() {
-        return new TimeSpan(minutes, MINUTES);
-    }
-
-    public long getHours() {
-        return new TimeSpan(hours, HOURS);
-    }
-
-    public long getDays() {
-        return new TimeSpan(days, DAYS);
-    }
-
-    public long getMonths() {
-        return new TimeSpan(months, MONTHS);
-    }
-
-    public long getYears() {
-        return new TimeSpan(years, YEARS);
+    @Override
+    public long milliseconds() {
+        return this.convertTo(MILLISECONDS);
     }
 }
