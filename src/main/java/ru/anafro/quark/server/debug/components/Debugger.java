@@ -1,9 +1,7 @@
 package ru.anafro.quark.server.debug.components;
 
-import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.debug.exceptions.ImageForDebugFrameIconNotFoundException;
-import ru.anafro.quark.server.files.Assets;
-import ru.anafro.quark.server.networking.Server;
+import ru.anafro.quark.server.files.AssetDirectory;
+import ru.anafro.quark.server.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,46 +9,46 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class DebugFrame extends JFrame {
+public abstract class Debugger extends JFrame {
     private static final int EXTRA_FRAME_HEIGHT = 40;
-    protected final Server server;
+    protected final Logger logger = new Logger(getClass());
     protected final Panel panel;
     protected final String name;
 
 
-    public DebugFrame(String title, String name, int width, int height) {
-        this.server = Quark.server();
+    public Debugger(String title, String name, int width, int height) {
         this.name = name;
         this.panel = new Panel(new Rectangle(0, 0, width, height));
 
-        setTitle(title + " - Quark Server (Debug)");
+        setTitle(STR."\{title} - Quark Server (Debug)");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         setPreferredSize(new Dimension(width, height + EXTRA_FRAME_HEIGHT));
         setResizable(false);
-
-        constructInterface();
-
         setContentPane(panel);
         pack();
         setLocationRelativeTo(null);
 
-        String logoImagePath = Assets.get("Icons/Logo.png");
+        String logoImagePath = AssetDirectory.getInstance().getAbsoluteFilePath("Icons", "Logo.png");
+
         try {
             setIconImage(ImageIO.read(new File(logoImagePath)));
         } catch (IOException exception) {
-            throw new ImageForDebugFrameIconNotFoundException(logoImagePath);
+            logger.debug(STR."Can't find the Quark logo at path \{logoImagePath}.");
         }
     }
-
-    protected abstract void constructInterface();
 
     public void add(JComponent component) {
         panel.add(component);
     }
 
     public void open() {
-        setVisible(true);
+        if (isVisible()) {
+            pullToTop();
+        } else {
+            setVisible(true);
+        }
+
     }
 
     @Override
