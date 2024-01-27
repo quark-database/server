@@ -1,0 +1,87 @@
+package ru.anafro.quark.server.database.language.instructions;
+
+import ru.anafro.quark.server.database.data.Database;
+import ru.anafro.quark.server.database.exceptions.QueryException;
+import ru.anafro.quark.server.database.language.*;
+
+/**
+ * This class represents the delete database instruction of Quark QL.
+ * <br><br>
+ * <p>
+ * Note that you should not create instances of this class
+ * by your own. Instead, use {@code Quark.instructions().get("delete database"); }
+ * to get an instance of this class.
+ *
+ * <br><br>
+ * <p>
+ * You can check out the syntax of this instruction by running
+ * <pre>
+ * {@code
+ * Quark.instructions().get("delete database").getSyntax();
+ * }
+ * </pre>
+ *
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @version Quark 1.1
+ * @since Quark 1.1
+ */
+public class DeleteDatabaseInstruction extends Instruction {
+
+    /**
+     * Creates a new instance of the delete database instruction
+     * representing object.
+     * <br><br>
+     * <p>
+     * Note that you should not create instances of this class
+     * by your own. Instead, use Quark.instructions().get("delete database");
+     * to get an instance of this class.
+     * <br><br>
+     * <p>
+     * You can check out the syntax of this instruction by running
+     * <pre>
+     * {@code
+     * Quark.instructions().get("delete database").getSyntax();
+     * }
+     * </pre>
+     *
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
+     */
+    public DeleteDatabaseInstruction() {
+        super("delete database",
+
+                "Deletes a database",
+
+                "database.delete",
+
+                InstructionParameter.general("name")
+        );
+    }
+
+    /**
+     * Runs the action of this instruction with passed in arguments.
+     * <br><br>
+     * <p>
+     * You can check out the syntax of this instruction by running
+     * <pre>
+     * {@code
+     * Quark.instructions().get("delete database").getSyntax();
+     * }
+     * </pre>
+     *
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
+     */
+    @Override
+    protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
+        var databaseName = arguments.getString("name");
+
+        if (!Database.exists(databaseName)) {
+            throw new QueryException("Database '%s' does not exist.".formatted(databaseName));
+        }
+
+        Database.delete(databaseName);
+
+        result.ok("Database '%s' successfully deleted.".formatted(databaseName));
+    }
+}

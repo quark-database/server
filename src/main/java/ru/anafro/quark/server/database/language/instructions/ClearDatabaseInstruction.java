@@ -1,0 +1,91 @@
+package ru.anafro.quark.server.database.language.instructions;
+
+import ru.anafro.quark.server.database.data.Database;
+import ru.anafro.quark.server.database.exceptions.QueryException;
+import ru.anafro.quark.server.database.language.*;
+
+/**
+ * This class represents the clear database instruction of Quark QL.
+ * <br><br>
+ * <p>
+ * Note that you should not create instances of this class
+ * by your own. Instead, use {@code Quark.instructions().get("clear database"); }
+ * to get an instance of this class.
+ *
+ * <br><br>
+ * <p>
+ * You can check out the syntax of this instruction by running
+ * <pre>
+ * {@code
+ * Quark.instructions().get("clear database").getSyntax();
+ * }
+ * </pre>
+ *
+ * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+ * @version Quark 1.1
+ * @since Quark 1.1
+ */
+public class ClearDatabaseInstruction extends Instruction {
+
+    /**
+     * Creates a new instance of the clear database instruction
+     * representing object.
+     * <br><br>
+     * <p>
+     * Note that you should not create instances of this class
+     * by your own. Instead, use Quark.instructions().get("clear database");
+     * to get an instance of this class.
+     * <br><br>
+     * <p>
+     * You can check out the syntax of this instruction by running
+     * <pre>
+     * {@code
+     * Quark.instructions().get("clear database").getSyntax();
+     * }
+     * </pre>
+     *
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
+     */
+    public ClearDatabaseInstruction() {
+        super("clear database",
+
+                "Deletes all the tables inside the database",
+
+                "database.clear",
+
+                InstructionParameter.general("database")
+        );
+    }
+
+    /**
+     * Runs the action of this instruction with passed in arguments.
+     * <br><br>
+     * <p>
+     * You can check out the syntax of this instruction by running
+     * <pre>
+     * {@code
+     * Quark.instructions().get("clear database").getSyntax();
+     * }
+     * </pre>
+     *
+     * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
+     */
+    @Override
+    protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
+        var databaseName = arguments.getString("database");
+
+        if (Database.exists(databaseName)) {
+            var database = Database.byName(databaseName);
+
+            for (var table : database.allTables()) {
+                table.delete();
+            }
+
+            result.ok("Database %s has been cleared.".formatted(databaseName));
+        } else {
+            throw new QueryException("Database %s does not exist.".formatted(databaseName));
+        }
+    }
+}
