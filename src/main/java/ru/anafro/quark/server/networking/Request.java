@@ -1,68 +1,69 @@
 package ru.anafro.quark.server.networking;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import ru.anafro.quark.server.database.language.Query;
+import ru.anafro.quark.server.security.Token;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.util.Map;
 
 public class Request {
     private final JSONObject data;
-    private final InetAddress clientIP;
+    private Query query = null;
 
-    public Request(JSONObject data, InetAddress clientIP) {
+    private Request(JSONObject data) {
         this.data = data;
-        this.clientIP = clientIP;
+    }
+
+    @SafeVarargs
+    public Request(Map.Entry<String, Object>... entries) {
+        this(new JSONObject());
+
+        for (var entry : entries) {
+            var key = entry.getKey();
+            var value = entry.getValue();
+
+            data.put(key, value);
+        }
+    }
+
+    public static Request empty() {
+        return new Request();
+    }
+
+    public static Request createFromJson(String jsonString) {
+        try {
+            return new Request(new JSONObject(jsonString));
+        } catch (JSONException exception) {
+            return Request.empty();
+        }
     }
 
     public String getString(String key) {
         return data.getString(key);
     }
 
-    public int getInt(String key) {
-        return data.getInt(key);
+    public Token getToken() {
+        return new Token(data.getString("token"));
     }
 
-    public float getFloat(String key) {
-        return data.getFloat(key);
+    public boolean isQueryNotParsed() {
+        return query == null;
     }
 
-    public double getDouble(String key) {
-        return data.getDouble(key);
-    }
+    public Query getQuery() {
+        if (isQueryNotParsed()) {
+            query = Query.make(getString("query"));
+        }
 
-    public long getLong(String key) {
-        return data.getLong(key);
-    }
-
-    public boolean getBoolean(String key) {
-        return data.getBoolean(key);
+        return query;
     }
 
     public boolean has(String key) {
         return data.has(key);
     }
 
-    public boolean missing(String key) {
+    public boolean doesntHave(String key) {
         return !has(key);
-    }
-
-    public InetAddress getClientIP() {
-        return clientIP;
-    }
-
-    public boolean isInner() {
-        if (clientIP.isAnyLocalAddress() || clientIP.isLoopbackAddress())
-            return true;
-
-        try {
-            return NetworkInterface.getByInetAddress(clientIP) != null;
-        } catch(SocketException exception) {
-            return false;
-        }
-    }
-
-    public JSONObject getData() {
-        return data;
     }
 }
