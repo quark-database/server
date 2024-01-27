@@ -1,125 +1,128 @@
 package ru.anafro.quark.server.networking;
 
-import ru.anafro.quark.server.api.Quark;
-import ru.anafro.quark.server.databases.ql.InstructionResult;
-import ru.anafro.quark.server.databases.ql.QueryExecutionStatus;
-import ru.anafro.quark.server.databases.ql.lexer.InstructionLexer;
-import ru.anafro.quark.server.databases.ql.parser.InstructionParser;
-import ru.anafro.quark.server.databases.views.TableView;
+import ru.anafro.quark.server.database.language.lexer.InstructionLexer;
+import ru.anafro.quark.server.database.language.parser.InstructionParser;
 import ru.anafro.quark.server.exceptions.QuarkException;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.logging.Logger;
-import ru.anafro.quark.server.plugins.events.*;
-import ru.anafro.quark.server.security.Token;
+import ru.anafro.quark.server.networking.middlewares.Middleware;
+import ru.anafro.quark.server.networking.middlewares.QueryMiddleware;
+import ru.anafro.quark.server.networking.middlewares.TokenMiddleware;
+import ru.anafro.quark.server.plugins.events.ServerStoppedEvent;
+import ru.anafro.quark.server.utils.collections.Lists;
+import ru.anafro.quark.server.utils.networking.Networking;
 
-public class Server extends TcpServer {
-    private final ServerConfiguration configuration = new ServerConfigurationLoader().load("Server Configuration.json");
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+
+/**
+ * TcpServer is an abstract class for receiving TCP packets,
+ * but not handling - implement 'handle()' method to add
+ * handling functionality.
+ */
+public final class Server implements Runnable {
     private final InstructionLexer lexer = new InstructionLexer();
     private final InstructionParser parser = new InstructionParser();
-
+    private final ArrayList<Middleware> middlewares = Lists.empty();
+    private final Logger logger = new Logger(this.getClass());
+    private volatile boolean isRunning = false;
+    private ServerSocket socket;
 
     public Server() {
-        this.registerMiddleware(request -> {
-            if(request.missing("token")) {
-                return MiddlewareResponse.deny("Token Missed");
-            }
-
-            if(request.missing("query")) {
-                return MiddlewareResponse.deny("Query Missing");
-            }
-
-            return MiddlewareResponse.pass();
-        });
+        middlewares.add(new TokenMiddleware());
+        middlewares.add(new QueryMiddleware());
     }
 
-    public void start() {
-        logger.info("Server is being started at port " + configuration.getPort() + "...");
-
-        Quark.plugins().forEach(plugin -> {
-            try {
-                plugin.onEnable();
-                Quark.fire(new PluginLoaded(plugin));
-            } catch(Throwable throwable) {
-                Quark.fire(new PluginCrashed(plugin, throwable));
-            }
-        });
-
-        Quark.fire(new BeforeServerStarted(this));
-        super.start(configuration.getPort());
-        Quark.fire(new ServerStarted(this));
-    }
-
-    @Override
-    public Response onRequest(Request request) {
+    /**
+     * This function is called when a request is received from the client.
+     * <p>
+     * The function is called with a single argument, a Request object. The Request object contains all
+     * the information about the request.
+     *
+     * @param request The request object that was sent to the server.
+     * @return A Response object.
+     */
+    public Response respond(Request request) {
         try {
-            var query = request.getString("query");
-
-            Quark.fire(new RequestReceived(this, request));
-            Quark.fire(new BeforeInstructionLexing(query, lexer));
-
-            var tokens = lexer.lex(query);
-
-            Quark.fire(new BeforeInstructionParsing(query, tokens, parser));
-            parser.parse(tokens);
-
-            var instruction = parser.getInstruction();
-            var arguments = parser.getArguments();
-            var token = new Token(request.getString("token"));
-
-
-            if(token.hasPermission(instruction.getPermission())) {
-                    Quark.fire(new BeforeInstructionExecuted(instruction, arguments));
-
-                    InstructionResult result = instruction.execute(arguments);
-
-                    Quark.fire(new InstructionFinished(instruction, arguments, result));
-
-                    return Response.create()
-                            .add("status", result.queryExecutionStatus().name())
-                            .add("message", result.message())
-                            .add("time", result.milliseconds())
-                            .add("table", result.tableView().toJson());
-
-            } else {
-                return Response.error("No Permission");
-            }
-        } catch(QuarkException exception) {
-            return Response.create()
-                    .add("status", QueryExecutionStatus.SYNTAX_ERROR.name())
-                    .add("message", exception.getMessage())
-                    .add("time", 0)
-                    .add("table", TableView.empty().toJson());
-        } catch(Exception exception) {
-            return Response.create()
-                    .add("status", QueryExecutionStatus.SERVER_ERROR.name())
-                    .add("message", exception.getMessage())
-                    .add("time", 0)
-                    .add("table", TableView.empty().toJson());
+            return Response.make(request.getQuery().execute());
+        } catch (QuarkException exception) {
+            return Response.syntaxError(exception);
+        } catch (Exception exception) {
+            return Response.serverError(exception);
         }
     }
 
+    /**
+     * It starts a server on a given port, waits for a client to connect, collects a message from the
+     * client, makes a request, runs middlewares, and sends a response
+     */
     @Override
-    public void onStartingCompleted() {
-        Quark.fire(new ServerStarted(this));
+    public void run() {
+        this.socket = Networking.createServerSocket(Quark.configuration().getPort());
+
+        while (this.isRunning()) {
+            var client = new Client(Networking.acceptClientSocket(socket));
+            var request = client.receiveRequest();
+            var middlewareResponse = passThroughMiddlewares(request);
+
+            if (middlewareResponse.isPassed()) {
+                client.send(respond(request));
+            } else {
+                client.send(middlewareResponse);
+            }
+        }
     }
 
-    public ServerConfiguration getConfiguration() {
-        return configuration;
+    public int getPort() {
+        return socket.getLocalPort();
+    }
+
+    private MiddlewareResponse passThroughMiddlewares(Request request) {
+        for (var middleware : middlewares) {
+            var response = middleware.handleRequest(request);
+
+            if (response.isDenied()) {
+                return response;
+            }
+        }
+
+        return MiddlewareResponse.pass();
+    }
+
+    /**
+     * The stop() function sets the stopped variable to false.
+     */
+    public void stop() {
+        try {
+            socket.close();
+            this.isRunning = false;
+
+            Quark.fireEvent(new ServerStoppedEvent());
+        } catch (IOException exception) {
+            logger.error("Stopping the server caused an exception.");
+            logger.error(exception);
+        }
+    }
+
+    /**
+     * This function returns a boolean value that indicates whether the server is running or not
+     *
+     * @return The boolean value of the stopped variable.
+     */
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public InstructionLexer getLexer() {
+        return lexer;
+    }
+
+    public InstructionParser getParser() {
+        return parser;
     }
 
     public Logger getLogger() {
         return logger;
-    }
-
-    public InstructionLexer getInstructionLexer() {
-        return lexer;
-    }
-
-    public InstructionParser getInstructionParser() {
-        return parser;
-    }
-
-    @Override
-    public void run() {
-        start();
     }
 }
