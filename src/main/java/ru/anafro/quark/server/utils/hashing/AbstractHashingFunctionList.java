@@ -1,8 +1,8 @@
 package ru.anafro.quark.server.utils.hashing;
 
-import ru.anafro.quark.server.utils.patterns.NamedObjectsRegistry;
+import ru.anafro.quark.server.utils.patterns.NamedObjectsList;
 
-public class AbstractHashingFunctionRegistry<T> extends NamedObjectsRegistry<HashingFunction<T>> {
+public class AbstractHashingFunctionList<T> extends NamedObjectsList<HashingFunction<T>> {
 
     @Override
     protected String getNameOf(HashingFunction<T> function) {

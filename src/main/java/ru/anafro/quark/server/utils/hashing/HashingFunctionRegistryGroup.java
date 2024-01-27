@@ -1,17 +1,17 @@
 package ru.anafro.quark.server.utils.hashing;
 
-import ru.anafro.quark.server.utils.hashing.integers.IntegerHashingFunctionRegistry;
-import ru.anafro.quark.server.utils.hashing.strings.StringHashingFunctionRegistry;
+import ru.anafro.quark.server.utils.hashing.integers.IntegerHashingFunctionList;
+import ru.anafro.quark.server.utils.hashing.strings.StringHashingFunctionList;
 
 public class HashingFunctionRegistryGroup {
-    private final IntegerHashingFunctionRegistry integerHashingFunctionRegistry = new IntegerHashingFunctionRegistry();
-    private final StringHashingFunctionRegistry stringHashingFunctionRegistry = new StringHashingFunctionRegistry();
+    private final IntegerHashingFunctionList integerHashingFunctionRegistry = new IntegerHashingFunctionList();
+    private final StringHashingFunctionList stringHashingFunctionRegistry = new StringHashingFunctionList();
 
-    public IntegerHashingFunctionRegistry forIntegers() {
+    public IntegerHashingFunctionList forIntegers() {
         return integerHashingFunctionRegistry;
     }
 
-    public StringHashingFunctionRegistry forStrings() {
+    public StringHashingFunctionList forStrings() {
         return stringHashingFunctionRegistry;
     }
 }
