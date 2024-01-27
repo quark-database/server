@@ -1,15 +1,15 @@
 package ru.anafro.quark.server.utils.strings;
 
-import ru.anafro.quark.server.utils.exceptions.CallingUtilityConstructorException;
+import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 
 /**
  * The string wrapper utility, which can help you to surround
  * your strings with a string wrapper without repeating it.
  *
- * @since  Quark 1.1
  * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
- * @see    Wrapper#wrap(String, String) 
- * @see    Wrapper#quoted(String)
+ * @see Wrapper#wrap(String, String)
+ * @see Wrapper#quoted(String)
+ * @since Quark 1.1
  */
 public final class Wrapper {
 
@@ -17,17 +17,17 @@ public final class Wrapper {
      * This private constructor of Wrapper class <strong>MUST NOT</strong> be ever
      * called, because Wrapper is a utility class. Use static methods declared inside.
      *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
+     * @since Quark 1.1
      */
     private Wrapper() {
-        throw new CallingUtilityConstructorException(getClass());
+        throw new UtilityClassInstantiationException(getClass());
     }
 
     /**
      * Wraps the string with a string wrapper.
      * <br><br>
-     *
+     * <p>
      * For example, this code will wrap the string with the wrapper:
      * <pre>
      * {@code
@@ -40,22 +40,21 @@ public final class Wrapper {
      * but creating a separate variable is also not a way. It's also recommended
      * to static-import this method to beautify your code even more.</i>
      *
-     * @param  string a string to wrap
-     * @param  wrapper a wrapper
+     * @param string  a string to wrap
+     * @param wrapper a wrapper
      * @return the wrapped string
-     *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Wrapper#quoted
+     * @see Wrapper#quoted
+     * @since Quark 1.1
      */
     public static String wrap(String string, String wrapper) {
         return wrapper + string + wrapper;
     }
 
     /**
-     * Wraps the string with a double quote symbol (").
+     * Wraps the string with a quotation mark.
      * <br><br>
-     *
+     * <p>
      * For example, this method creates quotes:
      * <pre>
      * {@code
@@ -70,13 +69,15 @@ public final class Wrapper {
      *
      * <i>Tip: It's also recommended to static-import this method to beautify your code even more.</i>
      *
-     * @param  string a string to wrap with quote symbol
+     * @param string a string to wrap with quote symbol
      * @return the quote-wrapped string
-     *
-     * @since  Quark 1.1
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see    Wrapper#wrap
+     * @see Wrapper#wrap
+     * @since Quark 1.1
+     * @deprecated Since string templates were introduced,
+     * all the usages of <code>quoted</code> are redundant.
      */
+    @Deprecated(since = "3", forRemoval = true)
     public static String quoted(String string) {
         return wrap(string, "\"");
     }
