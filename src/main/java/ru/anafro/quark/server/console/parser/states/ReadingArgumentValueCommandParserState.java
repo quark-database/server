@@ -5,9 +5,10 @@ import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
 import ru.anafro.quark.server.console.parser.CommandParser;
 
 public class ReadingArgumentValueCommandParserState extends CommandParserState {
+    private final String argumentName;
     private boolean inString = false;
     private boolean escapeMode = false;
-    private final String argumentName;
+
     public ReadingArgumentValueCommandParserState(CommandParser parser, String argumentName) {
         super(parser);
         this.argumentName = argumentName;
@@ -18,35 +19,33 @@ public class ReadingArgumentValueCommandParserState extends CommandParserState {
      * value, so we switch to the ReadingArgumentNameCommandParserState. If the character is a
      * backslash, then we're in escape mode. If the character is a quotation mark, then we're either
      * starting or ending a string. If the character is anything else, then we add it to the buffer
-     * 
+     *
      * @param currentCharacter The current character that is being read.
      */
     @Override
     public void handleCharacter(char currentCharacter) {
-        if(Character.isSpaceChar(currentCharacter) && !inString) {
-            if(parser.getBuffer().isEmpty()) {
-                return;
-            } else {
+        if (Character.isSpaceChar(currentCharacter) && !inString) {
+            if (parser.getBuffer().isNotEmpty()) {
                 parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             }
-        } else if(escapeMode) {
-            if(currentCharacter == '\'' || currentCharacter == '\\') {
+        } else if (escapeMode) {
+            if (currentCharacter == '\'' || currentCharacter == '\\') {
                 parser.getBuffer().append(currentCharacter);
             } else {
-                throw new CommandRuntimeException("There is no escaping character \\" + currentCharacter);
+                throw new CommandRuntimeException(STR."There is no escaping character \\\{currentCharacter}");
             }
             escapeMode = false;
-        } else if(currentCharacter == '\\') {
+        } else if (currentCharacter == '\\') {
             escapeMode = true;
-        } else if(currentCharacter == '\'') {
-            if(parser.getBuffer().isEmpty()) {
-                if(inString) {
+        } else if (currentCharacter == '\'') {
+            if (parser.getBuffer().isEmpty()) {
+                if (inString) {
                     parser.switchState(new ReadingArgumentNameCommandParserState(parser));
                 } else {
                     inString = true;
                 }
-            } else if(inString) {
+            } else if (inString) {
                 parser.getArguments().getArgument(argumentName).setValue(parser.getBuffer().extractContent());
                 parser.switchState(new ReadingArgumentNameCommandParserState(parser));
             } else {

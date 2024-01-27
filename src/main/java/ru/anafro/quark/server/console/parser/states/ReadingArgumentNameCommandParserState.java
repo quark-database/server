@@ -9,16 +9,14 @@ public class ReadingArgumentNameCommandParserState extends CommandParserState {
 
     @Override
     public void handleCharacter(char currentCharacter) {
-        if(Character.isSpaceChar(currentCharacter)) {
-            if(parser.getBuffer().isEmpty()) {
-                return;
-            } else {
-                parser.getArguments().addEmpty(parser.getBufferContent());
-                parser.switchState(new ReadingArgumentValueCommandParserState(parser, parser.getBuffer().extractContent()));
-            }
-        } else {
-            parser.getBuffer().append(currentCharacter);
+        if (Character.isSpaceChar(currentCharacter) && parser.getBuffer().isNotEmpty()) {
+            parser.getArguments().addEmpty(parser.getBufferContent());
+            parser.switchState(new ReadingArgumentValueCommandParserState(parser, parser.getBuffer().extractContent()));
+
+            return;
         }
+
+        parser.getBuffer().append(currentCharacter);
     }
 
     @Override
