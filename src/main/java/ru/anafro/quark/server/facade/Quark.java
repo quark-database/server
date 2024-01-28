@@ -398,7 +398,8 @@ public final class Quark {
                 new WeekConstructor(),
                 new MonthConstructor(),
                 new YearConstructor(),
-                new CastConstructor()
+                new CastConstructor(),
+                new VarConstructor()
         );
     }
 
