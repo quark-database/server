@@ -3,7 +3,7 @@ package ru.anafro.quark.server.language.types;
 import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.language.entities.NullEntity;
 import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.language.entities.constructors.StringConstructorBuilder;
+import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.facade.Quark;
 
 public class NullType extends EntityType<NullEntity> {

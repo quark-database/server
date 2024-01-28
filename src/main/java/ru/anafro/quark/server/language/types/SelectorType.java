@@ -5,7 +5,7 @@ import ru.anafro.quark.server.language.Expressions;
 import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.language.entities.SelectorEntity;
 import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.language.entities.constructors.StringConstructorBuilder;
+import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.utils.types.exceptions.TypeException;
 
 public class SelectorType extends EntityType<SelectorEntity> {

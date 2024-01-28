@@ -3,7 +3,7 @@ package ru.anafro.quark.server.database.data;
 import ru.anafro.quark.server.database.data.exceptions.TableRecordSelectorExpressionShouldBeBooleanException;
 import ru.anafro.quark.server.language.Expressions;
 import ru.anafro.quark.server.language.entities.BooleanEntity;
-import ru.anafro.quark.server.language.entities.constructors.StringConstructorBuilder;
+import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.facade.Quark;
 
 import java.util.Objects;

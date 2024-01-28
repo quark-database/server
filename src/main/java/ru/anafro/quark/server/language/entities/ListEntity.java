@@ -2,7 +2,7 @@ package ru.anafro.quark.server.language.entities;
 
 import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
-import ru.anafro.quark.server.language.entities.constructors.StringConstructorBuilder;
+import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.language.entities.exceptions.TypeCanNotBeUsedInRecordsException;
 import ru.anafro.quark.server.language.types.EntityType;
 import ru.anafro.quark.server.facade.Quark;

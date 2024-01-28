@@ -1,10 +1,10 @@
 package ru.anafro.quark.server.language.entities;
 
+import ru.anafro.quark.server.exceptions.QuarkException;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.entities.exceptions.ConstructorEvaluationException;
 import ru.anafro.quark.server.language.lexer.tokens.ConstructorNameInstructionToken;
 import ru.anafro.quark.server.language.types.EntityType;
-import ru.anafro.quark.server.exceptions.QuarkException;
-import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.lang.annotation.ElementType;

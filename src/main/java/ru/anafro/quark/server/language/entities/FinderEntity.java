@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.language.entities;
 
 import ru.anafro.quark.server.database.data.TableRecordFinder;
-import ru.anafro.quark.server.language.entities.constructors.StringConstructorBuilder;
+import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.language.entities.exceptions.TypeCanNotBeUsedInRecordsException;
 import ru.anafro.quark.server.facade.Quark;
 
