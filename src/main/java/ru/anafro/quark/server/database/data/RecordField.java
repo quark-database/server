@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
-import ru.anafro.quark.server.database.language.entities.Entity;
-import ru.anafro.quark.server.database.language.entities.NullEntity;
+import ru.anafro.quark.server.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.NullEntity;
 
 public class RecordField {
     private final String columnName;

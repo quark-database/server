@@ -2,7 +2,7 @@ package ru.anafro.quark.server.console.commands;
 
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.database.language.types.EntityType;
+import ru.anafro.quark.server.language.types.EntityType;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.collections.Lists;
 

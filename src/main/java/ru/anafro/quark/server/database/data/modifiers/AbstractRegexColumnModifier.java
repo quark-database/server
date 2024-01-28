@@ -4,7 +4,7 @@ import ru.anafro.quark.server.database.data.ColumnModifier;
 import ru.anafro.quark.server.database.data.ColumnModifierApplicationPriority;
 import ru.anafro.quark.server.database.data.RecordField;
 import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.language.entities.InstructionEntityConstructorArguments;
+import ru.anafro.quark.server.language.entities.InstructionEntityConstructorArguments;
 
 public abstract class AbstractRegexColumnModifier extends ColumnModifier {
     private final String regex;

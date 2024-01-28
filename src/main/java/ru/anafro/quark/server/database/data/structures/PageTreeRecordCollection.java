@@ -4,7 +4,7 @@ import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.database.data.RecordLambda;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.data.TableRecordFinder;
-import ru.anafro.quark.server.database.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.utils.collections.BTree;
 import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
 

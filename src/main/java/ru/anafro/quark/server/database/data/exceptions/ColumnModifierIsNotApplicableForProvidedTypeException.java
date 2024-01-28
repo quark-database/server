@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.database.data.exceptions;
 
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
-import ru.anafro.quark.server.database.language.entities.ColumnModifierEntity;
-import ru.anafro.quark.server.database.language.entities.Entity;
-import ru.anafro.quark.server.database.language.types.EntityType;
+import ru.anafro.quark.server.language.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.language.entities.Entity;
+import ru.anafro.quark.server.language.types.EntityType;
 
 import java.util.stream.Collectors;
 

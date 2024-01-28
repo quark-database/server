@@ -1,8 +1,8 @@
 package ru.anafro.quark.server.networking;
 
 import org.json.JSONObject;
-import ru.anafro.quark.server.database.language.InstructionResult;
-import ru.anafro.quark.server.database.language.ResponseStatus;
+import ru.anafro.quark.server.language.InstructionResult;
+import ru.anafro.quark.server.language.ResponseStatus;
 
 public record Response(JSONObject json) {
     public static Response make(InstructionResult result) {

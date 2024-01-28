@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
-import ru.anafro.quark.server.database.language.Expressions;
-import ru.anafro.quark.server.database.language.entities.Entity;
+import ru.anafro.quark.server.language.Expressions;
+import ru.anafro.quark.server.language.entities.Entity;
 
 public record RecordFieldGenerator(String expression) implements RecordLambda<Entity> {
     public static final String COLUMN_NAME_MARKER = ":";

@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.debug;
 
-import ru.anafro.quark.server.database.language.exceptions.InstructionSyntaxException;
+import ru.anafro.quark.server.language.exceptions.InstructionSyntaxException;
 import ru.anafro.quark.server.debug.components.Debugger;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;

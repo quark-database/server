@@ -2,7 +2,7 @@ package ru.anafro.quark.server.database.data;
 
 import ru.anafro.quark.server.database.data.exceptions.TableRecordChangerTriesToChangeFieldThatDoesNotExistException;
 import ru.anafro.quark.server.database.data.exceptions.TableRecordChangerWrongTypeException;
-import ru.anafro.quark.server.database.language.Expressions;
+import ru.anafro.quark.server.language.Expressions;
 
 public record TableRecordChanger(String column, String lambda) implements RecordLambda<Void> {
     public static final String LAMBDA_FIELD_PREFIX = ":";

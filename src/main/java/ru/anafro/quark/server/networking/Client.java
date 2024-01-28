@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.networking;
 
 import org.json.JSONObject;
-import ru.anafro.quark.server.database.language.ResponseStatus;
+import ru.anafro.quark.server.language.ResponseStatus;
 import ru.anafro.quark.server.logging.Logger;
 
 import java.io.DataOutputStream;

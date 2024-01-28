@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.networking;
 
-import ru.anafro.quark.server.database.language.lexer.InstructionLexer;
-import ru.anafro.quark.server.database.language.parser.InstructionParser;
+import ru.anafro.quark.server.language.lexer.InstructionLexer;
+import ru.anafro.quark.server.language.parser.InstructionParser;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.logging.Logger;

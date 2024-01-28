@@ -4,7 +4,7 @@ import ru.anafro.quark.server.database.data.ColumnDescription;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableRecordChanger;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
-import ru.anafro.quark.server.database.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.Entity;
 
 import java.util.stream.Collectors;
 

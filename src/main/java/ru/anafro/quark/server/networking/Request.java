@@ -2,7 +2,7 @@ package ru.anafro.quark.server.networking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import ru.anafro.quark.server.database.language.Query;
+import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.security.Token;
 
 import java.util.Map;

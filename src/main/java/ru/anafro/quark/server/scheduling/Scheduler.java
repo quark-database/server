@@ -2,8 +2,8 @@ package ru.anafro.quark.server.scheduling;
 
 import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.language.entities.LongEntity;
-import ru.anafro.quark.server.database.language.entities.StringEntity;
+import ru.anafro.quark.server.language.entities.LongEntity;
+import ru.anafro.quark.server.language.entities.StringEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.time.TimeSpan;
 

@@ -1,8 +1,8 @@
 package ru.anafro.quark.server.database.data;
 
-import ru.anafro.quark.server.database.language.entities.ColumnModifierEntity;
-import ru.anafro.quark.server.database.language.entities.InstructionEntityConstructorArguments;
-import ru.anafro.quark.server.database.language.types.EntityType;
+import ru.anafro.quark.server.language.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.language.entities.InstructionEntityConstructorArguments;
+import ru.anafro.quark.server.language.types.EntityType;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.collections.Lists;

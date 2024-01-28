@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.console;
 
 import ru.anafro.quark.server.console.parser.CommandParser;
-import ru.anafro.quark.server.database.language.Query;
+import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.fun.Greeter;
@@ -13,7 +13,7 @@ import ru.anafro.quark.server.utils.types.classes.Enums;
 
 import java.util.Optional;
 
-import static ru.anafro.quark.server.database.language.ResponseStatus.OK;
+import static ru.anafro.quark.server.language.ResponseStatus.OK;
 import static ru.anafro.quark.server.logging.LoggingLevel.ERROR;
 import static ru.anafro.quark.server.logging.LoggingLevel.INFO;
 

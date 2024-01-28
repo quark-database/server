@@ -4,8 +4,8 @@ import ru.anafro.quark.server.database.data.ColumnDescription;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.data.exceptions.*;
-import ru.anafro.quark.server.database.language.entities.ColumnEntity;
-import ru.anafro.quark.server.database.language.entities.ListEntity;
+import ru.anafro.quark.server.language.entities.ColumnEntity;
+import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.collections.Streams;
 import ru.anafro.quark.server.utils.files.File;
@@ -13,7 +13,7 @@ import ru.anafro.quark.server.utils.files.File;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.anafro.quark.server.database.language.Expressions.eval;
+import static ru.anafro.quark.server.language.Expressions.eval;
 
 public class TableHeader {
     public static final String NAME = "Table's Header.qheader";

@@ -1,8 +1,8 @@
 package ru.anafro.quark.server.plugins.events;
 
-import ru.anafro.quark.server.database.language.Instruction;
-import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionResult;
+import ru.anafro.quark.server.language.Instruction;
+import ru.anafro.quark.server.language.InstructionArguments;
+import ru.anafro.quark.server.language.InstructionResult;
 
 public class InstructionFinishedEvent extends Event {
     private final Instruction instruction;

@@ -3,7 +3,7 @@ package ru.anafro.quark.server.database.data.exceptions;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
-import ru.anafro.quark.server.database.language.entities.ColumnModifierEntity;
+import ru.anafro.quark.server.language.entities.ColumnModifierEntity;
 
 public class ColumnModifierValidityCheckFailedException extends DatabaseException {
     public ColumnModifierValidityCheckFailedException(TableRecord record, Table table, ColumnModifierEntity modifierEntity) {

@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.database.data;
 
-import ru.anafro.quark.server.database.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.Entity;
 
 public record TableRecordFinder(String columnName, Entity findingValue) implements RecordLambda<Boolean> {
 

@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.security;
 
-import ru.anafro.quark.server.database.language.Query;
+import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.arrays.Arrays;
 import ru.anafro.quark.server.utils.strings.TextBuffer;

@@ -3,7 +3,7 @@ package ru.anafro.quark.server.database.data;
 import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.exceptions.RecordFieldCountMismatchesTableHeaderException;
 import ru.anafro.quark.server.database.data.exceptions.RecordTypeMismatchesTableHeaderException;
-import ru.anafro.quark.server.database.language.entities.ListEntity;
+import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.database.views.TableViewRow;
 import ru.anafro.quark.server.utils.collections.Lists;
 

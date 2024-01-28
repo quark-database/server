@@ -3,7 +3,7 @@ package ru.anafro.quark.server.console.commands;
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
 import ru.anafro.quark.server.console.CommandParameter;
-import ru.anafro.quark.server.database.language.Expressions;
+import ru.anafro.quark.server.language.Expressions;
 import ru.anafro.quark.server.exceptions.QuarkException;
 
 import static ru.anafro.quark.server.utils.collections.Collections.list;
