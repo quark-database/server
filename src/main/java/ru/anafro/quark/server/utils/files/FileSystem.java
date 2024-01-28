@@ -1,7 +1,7 @@
-package ru.anafro.quark.server.files;
+package ru.anafro.quark.server.utils.files;
 
-import ru.anafro.quark.server.files.exceptions.CannotCreateDirectoryException;
 import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
+import ru.anafro.quark.server.utils.files.exceptions.CannotCreateDirectoryException;
 
 import java.io.File;
 import java.io.IOException;
