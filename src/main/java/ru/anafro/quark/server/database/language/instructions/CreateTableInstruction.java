@@ -6,12 +6,12 @@ import ru.anafro.quark.server.database.data.structures.LinearRecordCollection;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.entities.ColumnEntity;
 import ru.anafro.quark.server.database.language.entities.ListEntity;
 import ru.anafro.quark.server.database.language.entities.RecordEntity;
 
+import static ru.anafro.quark.server.database.language.InstructionParameter.*;
 import static ru.anafro.quark.server.utils.collections.Collections.emptyList;
 
 /**
@@ -64,10 +64,10 @@ public class CreateTableInstruction extends Instruction {
 
                 "table.create",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("columns", "list of column"),
-                InstructionParameter.optional("records", "list of record")
+                required("columns", "list of column"),
+                optional("records", "list of record")
         );
     }
 

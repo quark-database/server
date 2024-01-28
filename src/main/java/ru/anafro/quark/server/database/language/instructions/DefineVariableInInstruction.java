@@ -4,7 +4,12 @@ import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableName;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.database.data.exceptions.VariableAlreadyExistsException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 public class DefineVariableInInstruction extends Instruction {
     /**
@@ -19,9 +24,9 @@ public class DefineVariableInInstruction extends Instruction {
                 "define variable in",
                 "Defines a new variable in the table",
                 "table.variable.define",
-                InstructionParameter.general("table"),
-                InstructionParameter.required("name"),
-                InstructionParameter.required("value", "?")
+                general("table"),
+                required("name"),
+                required("value", "?")
         );
     }
 

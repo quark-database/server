@@ -3,8 +3,9 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.*;
 
 /**
  * This class represents the delete from instruction of Quark QL.
@@ -56,11 +57,11 @@ public class DeleteFromInstruction extends Instruction {
 
                 "json.delete",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("selector", "selector"),
-                InstructionParameter.optional("skip", "int"),
-                InstructionParameter.optional("limit", "int")
+                required("selector", "selector"),
+                optional("skip", "int"),
+                optional("limit", "int")
         );
     }
 

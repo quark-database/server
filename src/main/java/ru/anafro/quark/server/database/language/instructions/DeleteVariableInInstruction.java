@@ -4,7 +4,12 @@ import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableName;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.database.data.exceptions.VariableNotFoundException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 public class DeleteVariableInInstruction extends Instruction {
     /**
@@ -19,8 +24,8 @@ public class DeleteVariableInInstruction extends Instruction {
                 "delete variable in",
                 "Deletes a variable in the table",
                 "table.variable.delete",
-                InstructionParameter.general("table"),
-                InstructionParameter.required("name")
+                general("table"),
+                required("name")
         );
     }
 

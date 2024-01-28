@@ -3,9 +3,11 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.ExpressionTableRecordSelector;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.utils.integers.Counter;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.optional;
 
 public class CountInInstruction extends Instruction {
     /**
@@ -20,8 +22,8 @@ public class CountInInstruction extends Instruction {
                 "count in",
                 "Counts records matching condition",
                 "table.count in",
-                InstructionParameter.general("table"),
-                InstructionParameter.optional("selector", "selector")
+                general("table"),
+                optional("selector", "selector")
         );
     }
 

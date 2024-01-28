@@ -4,8 +4,9 @@ import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the rename table instruction of Quark QL.
@@ -58,8 +59,8 @@ public class RenameTableInstruction extends Instruction {
 
                 "table.rename",
 
-                InstructionParameter.required("old"),
-                InstructionParameter.required("new")
+                required("old"),
+                required("new")
         );
     }
 

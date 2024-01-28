@@ -3,12 +3,14 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.ColumnDescription;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the swap columns in instruction of Quark QL.
@@ -61,10 +63,10 @@ public class SwapColumnsInstruction extends Instruction {
 
                 "columns.swap",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("first"),
-                InstructionParameter.required("second")
+                required("first"),
+                required("second")
         );
     }
 

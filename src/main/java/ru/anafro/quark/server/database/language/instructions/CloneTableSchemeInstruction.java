@@ -4,8 +4,10 @@ import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the clone table scheme instruction of Quark QL.
@@ -57,9 +59,9 @@ public class CloneTableSchemeInstruction extends Instruction {
 
                 "table.scheme",
 
-                InstructionParameter.general("prototype"),
+                general("prototype"),
 
-                InstructionParameter.required("destination")
+                required("destination")
         );
     }
 

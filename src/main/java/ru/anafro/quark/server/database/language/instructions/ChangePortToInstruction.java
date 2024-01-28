@@ -3,10 +3,11 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.exceptions.QuerySyntaxException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.networking.Ports;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the change port to instruction of Quark QL.
@@ -58,7 +59,7 @@ public class ChangePortToInstruction extends Instruction {
 
                 "server.port.change",
 
-                InstructionParameter.general("port", "int")
+                general("port", "int")
         );
     }
 

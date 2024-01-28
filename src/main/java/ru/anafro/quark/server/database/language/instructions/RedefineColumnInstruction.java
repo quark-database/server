@@ -3,8 +3,10 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the redefine column instruction of Quark QL.
@@ -56,9 +58,9 @@ public class RedefineColumnInstruction extends Instruction {
 
                 "column.redefine",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("definition", "column")
+                required("definition", "column")
         );
     }
 

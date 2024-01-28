@@ -4,8 +4,9 @@ import ru.anafro.quark.server.database.data.Database;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the list tables in instruction of Quark QL.
@@ -57,7 +58,7 @@ public class ListTablesInstruction extends Instruction {
 
                 "table.list",
 
-                InstructionParameter.general("database")
+                general("database")
         );
     }
 

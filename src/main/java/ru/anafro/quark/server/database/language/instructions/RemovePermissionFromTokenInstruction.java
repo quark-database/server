@@ -1,8 +1,13 @@
 package ru.anafro.quark.server.database.language.instructions;
 
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.entities.StringEntity;
 import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the remove permission from token instruction of Quark QL.
@@ -54,9 +59,9 @@ public class RemovePermissionFromTokenInstruction extends Instruction {
 
                 "token.remove permission",
 
-                InstructionParameter.general("token"),
+                general("token"),
 
-                InstructionParameter.required("permission")
+                required("permission")
         );
     }
 

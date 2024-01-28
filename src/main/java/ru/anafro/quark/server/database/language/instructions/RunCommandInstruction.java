@@ -1,7 +1,11 @@
 package ru.anafro.quark.server.database.language.instructions;
 
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the run command instruction of Quark QL.
@@ -53,7 +57,7 @@ public class RunCommandInstruction extends Instruction {
 
                 "server.command",
 
-                InstructionParameter.general("command")
+                general("command")
         );
     }
 

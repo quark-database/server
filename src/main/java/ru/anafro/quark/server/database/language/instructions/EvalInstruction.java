@@ -1,6 +1,10 @@
 package ru.anafro.quark.server.database.language.instructions;
 
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the eval instruction of Quark QL.
@@ -53,7 +57,7 @@ public class EvalInstruction extends Instruction {
 
                 "!unsafe.eval",
 
-                InstructionParameter.general("entity", "?")
+                general("entity", "?")
         );
     }
 

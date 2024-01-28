@@ -1,9 +1,14 @@
 package ru.anafro.quark.server.database.language.instructions;
 
 import ru.anafro.quark.server.database.data.parser.RecordCharacterEscapeService;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.entities.StringEntity;
 import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the redefine permissions for token instruction of Quark QL.
@@ -56,9 +61,9 @@ public class RedefinePermissionsForTokenInstruction extends Instruction {
 
                 "token.redefine",
 
-                InstructionParameter.general("token"),
+                general("token"),
 
-                InstructionParameter.required("permissions", "list of str")
+                required("permissions", "list of str")
         );
     }
 

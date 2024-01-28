@@ -2,10 +2,12 @@ package ru.anafro.quark.server.database.language.instructions;
 
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.lexer.InstructionLexer;
 import ru.anafro.quark.server.utils.integers.Integers;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.optional;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 public class HintNextElementsInstruction extends Instruction {
     /**
@@ -23,8 +25,8 @@ public class HintNextElementsInstruction extends Instruction {
 
                 "any",
 
-                InstructionParameter.required("query"),
-                InstructionParameter.optional("caret position", "int")
+                required("query"),
+                optional("caret position", "int")
         );
     }
 

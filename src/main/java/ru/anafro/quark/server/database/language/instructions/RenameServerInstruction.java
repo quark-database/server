@@ -2,9 +2,10 @@ package ru.anafro.quark.server.database.language.instructions;
 
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the rename server to instruction of Quark QL.
@@ -57,7 +58,7 @@ public class RenameServerInstruction extends Instruction {
 
                 "server.rename",
 
-                InstructionParameter.general("new")
+                general("new")
         );
     }
 

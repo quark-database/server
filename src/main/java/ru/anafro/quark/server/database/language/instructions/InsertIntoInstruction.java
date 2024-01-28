@@ -2,8 +2,10 @@ package ru.anafro.quark.server.database.language.instructions;
 
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the insert into instruction of Quark QL.
@@ -55,9 +57,9 @@ public class InsertIntoInstruction extends Instruction {
 
                 "table.insert",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("record", "record")
+                required("record", "record")
         );
     }
 

@@ -3,8 +3,9 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 public class ListVariablesInInstruction extends Instruction {
     /**
@@ -19,7 +20,7 @@ public class ListVariablesInInstruction extends Instruction {
                 "list variables in",
                 "Shows all the variables inside the table",
                 "table.variable.list",
-                InstructionParameter.general("table")
+                general("table")
         );
     }
 

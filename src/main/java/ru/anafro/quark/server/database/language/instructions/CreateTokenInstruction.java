@@ -4,10 +4,15 @@ import ru.anafro.quark.server.database.data.Database;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.data.structures.RecordCollectionResolver;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.entities.ListEntity;
 import ru.anafro.quark.server.database.language.entities.StringEntity;
 import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the "create token" instruction of Quark QL.
@@ -59,9 +64,9 @@ public class CreateTokenInstruction extends Instruction {
 
                 "token.create",
 
-                InstructionParameter.general("token"),
+                general("token"),
 
-                InstructionParameter.required("permissions", "list of str"));
+                required("permissions", "list of str"));
     }
 
     /**

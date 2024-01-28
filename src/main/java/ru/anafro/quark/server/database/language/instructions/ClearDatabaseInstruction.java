@@ -2,7 +2,11 @@ package ru.anafro.quark.server.database.language.instructions;
 
 import ru.anafro.quark.server.database.data.Database;
 import ru.anafro.quark.server.database.exceptions.QueryException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the clear database instruction of Quark QL.
@@ -54,7 +58,7 @@ public class ClearDatabaseInstruction extends Instruction {
 
                 "database.clear",
 
-                InstructionParameter.general("database")
+                general("database")
         );
     }
 

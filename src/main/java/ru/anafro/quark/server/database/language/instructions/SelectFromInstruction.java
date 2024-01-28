@@ -4,8 +4,10 @@ import ru.anafro.quark.server.database.data.ExpressionTableRecordSelector;
 import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.optional;
 
 /**
  * This class represents the select from instruction of Quark QL.
@@ -57,11 +59,11 @@ public class SelectFromInstruction extends Instruction {
 
                 "json.select",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.optional("selector", "selector"),
-                InstructionParameter.optional("skip", "int"),
-                InstructionParameter.optional("limit", "int")
+                optional("selector", "selector"),
+                optional("skip", "int"),
+                optional("limit", "int")
         );
     }
 

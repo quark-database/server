@@ -5,8 +5,10 @@ import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection
 import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 public class ExcludeFromInstruction extends Instruction {
     /**
@@ -22,8 +24,8 @@ public class ExcludeFromInstruction extends Instruction {
                 "Excludes the records matches the finder",
                 "table.exclude",
 
-                InstructionParameter.general("table"),
-                InstructionParameter.required("finder", "finder")
+                general("table"),
+                required("finder", "finder")
         );
     }
 

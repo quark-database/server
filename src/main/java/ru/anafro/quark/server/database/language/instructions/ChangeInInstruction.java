@@ -3,8 +3,10 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the change in instruction of Quark QL.
@@ -56,10 +58,10 @@ public class ChangeInInstruction extends Instruction {
 
                 "table.change",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("selector", "selector"),
-                InstructionParameter.required("changer", "changer")
+                required("selector", "selector"),
+                required("changer", "changer")
         );
     }
 

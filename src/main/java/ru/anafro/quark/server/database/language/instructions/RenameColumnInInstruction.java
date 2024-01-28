@@ -3,8 +3,13 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableName;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.exceptions.QuarkException;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the rename column instruction of Quark QL.
@@ -56,10 +61,10 @@ public class RenameColumnInInstruction extends Instruction {
 
                 "column.rename",
 
-                InstructionParameter.general("name"),
+                general("name"),
 
-                InstructionParameter.required("old"),
-                InstructionParameter.required("new")
+                required("old"),
+                required("new")
         );
     }
 

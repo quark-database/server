@@ -3,7 +3,11 @@ package ru.anafro.quark.server.database.language.instructions;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableName;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
 
 /**
  * This class represents the delete table instruction of Quark QL.
@@ -56,7 +60,7 @@ public class DeleteTableInstruction extends Instruction {
 
                 "table.delete",
 
-                InstructionParameter.general("table")
+                general("table")
         );
     }
 

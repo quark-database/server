@@ -6,9 +6,14 @@ import ru.anafro.quark.server.database.data.TableName;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.database.data.structures.RecordCollectionResolver;
 import ru.anafro.quark.server.database.exceptions.QueryException;
-import ru.anafro.quark.server.database.language.*;
+import ru.anafro.quark.server.database.language.Instruction;
+import ru.anafro.quark.server.database.language.InstructionArguments;
+import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.entities.StringEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 /**
  * This class represents the reorder columns in instruction of Quark QL.
@@ -61,9 +66,9 @@ public class ReorderColumnsInstruction extends Instruction {
 
                 "column.reorder",
 
-                InstructionParameter.general("table"),
+                general("table"),
 
-                InstructionParameter.required("order", "list of str")
+                required("order", "list of str")
         );
     }
 

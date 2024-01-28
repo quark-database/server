@@ -5,9 +5,10 @@ import ru.anafro.quark.server.database.exceptions.DatabaseException;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
 import ru.anafro.quark.server.database.language.exceptions.GeneratedValueMismatchesColumnTypeException;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.*;
 
 /**
  * This class represents the add column instruction of Quark QL.
@@ -59,10 +60,10 @@ public class AddColumnInstruction extends Instruction {
 
                 "column.add",
 
-                InstructionParameter.general("definition", "column"),
+                general("definition", "column"),
 
-                InstructionParameter.required("table"),
-                InstructionParameter.optional("generator", "generator")
+                required("table"),
+                optional("generator", "generator")
         );
     }
 

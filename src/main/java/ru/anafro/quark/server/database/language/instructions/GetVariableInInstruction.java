@@ -4,8 +4,10 @@ import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.exceptions.VariableNotFoundException;
 import ru.anafro.quark.server.database.language.Instruction;
 import ru.anafro.quark.server.database.language.InstructionArguments;
-import ru.anafro.quark.server.database.language.InstructionParameter;
 import ru.anafro.quark.server.database.language.InstructionResultRecorder;
+
+import static ru.anafro.quark.server.database.language.InstructionParameter.general;
+import static ru.anafro.quark.server.database.language.InstructionParameter.required;
 
 public class GetVariableInInstruction extends Instruction {
     /**
@@ -21,8 +23,8 @@ public class GetVariableInInstruction extends Instruction {
                 "Shows the variable value of the table",
                 "table.variable.get",
 
-                InstructionParameter.general("table"),
-                InstructionParameter.required("name")
+                general("table"),
+                required("name")
         );
     }
 
