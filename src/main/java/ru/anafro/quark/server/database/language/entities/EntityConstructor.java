@@ -110,7 +110,7 @@ public abstract class EntityConstructor {
         for (var parameter : parameters) {
             var parameterName = parameter.name();
 
-            if (parameter.required() && arguments.doesntHave(parameterName)) {
+            if (parameter.isRequired() && arguments.doesntHave(parameterName)) {
                 throw new ConstructorEvaluationException(this, STR."The required parameter \{parameterName} is missing.");
             }
         }
@@ -158,7 +158,7 @@ public abstract class EntityConstructor {
             syntax.append('(');
             for (int index = 0; index < parameters.asList().size(); index++) {
                 var parameter = parameters.parameterAt(index);
-                syntax.append(STR."\{parameter.required() ? "" : "<blue>optional</> "}<blue>\{parameter.type()}</><blue>\{parameter.isVarargs() ? " varargs" : ""}</>: <grayish>\{parameter.name()}</>");
+                syntax.append(STR."\{parameter.isRequired() ? "" : "<blue>optional</> "}<blue>\{parameter.type()}</><blue>\{parameter.isVarargs() ? " varargs" : ""}</>: <grayish>\{parameter.name()}</>");
 
                 if (index + 1 != parameters.asList().size()) {
                     syntax.append(", ");

@@ -34,7 +34,7 @@ public final class InstructionEntityConstructorParameter {
         return new InstructionEntityConstructorParameter(name, type, false);
     }
 
-    public boolean required() {
+    public boolean isRequired() {
         return required;
     }
 
@@ -53,7 +53,7 @@ public final class InstructionEntityConstructorParameter {
         var that = (InstructionEntityConstructorParameter) obj;
         return Objects.equals(this.name, that.name) &&
                 Objects.equals(this.type, that.type) &&
-                this.required == that.required();
+                this.required == that.isRequired();
     }
 
     @Override

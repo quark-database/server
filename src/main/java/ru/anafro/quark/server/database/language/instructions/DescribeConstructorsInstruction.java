@@ -46,7 +46,7 @@ public class DescribeConstructorsInstruction extends Instruction {
                         parameter.name(),
                         parameter.type(),
                         Boolean.toString(parameter.isVarargs()),
-                        Boolean.toString(parameter.required()),
+                        Boolean.toString(parameter.isRequired()),
                         Boolean.toString(parameter.isWildcard())
                 );
             }

@@ -37,7 +37,7 @@ public final class ConstructorClassMapper {
                     var parameters1 = getParameters();
 
                     for (var parameter : parameters1) {
-                        if (parameter.required() && arguments.doesntHave(parameter.name())) {
+                        if (parameter.isRequired() && arguments.doesntHave(parameter.name())) {
                             arguments.add(parameter.name(), new NullEntity(parameter.type()));
                         }
                     }
