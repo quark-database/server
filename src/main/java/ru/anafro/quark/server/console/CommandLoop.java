@@ -1,10 +1,10 @@
 package ru.anafro.quark.server.console;
 
 import ru.anafro.quark.server.console.parser.CommandParser;
-import ru.anafro.quark.server.language.Query;
+import ru.anafro.quark.server.entertainment.Greeter;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
-import ru.anafro.quark.server.fun.Greeter;
+import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.utils.strings.Strings;

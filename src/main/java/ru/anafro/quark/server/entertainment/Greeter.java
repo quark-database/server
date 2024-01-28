@@ -1,4 +1,4 @@
-package ru.anafro.quark.server.fun;
+package ru.anafro.quark.server.entertainment;
 
 import ru.anafro.quark.server.console.Console;
 import ru.anafro.quark.server.console.commands.HelpCommand;
