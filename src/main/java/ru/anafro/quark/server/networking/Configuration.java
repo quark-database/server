@@ -1,33 +1,46 @@
 package ru.anafro.quark.server.networking;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import ru.anafro.quark.server.networking.exceptions.ServerConfigurationCannotBeSavedException;
+import ru.anafro.quark.server.console.Console;
+import ru.anafro.quark.server.facade.Quark;
+import ru.anafro.quark.server.utils.files.JsonFile;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import static ru.anafro.quark.server.utils.time.TimeSpan.seconds;
 
 public class Configuration {
-    @SerializedName(value = "strhash", alternate = {"string-hashing-function", "stringHashingFunction"})
+    @SerializedName("stringHashingFunction")
     private final String stringHashingFunction = "default";
-    @SerializedName(value = "inthash", alternate = {"integer-hashing-function", "integerHashingFunction"})
+    @SerializedName("integerHashingFunction")
     private final String integerHashingFunction = "default";
     @Expose
-    private final transient String path = null;
-    @SerializedName(value = "name", alternate = {"server-name", "serverName"})
+    private transient JsonFile file;
+    @SerializedName("name")
     private String name = "Unnamed Quark Server";
-    @SerializedName(value = "port")
+    @SerializedName("port")
     private int port = 10000;
 
     public static Configuration load(String path) {
+        var file = new JsonFile(path);
+
         try {
-            var gson = new Gson();
-            return gson.fromJson(new FileReader(path), Configuration.class);
-        } catch (IOException exception) {
-            return new Configuration();
+            var configuration = file.tryRead(Configuration.class).orElseGet(Configuration::new);
+            configuration.setFile(file);
+
+            return configuration;
+        } catch (Exception exception) {
+            Quark.error(STR."""
+                The \{file.getName()} contains a JSON error:
+                <red>\{exception.getMessage()}</>
+
+                """);
+
+            Console.sleep("The server will start with default configuration...", seconds(15));
+
+            var configuration = new Configuration();
+            configuration.setFile(file);
+
+            return configuration;
         }
     }
 
@@ -45,16 +58,7 @@ public class Configuration {
     }
 
     public void save() {
-        if (path == null) {
-            return;
-        }
-
-        try {
-            var gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(this, new FileWriter(path));
-        } catch (IOException exception) {
-            throw new ServerConfigurationCannotBeSavedException(exception);
-        }
+        file.write(this, Configuration.class);
     }
 
     public String getStringHashingFunction() {
@@ -76,5 +80,9 @@ public class Configuration {
      */
     public void setPort(int port) {
         this.port = port;
+    }
+
+    private void setFile(JsonFile file) {
+        this.file = file;
     }
 }
