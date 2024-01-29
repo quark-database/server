@@ -32,7 +32,7 @@ public final class Threads {
      */
     public synchronized static void sleepFor(TimeSpan delay) {
         try {
-            Thread.sleep(delay.milliseconds());
+            Thread.sleep(delay.getMilliseconds());
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
         }
