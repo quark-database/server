@@ -97,6 +97,10 @@ public final class Strings {
         return string.split("\n");
     }
 
+    public static String[] words(String string) {
+        return string.split(" +");
+    }
+
     public static Optional<Integer> lastIndexOf(String string, char character) {
         var lastIndex = string.lastIndexOf(character);
 
@@ -183,5 +187,23 @@ public final class Strings {
 
     public static String getLastToken(String string, String delimiter) {
         return Arrays.getLast(string.split(Pattern.quote(delimiter)));
+    }
+
+    public static String breakWords(String string, int maxCharactersPerLine) {
+        var words = words(string);
+        var result = new TextBuffer();
+        var charactersInLine = 0;
+
+        for (var word : words) {
+            result.append(word, ' ');
+            charactersInLine += word.length();
+
+            if (charactersInLine >= maxCharactersPerLine) {
+                result.nextLine();
+                charactersInLine = 0;
+            }
+        }
+
+        return result.getContent();
     }
 }
