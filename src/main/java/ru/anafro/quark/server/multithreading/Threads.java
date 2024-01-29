@@ -3,6 +3,8 @@ package ru.anafro.quark.server.multithreading;
 import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 import ru.anafro.quark.server.utils.time.TimeSpan;
 
+import java.util.function.Consumer;
+
 /**
  * Threads class contains methods to handle threads.
  * Use static methods inside.
@@ -38,4 +40,13 @@ public final class Threads {
         }
     }
 
+    public synchronized static void repeatWithInterval(Consumer<TimeSpan> action, TimeSpan duration, TimeSpan interval) {
+        var timeLeft = duration.copy();
+
+        while (timeLeft.isNotInstant()) {
+            action.accept(timeLeft);
+            Threads.sleepFor(interval);
+            timeLeft.subtract(interval);
+        }
+    }
 }
