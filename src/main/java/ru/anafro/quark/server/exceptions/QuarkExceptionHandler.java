@@ -4,14 +4,14 @@ import ru.anafro.quark.server.console.Console;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
 import ru.anafro.quark.server.utils.runtime.ExitCodes;
-import ru.anafro.quark.server.utils.types.classes.Classes;
+import ru.anafro.quark.server.utils.strings.Strings;
 
 public class QuarkExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable error) {
-        var exceptionName = Classes.getHumanReadableClassName(error);
-        var exceptionMessage = error.getMessage();
+        var exceptionName = Exceptions.getName(error);
+        var exceptionMessage = Strings.breakWords(error.getMessage(), 40);
         var exceptionStackTrace = Exceptions.getPrettyTrace(error);
 
         Console.clear();
@@ -27,19 +27,19 @@ public class QuarkExceptionHandler implements Thread.UncaughtExceptionHandler {
                 that makes server work impossible.
 
                 This is a bug. Please, report:
-                <purple>\{Quark.EMAIL}</>
+                <italic><purple>\{Quark.EMAIL}</></>
 
 
                 TECHNICAL INFORMATION:
 
                 The exception name:
-                <cyan>\{exceptionName}</>
+                <italic><gray>\{exceptionName}</></>
 
                 The exception message:
-                <cyan>\{exceptionMessage}</>
+                <italic><gray>\{exceptionMessage}</></>
 
                 The stack trace:
-                <cyan>\{exceptionStackTrace}</>
+                \{exceptionStackTrace}
                 """);
 
 
