@@ -1,8 +1,18 @@
 package ru.anafro.quark.server.utils.time;
 
+import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.utils.types.classes.Enums;
+
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static ru.anafro.quark.server.utils.comparisons.Comparisons.is;
 import static ru.anafro.quark.server.utils.time.TimeUnit.*;
 
-public record TimeSpan(long milliseconds) {
+public final class TimeSpan implements Comparable<TimeSpan> {
+    private long milliseconds;
+
     public TimeSpan(long milliseconds) {
         this.milliseconds = Math.max(0, milliseconds);
     }
@@ -43,7 +53,7 @@ public record TimeSpan(long milliseconds) {
         return TimeSpan.of(years, YEARS);
     }
 
-    public long convertTo(TimeUnit unit) {
+    public long get(TimeUnit unit) {
         return milliseconds / unit.milliseconds;
     }
 
@@ -51,8 +61,53 @@ public record TimeSpan(long milliseconds) {
         return milliseconds;
     }
 
+    public boolean isNotInstant() {
+        return milliseconds != 0;
+    }
+
+    private TimeUnit getUnit() {
+        return Stream.of(values())
+                .sorted(Comparator.comparingLong(TimeUnit::getMilliseconds).reversed())
+                .filter(unit -> get(unit) != 0)
+                .findFirst()
+                .orElse(Enums.max(values(), TimeUnit::getMilliseconds));
+    }
+
+    public void subtract(TimeSpan subtrahend) {
+        if (is(subtrahend).greaterThan(this)) {
+            this.milliseconds = 0;
+            return;
+        }
+
+        this.milliseconds -= subtrahend.getMilliseconds();
+    }
+
+    public TimeSpan copy() {
+        return new TimeSpan(milliseconds);
+    }
+
     @Override
-    public long milliseconds() {
-        return this.convertTo(MILLISECONDS);
+    public String toString() {
+        var unit = getUnit();
+
+        return STR."\{get(unit)} \{unit.name().toLowerCase()}";
+    }
+
+    @Override
+    public int compareTo(@NotNull TimeSpan that) {
+        return (int) (this.milliseconds - that.getMilliseconds());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (TimeSpan) obj;
+        return this.milliseconds == that.milliseconds;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(milliseconds);
     }
 }
