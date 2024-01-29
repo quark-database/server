@@ -9,8 +9,9 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.List;
+import java.util.Objects;
 
-public class File implements Comparable<File> {
+public class File implements Comparable<File>, Appendable {
     private final Path path;
     private final java.io.File file;
 
@@ -21,6 +22,13 @@ public class File implements Comparable<File> {
 
     public File(String path) {
         this(Path.of(path));
+    }
+
+    public static File create(String path) {
+        var file = new File(path);
+        file.create();
+
+        return file;
     }
 
     public boolean exists() {
@@ -67,6 +75,10 @@ public class File implements Comparable<File> {
 
     public void write(String text) {
         writeWithOptions(text, StandardOpenOption.WRITE);
+    }
+
+    public void append(String text) {
+        writeWithOptions(text, StandardOpenOption.APPEND);
     }
 
     private void writeWithOptions(String text, StandardOpenOption... options) {
@@ -156,5 +168,23 @@ public class File implements Comparable<File> {
     @Override
     public int compareTo(File other) {
         return file.compareTo(other.getIOFile());
+    }
+
+    @Override
+    public Appendable append(CharSequence sequence) throws IOException {
+        Objects.requireNonNull(sequence, "Cannot append a null char sequence to a file");
+        append(sequence.toString());
+        return this;
+    }
+
+    @Override
+    public Appendable append(CharSequence sequence, int start, int end) throws IOException {
+        return append(sequence == null ? null : sequence.subSequence(start, end));
+    }
+
+    @Override
+    public Appendable append(char character) throws IOException {
+        append(String.valueOf(character));
+        return this;
     }
 }
