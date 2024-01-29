@@ -83,9 +83,6 @@ public final class Quark {
      * @since Quark 1.2
      */
     private static final Version version = new Version(3, 0, 0, "in development");
-
-    private static final Configuration configuration = Configuration.load("Configuration.json");
-
     /**
      * The default Quark logger.
      * Should be used only for debugging. Do not use it for your modules.
@@ -162,6 +159,7 @@ public final class Quark {
      */
     private static final TableSchemeList schemes = new TableSchemeList();
     private static final HashMap<String, Entity> variables = new HashMap<>();
+    private static Configuration configuration;
     /**
      * The server of Quark.
      *
@@ -211,6 +209,7 @@ public final class Quark {
         }
 
         initializeDefaultExceptionHandler();
+        initializeConfiguration();
         initializeTypes();
         initializeModifiers();
         initializeConstructors();
@@ -247,6 +246,10 @@ public final class Quark {
 
     private static void initializeDefaultExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler(new QuarkExceptionHandler());
+    }
+
+    private static void initializeConfiguration() {
+        configuration = Configuration.load("Configuration.json");
     }
 
     private static void initializeParallelServiceRunner() {
@@ -1141,5 +1144,9 @@ public final class Quark {
 
     public static boolean isDebug() {
         return DEBUG;
+    }
+
+    public static boolean isProduction() {
+        return !isDebug();
     }
 }
