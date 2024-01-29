@@ -21,6 +21,6 @@ public class MillisecondsConstructor extends EntityConstructor {
 
     @Override
     protected Entity invoke(InstructionEntityConstructorArguments arguments) {
-        return Entity.wrap(TimeSpan.milliseconds(arguments.getLong("milliseconds")).milliseconds());
+        return Entity.wrap(TimeSpan.milliseconds(arguments.getLong("milliseconds")).getMilliseconds());
     }
 }

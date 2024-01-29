@@ -1,9 +1,14 @@
 package ru.anafro.quark.server.language.instructions;
 
+import com.google.gson.Gson;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
 import ru.anafro.quark.server.language.ResponseStatus;
+import ru.anafro.quark.server.networking.Configuration;
+
+import static ru.anafro.quark.server.language.InstructionParameter.required;
 
 /**
  * This class represents the debug instruction of Quark QL.
@@ -54,7 +59,8 @@ public class DebugInstruction extends Instruction {
 
                 "Does stuff for Quark developers. Don't use.",
 
-                "!unsafe.debug"
+                "!unsafe.debug",
+                required("json", "str")
         );
     }
 
@@ -74,6 +80,12 @@ public class DebugInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        result.status(ResponseStatus.SYNTAX_ERROR, STR."\{getName()} MUST NOT be used.");
+        if (Quark.isProduction()) {
+            result.status(ResponseStatus.SYNTAX_ERROR, STR."\{getName()} MUST NOT be used.");
+            return;
+        }
+
+        var json = arguments.getString("json");
+        result.ok(new Gson().fromJson(json, Configuration.class).toString());
     }
 }
