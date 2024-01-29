@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.utils.exceptions;
 
+import ru.anafro.quark.server.utils.strings.Strings;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 import ru.anafro.quark.server.utils.types.classes.Classes;
 
@@ -43,5 +44,12 @@ public final class Exceptions {
 
                 \{trace}
                 """;
+    }
+
+    public static String getName(Throwable throwable) {
+        var className = throwable.getClass().getSimpleName();
+        var exceptionName = Strings.removeTrailing(className, "Exception");
+
+        return Classes.toHumanReadableName(exceptionName);
     }
 }
