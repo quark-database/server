@@ -14,6 +14,7 @@ import ru.anafro.quark.server.database.data.schemes.ScheduledQueriesTableScheme;
 import ru.anafro.quark.server.database.data.schemes.TableSchemeList;
 import ru.anafro.quark.server.database.data.schemes.TokensTableScheme;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
+import ru.anafro.quark.server.database.exceptions.QuerySyntaxException;
 import ru.anafro.quark.server.database.views.TableView;
 import ru.anafro.quark.server.debug.*;
 import ru.anafro.quark.server.debug.components.Debugger;
@@ -38,6 +39,7 @@ import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.logging.LoggingLevel;
 import ru.anafro.quark.server.multithreading.ParallelServiceRunner;
 import ru.anafro.quark.server.networking.Configuration;
+import ru.anafro.quark.server.networking.Ports;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.plugins.Plugin;
 import ru.anafro.quark.server.plugins.PluginManager;
@@ -60,6 +62,9 @@ import ru.anafro.quark.server.utils.runtime.Application;
 import ru.anafro.quark.server.utils.runtime.ExitCodes;
 
 import java.util.HashMap;
+import java.util.List;
+
+import static ru.anafro.quark.server.database.data.Table.systemTable;
 
 /**
  * Provides the easiest way of communicating with the Quark Server by having
@@ -1137,9 +1142,29 @@ public final class Quark {
         return configuration;
     }
 
+    public static void changePort(int newPort) {
+        if (Ports.isNotUsable(newPort)) {
+            throw new QuerySyntaxException(STR."Port should be between \{Ports.FIRST} and \{Ports.LAST}, not \{newPort}.");
+        }
+
+        configuration.setPort(newPort);
+        configuration.save();
+
+        Quark.reload();
+    }
+
     public static void reload() {
         Console.clear();
         System.exit(ExitCodes.RELOAD);
+    }
+
+    public static void createToken(String token, List<String> permissions) {
+        repairDirectories();
+        var tokens = systemTable("Tokens");
+
+        for (var permission : permissions) {
+            tokens.insert(token, permission);
+        }
     }
 
     public static boolean isDebug() {
@@ -1148,5 +1173,41 @@ public final class Quark {
 
     public static boolean isProduction() {
         return !isDebug();
+    }
+
+    public static void deleteToken(String token) {
+        systemTable("Tokens").delete(record -> record.getString("token").equals(token));  // TODO: .where
+    }
+
+    public static void redefineToken(String token, List<String> permissions) {
+        deleteToken(token);
+        createToken(token, permissions);
+    }
+
+    public static void removePermission(String targetToken, String permission) {
+        systemTable("Tokens").delete(record -> {
+            if (!record.getString(targetToken).equals(targetToken)) {
+                return false;
+            }
+
+            return new Token(targetToken).can(permission);
+        });
+    }
+
+    public static void rename(String newName) {
+        configuration.setName(newName);
+        configuration.save();
+    }
+
+    public static void scheduleCommand(String command, long period) {
+        systemTable("Scheduled Commands").insert(command, period);
+    }
+
+    public static void scheduleQuery(String query, long period) {
+        systemTable("Scheduled Queries").insert(query, period);
+    }
+
+    public static void exit() {
+        System.exit(ExitCodes.OK);
     }
 }

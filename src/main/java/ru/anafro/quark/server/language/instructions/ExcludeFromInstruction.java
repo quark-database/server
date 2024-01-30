@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
-import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
-import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -33,14 +30,8 @@ public class ExcludeFromInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var table = arguments.getTable("table");
         var finder = arguments.getFinder("finder");
-        var columnName = finder.columnName();
-        var column = table.getColumn(columnName).orElseThrow(() -> new ColumnNotFoundException(table, columnName));
-        var records = column.hasModifier("unique") ? new HashtableRecordCollection(columnName) : new PageTreeRecordCollection(columnName);
 
-        records.addAll(table);
-        records.exclude(finder);
-        table.store(records);
-
+        table.exclude(finder);
         result.ok("Exclusion has been performed.");
     }
 }

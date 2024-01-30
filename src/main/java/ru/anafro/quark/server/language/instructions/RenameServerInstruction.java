@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 
@@ -78,9 +78,9 @@ public class RenameServerInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        Quark.configuration().setName(arguments.getString("new"));
-        Quark.configuration().save();
+        var name = arguments.getString("new");
 
-        result.ok("Server name is changed.");
+        Quark.rename(name);
+        result.ok("The server is renamed.");
     }
 }

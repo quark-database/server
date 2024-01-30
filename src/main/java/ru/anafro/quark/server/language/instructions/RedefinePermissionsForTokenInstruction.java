@@ -1,11 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.parser.RecordCharacterEscapeService;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -86,18 +84,7 @@ public class RedefinePermissionsForTokenInstruction extends Instruction {
         var token = arguments.getString("token");
         var permissions = arguments.getList("permissions").stream().map(permission -> permission.valueAs(String.class)).toList();
 
-        Quark.query("""
-                        delete from "Quark.Tokens": selector = @selector("@equals(:token, \\"%s\\")");
-                """.formatted(new RecordCharacterEscapeService().wrapEscapableCharacters(token)));
-
-        for (var permission : permissions) {
-            Quark.query("""
-                            insert into "Quark.Tokens": record = @record(%s, %s);
-                    """.formatted(
-                    new StringEntity(token).toInstructionForm(),
-                    new StringEntity(permission).toInstructionForm()
-            ));
-        }
+        Quark.redefineToken(token, permissions);
 
         result.ok("Token permissions has been redefined.");
     }

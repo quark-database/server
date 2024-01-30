@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -59,7 +56,7 @@ public class ClearTableInstruction extends Instruction {
 
                 "table.clear",
 
-                general("name")
+                general("table")
         );
     }
 
@@ -79,14 +76,7 @@ public class ClearTableInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("name");
-
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        Table.byName(tableName).clear();
-
-        result.ok("Table '%s' successfully cleared.".formatted(tableName));
+        arguments.getTable().clear();
+        result.ok("The table is cleared.");
     }
 }

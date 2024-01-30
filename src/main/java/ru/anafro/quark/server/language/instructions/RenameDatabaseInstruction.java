@@ -1,11 +1,10 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
 
+import static ru.anafro.quark.server.database.data.Database.database;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
 
 /**
@@ -82,15 +81,7 @@ public class RenameDatabaseInstruction extends Instruction {
         var oldName = arguments.getString("old");
         var newName = arguments.getString("new");
 
-        if (Database.doesntExist(oldName)) {
-            throw new QueryException(STR."Database '\{oldName}' does not exist.");
-        }
-
-        if (Database.exists(newName)) {
-            throw new QueryException(STR."Database '\{newName}' already exists.");
-        }
-
-        Database.byName(oldName).rename(newName);
-        result.ok("Database has been successfully renamed.");
+        database(oldName).rename(newName);
+        result.ok("The database is renamed.");
     }
 }

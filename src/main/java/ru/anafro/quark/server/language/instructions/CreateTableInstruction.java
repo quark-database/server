@@ -1,18 +1,14 @@
 package ru.anafro.quark.server.language.instructions;
 
 import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableRecord;
-import ru.anafro.quark.server.database.data.structures.LinearRecordCollection;
-import ru.anafro.quark.server.database.exceptions.DatabaseException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
 import ru.anafro.quark.server.language.entities.ColumnEntity;
-import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.language.entities.RecordEntity;
+import ru.anafro.quark.server.utils.collections.Lists;
 
 import static ru.anafro.quark.server.language.InstructionParameter.*;
-import static ru.anafro.quark.server.utils.collections.Collections.emptyList;
 
 /**
  * This class represents the "create table" instruction of Quark QL.
@@ -89,22 +85,9 @@ public class CreateTableInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var tableName = arguments.getTableName("table");
         var columns = arguments.getList(ColumnEntity.class, "columns").stream().map(ColumnEntity::getColumnDescription).toList();
-        var records = arguments.tryGetList(RecordEntity.class, "records").orElse(emptyList());
-        var recordCollection = new LinearRecordCollection();
+        var records = arguments.tryGetList(RecordEntity.class, "records").orElseGet(Lists::empty);
 
-        if (Table.exists(tableName)) {
-            throw new DatabaseException(STR."The table \{tableName} already exists.");
-        }
-
-        var table = Table.create(tableName, columns);
-
-        records.forEach(record -> {
-            recordCollection.add(new TableRecord(table, new ListEntity("any", record.getValues())));
-        });
-
-        table.saveHeader();
-        table.store(recordCollection);
-
+        Table.create(tableName, columns, records);
         result.ok("A table has been created.");
     }
 }

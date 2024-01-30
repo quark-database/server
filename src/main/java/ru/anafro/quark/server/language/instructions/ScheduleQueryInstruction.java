@@ -1,11 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.entities.LongEntity;
-import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -86,13 +84,7 @@ public class ScheduleQueryInstruction extends Instruction {
         var query = arguments.getString("query");
         var period = arguments.getLong("period");
 
-        Quark.query("""
-                        insert into "Quark.Scheduled Queries": record = @record(%s, %s);
-                """.formatted(
-                new StringEntity(query).toInstructionForm(),
-                new LongEntity(period).toInstructionForm()
-        ));
-
+        Quark.scheduleQuery(query, period);
         result.ok("A new query is scheduled. Rerun the server.");
     }
 }

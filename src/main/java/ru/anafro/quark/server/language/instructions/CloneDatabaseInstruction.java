@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -81,18 +79,10 @@ public class CloneDatabaseInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var prototypeName = arguments.getString("prototype");
+        var prototype = arguments.getDatabase("prototype");
         var destinationName = arguments.getString("destination");
 
-        if (Database.doesntExist(prototypeName)) {
-            throw new QueryException(STR."Prototype database '\{prototypeName}' does not exist.");
-        }
-
-        if (Database.exists(destinationName)) {
-            throw new QueryException(STR."Destination database '\{destinationName}' already exists.");
-        }
-
-        Database.byName(prototypeName).copy(destinationName);
-        result.ok(STR."Database '\{prototypeName}' successfully cloned to '\{destinationName}'.");
+        prototype.copy(destinationName);
+        result.ok("The database is cloned.");
     }
 }

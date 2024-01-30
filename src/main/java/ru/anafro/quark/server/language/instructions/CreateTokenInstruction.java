@@ -1,15 +1,10 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableRecord;
-import ru.anafro.quark.server.database.data.structures.RecordCollectionResolver;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -85,28 +80,10 @@ public class CreateTokenInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        if (!Database.exists("Quark")) {
-            Quark.logger().warning("Quark database is missing. Trying to create a new one...");
-            Database.create("Quark");
-        }
-
-        if (!Table.exists("Quark.Tokens")) {
-            Quark.logger().warning("Quark.Tokens table is missing. Trying to create a new one...");
-            Quark.query("""
-                            create table "Quark.Tokens": columns = @list(@str("token"), @str("permission"));
-                    """);
-        }
-
-        var table = Table.byName("Quark.Tokens");
-        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.JUST_SELECT_EVERYTHING));
         var token = arguments.getString("token");
-        var permissions = arguments.getList("permissions");
+        var permissions = arguments.getList(StringEntity.class, "permissions").stream().map(StringEntity::getValue).toList();
 
-        for (var permission : permissions) {
-            records.add(new TableRecord(table, new ListEntity("any", new StringEntity(token), new StringEntity(permission.valueAs(String.class)))));
-        }
-
-        table.getRecords().save(records);
+        Quark.createToken(token, permissions);
         result.ok("A new token was registered!");
     }
 }

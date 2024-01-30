@@ -1,11 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.exceptions.QuerySyntaxException;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
-import ru.anafro.quark.server.networking.Ports;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 
@@ -79,17 +77,6 @@ public class ChangePortToInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        int newPort = arguments.getInt("port");
-
-        if (Ports.isUsable(newPort)) {
-            throw new QuerySyntaxException(STR."Port should be between \{Ports.FIRST} and \{Ports.LAST}, not \{newPort}");
-        }
-
-        var configuration = Quark.configuration();
-
-        configuration.setPort(newPort);
-        configuration.save();
-
-        Quark.reload();
+        Quark.changePort(arguments.getInt("port"));
     }
 }

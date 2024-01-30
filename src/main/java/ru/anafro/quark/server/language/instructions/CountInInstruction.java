@@ -4,7 +4,6 @@ import ru.anafro.quark.server.database.data.ExpressionTableRecordSelector;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.utils.integers.Counter;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.optional;
@@ -29,14 +28,12 @@ public class CountInInstruction extends Instruction {
 
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var table = arguments.getTable("table");
-        var selector = arguments.tryGetSelector("selector").orElse(ExpressionTableRecordSelector.SELECT_ALL);
-        var count = new Counter();
-
-        table.getRecords().forEach(record -> count.incrementIf(selector.selects(record)));
+        var table = arguments.getTable();
+        var selector = arguments.tryGetSelector().orElse(ExpressionTableRecordSelector.SELECT_ALL);
 
         result.header("count");
-        result.row(String.valueOf(count.getCount()));
-        result.ok("Records have been counted.");
+        result.row(table.count(selector));
+
+        result.ok("The records have been counted.");
     }
 }

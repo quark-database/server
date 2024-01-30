@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -78,22 +76,13 @@ public class ListTablesInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var databaseName = arguments.getString("database");
-
-        if (!Database.exists(databaseName)) {
-            throw new QueryException("Database with name '%s' does not exist.".formatted(
-                    databaseName
-            ));
-        }
-
-        var database = Database.byName(databaseName);
+        var database = arguments.getDatabase();
 
         result.header("table name");
-
         for (var table : database.allTables()) {
             result.row(table.getName());
         }
 
-        result.ok("Table names are loaded.");
+        result.ok("The table list is returned.");
     }
 }

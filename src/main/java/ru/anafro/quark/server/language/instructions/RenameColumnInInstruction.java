@@ -1,12 +1,8 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.exceptions.QuarkException;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -61,7 +57,7 @@ public class RenameColumnInInstruction extends Instruction {
 
                 "column.rename",
 
-                general("name"),
+                general("table"),
 
                 required("old"),
                 required("new")
@@ -84,32 +80,12 @@ public class RenameColumnInInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var oldName = arguments.getString("old");
+        var table = arguments.getTable();
+        var columnName = arguments.getString("old");
         var newName = arguments.getString("new");
-        var tableName = arguments.getString("name");
 
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
-
-        if (table.getHeader().missingColumn(oldName)) {
-            throw new QuarkException("Cannot rename the column '%s' to '%s', because it does not exist.".formatted(
-                    oldName,
-                    newName
-            ));
-        }
-
-        if (table.getHeader().hasColumn(newName)) {
-            throw new QuarkException("Cannot rename the column '%s' to '%s', because column with such name already exists.".formatted(
-                    oldName,
-                    newName
-            ));
-        }
-
-        table.getHeader().save();
-
+        table.renameColumn(columnName, newName);
+        table.saveHeader();
         result.ok("A column has been successfully renamed.");
     }
 }

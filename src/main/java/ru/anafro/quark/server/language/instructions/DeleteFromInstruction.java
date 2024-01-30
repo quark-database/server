@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -83,13 +82,9 @@ public class DeleteFromInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var table = arguments.getTable();
         var selector = arguments.getSelector();
-        var skip = arguments.tryGetInt("skip").orElse(0);
-        var limit = arguments.tryGetInt("limit").orElse(Integer.MAX_VALUE);
-        var records = table.selectAll();
+        var limiter = arguments.getLimiter();
 
-        records.remove(selector, new RecordIterationLimiter(skip, limit));
-        table.store(records);
-
-        result.ok("Deletion has been performed.");
+        table.delete(selector, limiter);
+        result.ok("Records are deleted.");
     }
 }

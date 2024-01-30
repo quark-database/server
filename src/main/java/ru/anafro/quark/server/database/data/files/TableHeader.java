@@ -10,6 +10,8 @@ import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.collections.Streams;
 import ru.anafro.quark.server.utils.files.File;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +101,10 @@ public class TableHeader {
         columns.add(columnDescription);
     }
 
+    public void renameColumn(String columnName, String newName) {
+        getColumn(columnName).orElseThrow().setName(newName);
+    }
+
     public void save() {
         file.write(ListEntity.of(columns.stream().map(ColumnEntity::new).toList()).toInstructionForm());
     }
@@ -114,5 +120,26 @@ public class TableHeader {
 
     public boolean doesntHaveColumn(String columnName) {
         return !hasColumn(columnName);
+    }
+
+    public void reorderColumns(List<String> order) {
+        var newOrder = Lists.<ColumnDescription>empty();
+
+        for (var columnName : order) {
+            var column = getColumn(columnName).orElseThrow();
+            newOrder.add(column);
+        }
+
+        this.columns = newOrder;
+    }
+
+    public void swapColumns(String firstColumnName, String secondColumnName) {
+        var newColumnOrder = new ArrayList<>(columns);
+        var firstIndex = Lists.indexOfKey(newColumnOrder, firstColumnName, ColumnDescription::name);
+        var secondIndex = Lists.indexOfKey(newColumnOrder, secondColumnName, ColumnDescription::name);
+
+        Collections.swap(newColumnOrder, firstIndex, secondIndex);
+
+        this.columns = newColumnOrder;
     }
 }

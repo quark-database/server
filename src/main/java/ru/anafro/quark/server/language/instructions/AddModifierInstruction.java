@@ -30,11 +30,9 @@ public class AddModifierInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var table = arguments.getTable("table");
         var modifier = arguments.getModifier("modifier");
-        var column = arguments.getColumn(table, "column");
+        var columnName = arguments.getString("column");
 
-        column.addModifier(modifier);
-        table.saveHeader();
-
+        table.addModifier(columnName, modifier);
         result.ok("A modifier has been added.");
     }
 }

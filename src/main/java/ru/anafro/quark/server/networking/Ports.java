@@ -84,4 +84,7 @@ public final class Ports {
         return isValid(port) && isAvailable(port);
     }
 
+    public static boolean isNotUsable(int port) {
+        return !isUsable(port);
+    }
 }

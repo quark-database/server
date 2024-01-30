@@ -1,15 +1,27 @@
 package ru.anafro.quark.server.database.data;
 
+import ru.anafro.quark.server.database.data.exceptions.DatabaseExistsException;
+import ru.anafro.quark.server.database.exceptions.QueryException;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.utils.files.Directory;
 
 import java.util.List;
 
 public class Database {
+    private static final String SYSTEM_DATABASE_NAME = Quark.NAME;
     private final Directory directory;
 
     private Database(Directory directory) {
         this.directory = directory;
+    }
+
+    public static Database systemDatabase() {
+        return database(SYSTEM_DATABASE_NAME);
+    }
+
+    public static Database database(String databaseName) {
+        return byName(databaseName);
     }
 
     public static Database byName(String databaseName) {
@@ -37,12 +49,12 @@ public class Database {
     }
 
     public static Database create(String databaseName) {
+        if (exists(databaseName)) {
+            throw new DatabaseExistsException(databaseName);
+        }
+
         var databaseDirectory = DatabasesDirectory.getInstance().createDirectory(databaseName);
         return new Database(databaseDirectory);
-    }
-
-    public static void delete(String databaseName) {
-        byName(databaseName).delete();
     }
 
     public Table getTable(String tableName) {
@@ -72,13 +84,29 @@ public class Database {
     }
 
     public Database copy(String destinationName) {
+        if (exists(destinationName)) {
+            throw new QueryException(STR."Destination database '\{destinationName}' already exists.");
+        }
+
         var sibling = directory.getSibling(destinationName);
         directory.copy(sibling.getPath());
 
         return byName(destinationName);
     }
 
+    public void copyScheme(String destinationName) {
+        copy(destinationName).clear();
+    }
+
     public void rename(String newName) {
         directory.moveTo(newName);
+    }
+
+    public void clear() {
+        allTables().forEach(Table::delete);
+    }
+
+    public Table table(String scheduledCommands) {
+        return getTable(scheduledCommands);
     }
 }

@@ -3,7 +3,8 @@ package ru.anafro.quark.server.language.instructions;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
+
+import static ru.anafro.quark.server.database.data.Table.systemTable;
 
 public class ClearScheduledCommandsInstruction extends Instruction {
     /**
@@ -23,9 +24,7 @@ public class ClearScheduledCommandsInstruction extends Instruction {
 
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        Quark.query("""
-                        clear table "Quark.Scheduled Commands";
-                """);
+        systemTable("Scheduled Commands").clear();
         result.ok("All the scheduled commands have been removed.");
     }
 }

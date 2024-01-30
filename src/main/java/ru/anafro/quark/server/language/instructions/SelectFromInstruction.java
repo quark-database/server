@@ -1,7 +1,6 @@
 package ru.anafro.quark.server.language.instructions;
 
 import ru.anafro.quark.server.database.data.ExpressionTableRecordSelector;
-import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -83,11 +82,10 @@ public class SelectFromInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var skip = arguments.tryGetInt("skip").orElse(0);
-        var limit = arguments.tryGetInt("limit").orElse(Integer.MAX_VALUE);
-        var selector = arguments.tryGetSelector("selector").orElse(ExpressionTableRecordSelector.SELECT_ALL);
+        var limiter = arguments.getLimiter();
+        var selector = arguments.tryGetSelector().orElse(ExpressionTableRecordSelector.SELECT_ALL);
         var table = arguments.getTable();
-        var records = table.select(selector, new RecordIterationLimiter(skip, limit));
+        var records = table.select(selector, limiter);
 
         result.header(table.createViewHeader());
 

@@ -83,7 +83,6 @@ public class InsertIntoInstruction extends Instruction {
         var record = arguments.getRecord(table);
 
         table.insert(record);
-
         result.ok("A record has been inserted.");
     }
 }

@@ -1,9 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -83,28 +79,10 @@ public class DeleteColumnInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var columnName = arguments.getString("name");
-        var tableName = arguments.getString("table");
+        var table = arguments.getTable();
+        var column = arguments.getString("name");
 
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
-
-        if (table.getHeader().missingColumn(columnName)) {
-            throw new QueryException("Table '%s' does not contain column '%s'.".formatted(
-                    tableName,
-                    columnName
-            ));
-        }
-
-        var records = table.selectAll();
-
-        records.forEach(record -> record.removeField(columnName));
-
-        table.getColumns().removeIf(column -> column.name().equals(columnName));
-        table.saveHeader();
-        table.store(records);
+        table.deleteColumn(column);
+        result.ok("The column is deleted.");
     }
 }

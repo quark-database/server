@@ -75,7 +75,6 @@ public class ListDatabasesInstruction extends Instruction {
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         result.header("database name");
-
         for (var database : Database.all()) {
             result.row(database.getName());
         }

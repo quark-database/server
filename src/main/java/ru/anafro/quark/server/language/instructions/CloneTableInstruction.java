@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -81,15 +79,10 @@ public class CloneTableInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var destinationName = arguments.getTableName("destination");
         var prototype = arguments.getTable("prototype");
-
-        if (Table.exists(destinationName)) {
-            throw new QueryException(STR."Table '\{destinationName}' already exists.");
-        }
+        var destinationName = arguments.getTableName("destination");
 
         prototype.copy(destinationName);
-
-        result.ok(STR."Table '\{prototype.getName()}' successfully cloned to '\{destinationName}'.");
+        result.ok("The table is cloned.");
     }
 }

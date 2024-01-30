@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -27,7 +27,6 @@ public class VarInstruction extends Instruction {
         var variableValue = arguments.get("value");
 
         Quark.setVariable(variableName, variableValue);
-
-        result.ok(STR."The \{variableName} is now set to \{variableValue}.");
+        result.ok("The variable is set.");
     }
 }

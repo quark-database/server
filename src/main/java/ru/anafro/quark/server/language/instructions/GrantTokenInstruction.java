@@ -3,10 +3,8 @@ package ru.anafro.quark.server.language.instructions;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.InstructionTemplate;
-import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.facade.Quark;
 
+import static ru.anafro.quark.server.database.data.Table.systemTable;
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
 
@@ -84,13 +82,7 @@ public class GrantTokenInstruction extends Instruction {
         var token = arguments.getString("token");
         var permission = arguments.getString("permission");
 
-        Quark.query(new InstructionTemplate("""
-                        insert into "Quark.Tokens": record = @record(%s, %s);
-                """).format(
-                new StringEntity(token),
-                new StringEntity(permission)
-        ));
-
+        systemTable("Tokens").insert(token, permission);
         result.ok("A new permission for the token has been granted.");
     }
 }

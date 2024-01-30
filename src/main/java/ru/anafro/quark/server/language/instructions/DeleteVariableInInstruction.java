@@ -1,9 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
-import ru.anafro.quark.server.database.data.exceptions.VariableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -31,22 +27,10 @@ public class DeleteVariableInInstruction extends Instruction {
 
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("table");
-        var variableName = arguments.getString("name");
+        var table = arguments.getTable();
+        var name = arguments.getString("name");
 
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
-
-        if (table.getVariableDirectory().missingVariable(variableName)) {
-            throw new VariableNotFoundException(table, variableName);
-        }
-
-        var variable = table.getVariableDirectory().getVariable(variableName);
-        variable.delete();
-
-        result.ok("The variable has been deleted.");
+        table.deleteVariable(name);
+        result.ok("The variable is deleted.");
     }
 }

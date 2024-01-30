@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -85,21 +84,7 @@ public class ChangeInInstruction extends Instruction {
         var changer = arguments.getChanger();
         var table = arguments.getTable();
 
-        if (table.canNotUse(changer)) {
-            throw new ColumnNotFoundException(table, changer.column());
-        }
-
-        var records = table.selectAll();
-        var recordsChanged = 0;
-
-        for (var record : records) {
-            if (selector.selects(record)) {
-                changer.change(record);
-                recordsChanged += 1;
-            }
-        }
-
-        table.store(records);
-        result.ok(STR."\{recordsChanged} records have been changed");
+        table.change(selector, changer);
+        result.ok("Records have been changed.");
     }
 }

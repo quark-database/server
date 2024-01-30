@@ -1,13 +1,12 @@
 package ru.anafro.quark.server.language.entities;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.entities.exceptions.EntitiesCannotBeComparedException;
 import ru.anafro.quark.server.language.entities.exceptions.InstructionEntityCastException;
 import ru.anafro.quark.server.language.types.EntityType;
-import ru.anafro.quark.server.facade.Quark;
-import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.patterns.exceptions.ObjectIsMissingInRegistryException;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,20 +42,13 @@ public abstract class Entity implements Comparable<Entity> {
         }
     }
 
-    public <T> Optional<ArrayList<T>> tryGetValueAsListOf(Class<T> elementsType) {
-        var value = this.getValue();
-
-        if (value instanceof ArrayList<?> list) {
-            var typedList = Lists.<T>empty();
-
-            for (var element : list) {
-                typedList.add(elementsType.cast(element));
-            }
-
-            return Optional.of(typedList);
+    public <T> Optional<List<T>> tryGetValueAsListOf(Class<T> elementsType) {
+        if (!(this instanceof ListEntity list)) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        var elements = list.getValue();
+        return Optional.of(elements.stream().map(elementsType::cast).toList());
     }
 
     public String toInstructionForm() {

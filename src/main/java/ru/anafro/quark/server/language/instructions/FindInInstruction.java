@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
-import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
-import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -32,19 +29,13 @@ public class FindInInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var finder = arguments.getFinder("finder");
         var table = arguments.getTable("table");
-        var columnName = finder.columnName();
-        var column = table.getColumn(columnName).orElseThrow(() -> new ColumnNotFoundException(table, columnName));
-        var records = column.hasModifier("unique") ?
-                new HashtableRecordCollection(finder.columnName()) :
-                new PageTreeRecordCollection(finder.columnName());
 
-        records.addAll(table);
-        table.getRecords().forEach(records::add);
-
-        records.find(finder).ifPresentOrElse(record -> {
+        table.find(finder).ifPresentOrElse(record -> {
             result.header(table.createViewHeader());
-            result.row(record);
-            result.ok("A row has been found.");
-        }, () -> result.ok("A row hasn't been found."));
+            result.row(record.toTableViewRow());
+            result.ok("A row is found.");
+        }, () -> {
+            result.ok("A row hasn't been found.");
+        });
     }
 }

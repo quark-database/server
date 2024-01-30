@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.utils.runtime.ExitCodes;
 
 /**
  * This class represents the reload server instruction of Quark QL.
@@ -74,7 +74,6 @@ public class ReloadServerInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        result.ok("The server is reloading.");
-        System.exit(ExitCodes.RELOAD);
+        Quark.reload();
     }
 }

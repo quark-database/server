@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 
@@ -80,7 +80,6 @@ public class RunCommandInstruction extends Instruction {
         var command = arguments.getString("command");
 
         Quark.runCommand(command);
-
-        result.ok("The command is successfully run.");
+        result.ok("The command is run.");
     }
 }

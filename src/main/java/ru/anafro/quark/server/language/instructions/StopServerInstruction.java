@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
 
 /**
  * This class represents the stop server instruction of Quark QL.
@@ -74,7 +74,7 @@ public class StopServerInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        Quark.warning("Quark Server has been stopped from outside by querying 'stop server'");
-        System.exit(0);
+        Quark.info(STR."The server is stopped by querying '\{this.getName()}'.");
+        Quark.exit();
     }
 }

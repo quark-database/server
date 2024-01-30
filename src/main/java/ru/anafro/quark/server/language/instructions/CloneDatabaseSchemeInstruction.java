@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -85,13 +82,7 @@ public class CloneDatabaseSchemeInstruction extends Instruction {
         var prototype = arguments.getDatabase("prototype");
         var destinationName = arguments.getString("destination");
 
-        if (Database.exists(destinationName)) {
-            throw new QueryException(STR."Destination database '\{destinationName}' already exists.");
-        }
-
-        prototype.copy(destinationName).allTables().forEach(Table::clear);
-
-        result.ok(STR."Database '\{prototype.getName()}' successfully cloned to '\{destinationName}', and all the tables were cleared in the destination.");
-
+        prototype.copyScheme(destinationName);
+        result.ok("The database scheme is cloned.");
     }
 }

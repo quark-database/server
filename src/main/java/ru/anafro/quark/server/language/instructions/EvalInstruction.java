@@ -81,6 +81,6 @@ public class EvalInstruction extends Instruction {
 
         result.header("value", "type", "exact type");
         result.row(entity.toInstructionForm(), entity.getTypeName(), entity.getExactTypeName());
-        result.ok("Expression is evaluated.");
+        result.ok("The expression is evaluated.");
     }
 }

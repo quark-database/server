@@ -1,9 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
-import ru.anafro.quark.server.database.data.exceptions.VariableAlreadyExistsException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -32,22 +28,11 @@ public class DefineVariableInInstruction extends Instruction {
 
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("table");
-        var variableName = arguments.getString("name");
+        var table = arguments.getTable();
+        var name = arguments.getString("name");
+        var value = arguments.get("value");
 
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
-
-        if (table.getVariableDirectory().hasVariable(variableName)) {
-            throw new VariableAlreadyExistsException(table, variableName);
-        }
-
-        var variable = table.getVariableDirectory().getVariable(variableName);
-        variable.set(arguments.get("value"));
-
-        result.ok("A new variable value has been set.");
+        table.setVariable(name, value);
+        result.ok("The variable value has been set.");
     }
 }

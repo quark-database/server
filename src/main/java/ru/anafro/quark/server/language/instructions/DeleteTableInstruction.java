@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -80,15 +77,7 @@ public class DeleteTableInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("table");
-
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
-        table.delete();
-
-        result.ok("Table '%s' successfully deleted.".formatted(tableName));
+        arguments.getTable().delete();
+        result.ok("The table is deleted.");
     }
 }

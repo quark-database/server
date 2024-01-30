@@ -1,8 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
-import ru.anafro.quark.server.database.data.TableName;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -80,20 +77,13 @@ public class ListColumnsInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("table");
-
-        if (!Table.exists(tableName)) {
-            throw new TableNotFoundException(new TableName(tableName));
-        }
-
-        var table = Table.byName(tableName);
+        var table = arguments.getTable();
 
         result.header("column name");
-
-        for (var columnDescription : table.getHeader().getColumns()) {
-            result.row(columnDescription.name());
+        for (var column : table.getColumns()) {
+            result.row(column.name());
         }
 
-        result.ok("All the columns has been successfully listed.");
+        result.ok("The column list are returned.");
     }
 }

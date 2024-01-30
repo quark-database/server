@@ -3,8 +3,7 @@ package ru.anafro.quark.server.language.instructions;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.lexer.InstructionLexer;
-import ru.anafro.quark.server.utils.integers.Integers;
+import ru.anafro.quark.server.language.hints.InstructionHint;
 
 import static ru.anafro.quark.server.language.InstructionParameter.optional;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -33,26 +32,17 @@ public class HintNextElementsInstruction extends Instruction {
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var query = arguments.getString("query");
-        var caretPosition = arguments.has("caret position") ? Integers.limit(arguments.getInt("caret position"), 0, query.length()) : query.length() - 1;
-
-        var lexer = new InstructionLexer();
-
-        lexer.allowBufferTrash();
-        lexer.lex(query.substring(0, caretPosition));
+        int caretPosition = arguments.tryGetInt("caret position").orElse(query.length() - 1);
 
         result.header("type", "title", "description", "completion");
 
-        try {
-            for (var hint : lexer.getState().makeHints()) {
-                result.row(
-                        hint.type().toString().toLowerCase(),
-                        hint.title(),
-                        hint.description(),
-                        hint.completion()
-                );
-            }
-        } catch (Exception ignored) {
-            // TODO: Probably there's a better way to determine if hints are not needed.
+        for (var hint : InstructionHint.makeHints(query, caretPosition)) {
+            result.row(
+                    hint.type().toString().toLowerCase(),
+                    hint.title(),
+                    hint.description(),
+                    hint.completion()
+            );
         }
 
         result.ok("Hints are collected.");

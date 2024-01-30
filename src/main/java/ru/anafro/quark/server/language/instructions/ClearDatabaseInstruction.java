@@ -1,7 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -78,18 +76,7 @@ public class ClearDatabaseInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var databaseName = arguments.getString("database");
-
-        if (Database.exists(databaseName)) {
-            var database = Database.byName(databaseName);
-
-            for (var table : database.allTables()) {
-                table.delete();
-            }
-
-            result.ok("Database %s has been cleared.".formatted(databaseName));
-        } else {
-            throw new QueryException("Database %s does not exist.".formatted(databaseName));
-        }
+        arguments.getDatabase().clear();
+        result.ok("Database has been cleared.");
     }
 }

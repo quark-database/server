@@ -1,13 +1,8 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.ColumnDescription;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.utils.collections.Lists;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -86,18 +81,11 @@ public class SwapColumnsInstruction extends Instruction {
      */
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var table = arguments.getTable("table");
+        var table = arguments.getTable();
         var firstColumnName = arguments.getColumn(table, "first").name();
         var secondColumnName = arguments.getColumn(table, "second").name();
-        var newColumnOrder = new ArrayList<>(table.getHeader().getColumns());
-        var firstIndex = Lists.indexOfKey(newColumnOrder, firstColumnName, ColumnDescription::name);
-        var secondIndex = Lists.indexOfKey(newColumnOrder, secondColumnName, ColumnDescription::name);
 
-        Collections.swap(newColumnOrder, firstIndex, secondIndex);
-
-        table.getHeader().setColumns(newColumnOrder);
-        table.saveHeader();
-
+        table.swapColumns(firstColumnName, secondColumnName);
         result.ok("Successfully swapped two columns in the table.");
     }
 }

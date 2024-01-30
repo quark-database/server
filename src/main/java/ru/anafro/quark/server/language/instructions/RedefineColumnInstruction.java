@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -82,14 +81,8 @@ public class RedefineColumnInstruction extends Instruction {
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var table = arguments.getTable();
         var columnDescription = arguments.getColumnDescription("definition");
-        var columnName = columnDescription.name();
 
-        if (table.getHeader().doesntHaveColumn(columnName)) {
-            throw new QueryException(STR."Column \{columnName} does not exist.");
-        }
-
-        table.getHeader().redefineColumn(columnDescription);
-
+        table.redefineColumn(columnDescription);
         result.ok("A column has been redefined.");
     }
 }

@@ -1,10 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.entities.StringEntity;
-import ru.anafro.quark.server.facade.Quark;
 
 import static ru.anafro.quark.server.language.InstructionParameter.general;
 import static ru.anafro.quark.server.language.InstructionParameter.required;
@@ -84,13 +83,7 @@ public class RemovePermissionFromTokenInstruction extends Instruction {
         var token = arguments.getString("token");
         var permission = arguments.getString("permission");
 
-        Quark.query("""
-                        insert into "Quark.Tokens": record = @record(%s, %s);
-                """.formatted(
-                new StringEntity(token).toInstructionForm(),
-                new StringEntity(permission).toInstructionForm()
-        ));
-
-        result.ok("A permission has been successfully removed from the token.");
+        Quark.removePermission(token, permission);
+        result.ok("The permission is removed from the token.");
     }
 }

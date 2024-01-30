@@ -1,12 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.RecordField;
 import ru.anafro.quark.server.database.exceptions.DatabaseException;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.language.exceptions.GeneratedValueMismatchesColumnTypeException;
 
 import static ru.anafro.quark.server.language.InstructionParameter.*;
 
@@ -84,48 +81,15 @@ public class AddColumnInstruction extends Instruction {
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         var table = arguments.getTable("table");
-        var columnDescription = arguments.getColumnDescription("definition");
-        var columnName = columnDescription.name();
-        var columnType = columnDescription.type();
+        var description = arguments.getColumnDescription("definition");
+        var generator = arguments.tryGetGenerator("generator").orElse(null);
+        var columnName = description.name();
 
         if (table.hasColumn(columnName)) {
             throw new DatabaseException(STR."A column with name '\{columnName}' already exists.");
         }
 
-        table.getHeader().addColumn(columnDescription);
-
-        var records = table.selectAll();
-        columnDescription.tryGetGeneratingModifier().ifPresentOrElse(modifierEntity -> {
-            var modifier = modifierEntity.getModifier();
-            var modifierArguments = modifierEntity.getModifierArguments();
-
-            for (var record : records) {
-                var generatedField = RecordField.empty(columnName);
-
-                modifier.prepareField(table, generatedField, modifierArguments);
-                record.add(generatedField);
-            }
-        }, () -> {
-            var generator = arguments.tryGetGenerator("generator").orElseThrow(() -> new QueryException("Add column needs a generator or a generating modifier."));
-
-            for (var record : records) {
-                var generatedEntity = generator.apply(record);
-
-                if (columnType.canCast(generatedEntity)) {
-                    generatedEntity = generatedEntity.castTo(columnType);
-                }
-
-                if (generatedEntity.doesntHaveType(columnType)) {
-                    throw new GeneratedValueMismatchesColumnTypeException(generator, columnDescription, generatedEntity);
-                }
-
-                record.add(new RecordField(columnName, generatedEntity));
-            }
-        });
-
-        table.store(records);
-        table.saveHeader();
-
+        table.addColumn(description, generator);
         result.ok("A column was added successfully.");
     }
 }

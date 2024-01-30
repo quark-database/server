@@ -1,9 +1,15 @@
 package ru.anafro.quark.server.language.hints;
 
 import ru.anafro.quark.server.facade.Quark;
+import ru.anafro.quark.server.language.lexer.InstructionLexer;
 import ru.anafro.quark.server.utils.integers.Integers;
 
-public record InstructionHint(InstructionHintType type, String title, String completion, String description) {
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+
+public record InstructionHint(InstructionHintType type, String title, String completion,
+                              String description) {
 
     public static InstructionHint instruction(String instructionName, int charactersAlreadyTyped) {
         return new InstructionHint(
@@ -35,5 +41,19 @@ public record InstructionHint(InstructionHintType type, String title, String com
                 STR."\{parameterName.substring(Integers.limit(charactersAlreadyTyped, 0, parameterName.length() - 1))} = ",
                 parameter.getType() + (parameter.isOptional() ? " (optional)" : "")
         );
+    }
+
+    public static List<InstructionHint> makeHints(String query, int caretPosition) {
+        var lexer = new InstructionLexer();
+        var limitedCaretPosition = Integers.limit(caretPosition, 0, query.length());
+
+        lexer.allowBufferTrash();
+        lexer.lex(query.substring(0, limitedCaretPosition));
+
+        try {
+            return lexer.getState().makeHints();
+        } catch (Exception ignored) {
+            return emptyList();
+        }
     }
 }

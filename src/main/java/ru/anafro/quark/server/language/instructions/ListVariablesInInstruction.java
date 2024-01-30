@@ -41,6 +41,6 @@ public class ListVariablesInInstruction extends Instruction {
             });
         }
 
-        result.ok("All the variables in the table have been listed.");
+        result.ok("The table variables list is returned.");
     }
 }

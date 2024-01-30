@@ -74,6 +74,13 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return this.get(IntegerEntity.class, argumentName).getValue();
     }
 
+    public RecordIterationLimiter getLimiter() {
+        var skip = tryGetInt("skip").orElse(0);
+        var limit = tryGetInt("limit").orElse(Integer.MAX_VALUE);
+
+        return new RecordIterationLimiter(skip, limit);
+    }
+
     public Optional<Integer> tryGetInt(String argumentName) {
         return this.tryGet(IntegerEntity.class, argumentName).map(IntegerEntity::getValue);
     }
@@ -102,8 +109,8 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         return this.tryGet(GeneratorEntity.class, argumentName).map(GeneratorEntity::getGenerator);
     }
 
-    public Optional<TableRecordSelector> tryGetSelector(String argumentName) {
-        return this.tryGet(SelectorEntity.class, argumentName).map(SelectorEntity::getSelector);
+    public Optional<TableRecordSelector> tryGetSelector() {
+        return this.tryGet(SelectorEntity.class, "selector").map(SelectorEntity::getSelector);
     }
 
     public TableName getTableName(String argumentName) {
@@ -126,6 +133,10 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
         }
 
         return Database.byName(databaseName);
+    }
+
+    public Database getDatabase() {
+        return getDatabase("database");
     }
 
     public Table getTable(String argumentName) {

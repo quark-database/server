@@ -3,8 +3,9 @@ package ru.anafro.quark.server.database.data;
 import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.exceptions.RecordFieldCountMismatchesTableHeaderException;
 import ru.anafro.quark.server.database.data.exceptions.RecordTypeMismatchesTableHeaderException;
-import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.database.views.TableViewRow;
+import ru.anafro.quark.server.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class TableRecord implements Iterable<RecordField> {
     private final Table table;
     private final ArrayList<RecordField> fields;
 
-    public TableRecord(Table table, ListEntity fields) {
+    public TableRecord(Table table, ArrayList<Entity> fields) {
         this.table = table;
         this.fields = Lists.empty();
 
@@ -40,7 +41,7 @@ public class TableRecord implements Iterable<RecordField> {
 
                 this.fields.add(field);
             }, () -> {
-                var value = fields.valueAt(fieldIndex.getAndIncrement());
+                var value = fields.get(fieldIndex.getAndIncrement());
                 var columnType = column.type();
 
                 if (columnType.canBeCastedFrom(value.getType())) {
@@ -56,9 +57,8 @@ public class TableRecord implements Iterable<RecordField> {
         }
     }
 
-    public TableRecord(Table table, ArrayList<RecordField> fields) {
-        this.table = table;
-        this.fields = fields;
+    public TableRecord(Table table, Object... fields) {
+        this(table, ListEntity.of(fields).getValue());
     }
 
     public RecordField getField(String name) {

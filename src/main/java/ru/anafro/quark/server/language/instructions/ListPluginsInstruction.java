@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.language.instructions;
 
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
-import ru.anafro.quark.server.facade.Quark;
 
 public class ListPluginsInstruction extends Instruction {
     /**
@@ -24,11 +24,10 @@ public class ListPluginsInstruction extends Instruction {
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
         result.header("plugin name", "plugin author");
-
         for (var plugin : Quark.plugins()) {
             result.row(plugin.getName(), plugin.getAuthor());
         }
 
-        result.ok("Plugins are listed.");
+        result.ok("The plugin list is returned.");
     }
 }

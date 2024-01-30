@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.exceptions.VariableNotFoundException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
@@ -30,16 +29,12 @@ public class GetVariableInInstruction extends Instruction {
 
     @Override
     protected void performAction(InstructionArguments arguments, InstructionResultRecorder result) {
-        var tableName = arguments.getString("table");
-        var variableName = arguments.getString("name");
-        var table = Table.byName(tableName);
+        var name = arguments.getString("name");
+        var table = arguments.getTable();
+        var value = table.getVariable(name).get().orElseThrow(() -> new VariableNotFoundException(table, name));
 
-        table.getVariable(variableName).get().ifPresentOrElse(value -> {
-            result.header("variable value", "variable type");
-            result.row(value.toInstructionForm(), value.getExactTypeName());
-            result.ok("The variable's value has been got.");
-        }, () -> {
-            throw new VariableNotFoundException(table, variableName);
-        });
+        result.header("variable value", "variable type");
+        result.row(value.toInstructionForm(), value.getExactTypeName());
+        result.ok("The variable is returned.");
     }
 }

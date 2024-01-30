@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.data.parser.RecordCharacterEscapeService;
 import ru.anafro.quark.server.database.data.parser.RecordParser;
+import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
@@ -41,13 +42,13 @@ public record UntypedTableRecord(ArrayList<String> values) implements Iterable<S
     }
 
     public TableRecord applyTypesFrom(TableHeader header) {
-        ArrayList<RecordField> fields = Lists.empty();
+        var fields = Lists.<Entity>empty();
 
         for (int index = 0; index < size(); index++) {
-            var column = header.columnAt(index);
-            var value = column.type().makeEntity(valueAt(index));
+            var columnType = header.columnAt(index).type();
+            var value = columnType.makeEntity(valueAt(index));
 
-            fields.add(new RecordField(column.name(), value));
+            fields.add(value);
         }
 
         return new TableRecord(header.getTable(), fields);
