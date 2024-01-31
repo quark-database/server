@@ -184,6 +184,10 @@ public final class Quark {
      */
     private static boolean isRun = false;
 
+    static {
+        run();
+    }
+
     /**
      * This private constructor of Quark class <strong>MUST NOT</strong> be ever
      * called, because Quark is a utility class. Use static methods declared inside.
