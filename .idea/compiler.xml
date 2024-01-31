@@ -8,8 +8,8 @@
         <outputRelativeToContentRoot value="true" />
       </profile>
       <profile name="Annotation profile for QuarkServer" enabled="true">
-        <sourceOutputDir name="../../../Quark/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../../Quark/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="build/generated-sources/annotations" />
+        <sourceTestOutputDir name="build/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="QuarkServer" />
       </profile>

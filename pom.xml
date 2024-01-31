@@ -138,6 +138,6 @@
         </plugins>
 
         <finalName>Quark Server</finalName>
-        <directory>D:\Quark</directory>
+        <directory>build</directory>
     </build>
 </project>
