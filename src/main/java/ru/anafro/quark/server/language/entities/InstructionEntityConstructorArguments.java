@@ -136,7 +136,7 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
         return this.get(ListEntity.class, argumentName);
     }
 
-    public <T extends Entity> ArrayList<T> getList(Class<T> elementsType, String argumentName) {
+    public <T extends Entity> List<T> getList(Class<T> elementsType, String argumentName) {
         return this.get(ListEntity.class, argumentName).tryGetValueAsListOf(elementsType).orElseThrow();
     }
 
