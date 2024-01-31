@@ -50,6 +50,35 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>add-run-server-bat-to-build</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>src/Run Server.bat</sourceFile>
+                            <destinationFile>build/Run Server.bat</destinationFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-configuration-json-to-build</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>src/Configuration.json</sourceFile>
+                            <destinationFile>build/Configuration.json</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.3</version>
