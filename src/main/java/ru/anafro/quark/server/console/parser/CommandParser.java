@@ -112,7 +112,7 @@ public class CommandParser {
         }
 
         Quark.commandLoop().forgetFailedCommand();
-        return commands.get(command);
+        return commands.get(commandName);
     }
 
     public Logger getLogger() {
