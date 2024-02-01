@@ -125,4 +125,8 @@ public final class Server implements Runnable {
     public Logger getLogger() {
         return logger;
     }
+
+    public boolean isClosed() {
+        return socket == null || socket.isClosed();
+    }
 }
