@@ -164,6 +164,7 @@ public final class Quark {
      */
     private static final TableSchemeList schemes = new TableSchemeList();
     private static final HashMap<String, Entity> variables = new HashMap<>();
+    private static boolean isInitialized = false;
     private static Configuration configuration;
     /**
      * The server of Quark.
@@ -183,9 +184,10 @@ public final class Quark {
      * @since Quark 1.1
      */
     private static boolean isRun = false;
+    private static final boolean isReady = false;
 
     static {
-        run();
+        initialize();
     }
 
     /**
@@ -197,6 +199,26 @@ public final class Quark {
      */
     private Quark() {
         throw new UtilityClassInstantiationException(getClass());
+    }
+
+    public static void initialize() {
+        if (isInitialized) {
+            return;
+        }
+
+        isInitialized = true;
+
+        initializeDefaultExceptionHandler();
+        initializeConfiguration();
+        initializeTypes();
+        initializeModifiers();
+        initializeConstructors();
+        initializeInstructions();
+        initializeCommands();
+        initializeDebuggers();
+        initializeHashingFunctions();
+        initializeSchemes();
+        repairDirectories();
     }
 
     /**
@@ -213,30 +235,23 @@ public final class Quark {
      * @since Quark 1.1
      */
     public static void run(String... args) {
+        if (!isInitialized) {
+            initialize();
+        }
+
         if (isRun) {
             return;
         }
 
-        initializeDefaultExceptionHandler();
-        initializeConfiguration();
-        initializeTypes();
-        initializeModifiers();
-        initializeConstructors();
-        initializeInstructions();
-        initializeCommands();
-        initializeDebuggers();
-        initializeHashingFunctions();
+        isRun = true;
+
         initializeServer();
-        initializeSchemes();
         initializeParallelServiceRunner();
-        repairDirectories();
         loadPlugins();
         enablePlugins();
         clearMavenOutput();
         runArgsCommands(args);
         runServiceRunner();
-
-        isRun = true;
     }
 
     public static void clearMavenOutput() {
@@ -1213,5 +1228,9 @@ public final class Quark {
 
     public static void exit() {
         System.exit(ExitCodes.OK);
+    }
+
+    public static boolean isNotRun() {
+        return !isRun;
     }
 }
