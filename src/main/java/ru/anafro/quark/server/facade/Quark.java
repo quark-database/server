@@ -164,6 +164,7 @@ public final class Quark {
      */
     private static final TableSchemeList schemes = new TableSchemeList();
     private static final HashMap<String, Entity> variables = new HashMap<>();
+    private static final boolean isReady = false;
     private static boolean isInitialized = false;
     private static Configuration configuration;
     /**
@@ -184,7 +185,6 @@ public final class Quark {
      * @since Quark 1.1
      */
     private static boolean isRun = false;
-    private static final boolean isReady = false;
 
     static {
         initialize();
@@ -217,6 +217,7 @@ public final class Quark {
         initializeCommands();
         initializeDebuggers();
         initializeHashingFunctions();
+        initializeServer();
         initializeSchemes();
         repairDirectories();
     }
@@ -245,7 +246,6 @@ public final class Quark {
 
         isRun = true;
 
-        initializeServer();
         initializeParallelServiceRunner();
         loadPlugins();
         enablePlugins();
