@@ -85,7 +85,7 @@
                 <version>3.2.3</version>
                 <configuration>
                     <workingDirectory>/test</workingDirectory>
-                    <skip>true</skip>
+                    <!--                    <skip>true</skip>-->
                     <useFile>false</useFile>
                     <argLine>--enable-preview</argLine>
                 </configuration>
