@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.networking;
 
-import ru.anafro.quark.server.language.lexer.InstructionLexer;
-import ru.anafro.quark.server.language.parser.InstructionParser;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
+import ru.anafro.quark.server.language.lexer.InstructionLexer;
+import ru.anafro.quark.server.language.parser.InstructionParser;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.networking.middlewares.Middleware;
 import ru.anafro.quark.server.networking.middlewares.QueryMiddleware;
@@ -26,7 +26,7 @@ public final class Server implements Runnable {
     private final InstructionParser parser = new InstructionParser();
     private final ArrayList<Middleware> middlewares = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
-    private volatile boolean isRunning = false;
+    private volatile boolean isRunning = true;
     private ServerSocket socket;
 
     public Server() {
