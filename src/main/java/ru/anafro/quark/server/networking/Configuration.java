@@ -2,11 +2,7 @@ package ru.anafro.quark.server.networking;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import ru.anafro.quark.server.console.Console;
-import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.files.JsonFile;
-
-import static ru.anafro.quark.server.utils.time.TimeSpan.seconds;
 
 public class Configuration {
     @SerializedName("stringHashingFunction")
@@ -29,14 +25,6 @@ public class Configuration {
 
             return configuration;
         } catch (Exception exception) {
-            Quark.error(STR."""
-                The \{file.getName()} contains a JSON error:
-                <red>\{exception.getMessage()}</>
-
-                """);
-
-            Console.sleep("The server will start with default configuration...", seconds(15));
-
             var configuration = new Configuration();
             configuration.setFile(file);
 
