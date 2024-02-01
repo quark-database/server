@@ -42,4 +42,8 @@ public final class Collections {
     public static <T> String join(Iterable<? extends T> iterable, Function<T, String> valueToString, String delimiter) {
         return StreamSupport.stream(iterable.spliterator(), false).map(valueToString).collect(Collectors.joining(delimiter));
     }
+
+    public static <T> boolean equalsIgnoreOrder(Collection<T> first, Collection<T> second) {
+        return first.size() == second.size() && first.containsAll(second) && second.containsAll(first);
+    }
 }
