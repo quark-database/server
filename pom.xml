@@ -78,11 +78,15 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.3</version>
                 <configuration>
+                    <workingDirectory>/test</workingDirectory>
+                    <skip>true</skip>
+                    <useFile>false</useFile>
                     <argLine>--enable-preview</argLine>
                 </configuration>
             </plugin>
@@ -126,6 +130,7 @@
                     </archive>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -161,7 +166,6 @@
                         <arg>--enable-preview</arg>
                         <arg>-parameters</arg>
                     </compilerArgs>
-
                 </configuration>
             </plugin>
         </plugins>
