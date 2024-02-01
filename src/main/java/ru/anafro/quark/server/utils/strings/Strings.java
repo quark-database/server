@@ -22,7 +22,6 @@ public final class Strings {
      * called, because "Strings" is a utility class. Use static methods declared inside.
      *
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
-     * @see Wrapper
      * @since Quark 1.1
      */
     private Strings() {

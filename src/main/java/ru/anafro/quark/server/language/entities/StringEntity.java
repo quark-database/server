@@ -3,8 +3,6 @@ package ru.anafro.quark.server.language.entities;
 import ru.anafro.quark.server.database.data.parser.RecordCharacterEscapeService;
 import ru.anafro.quark.server.facade.Quark;
 
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
-
 public class StringEntity extends Entity {
     private final String value;
 
@@ -25,7 +23,7 @@ public class StringEntity extends Entity {
 
     @Override
     public String toInstructionForm() {
-        return quoted(new RecordCharacterEscapeService().wrapEscapableCharacters(value));
+        return STR."\"\{new RecordCharacterEscapeService().wrapEscapableCharacters(value)}\"";
     }
 
     @Override
@@ -35,7 +33,7 @@ public class StringEntity extends Entity {
 
     @Override
     public String toRecordForm() {
-        return quoted(new RecordCharacterEscapeService().wrapEscapableCharacters(value));
+        return toInstructionForm();
     }
 
     @Override

@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
-
 public class InstructionArguments implements Iterable<InstructionArgument> {
     private final ArrayList<InstructionArgument> arguments = Lists.empty();
 
@@ -44,7 +42,7 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
 
     public <T extends Entity> T get(Class<T> type, String argumentName) {
         if (doesntHave(argumentName)) {
-            throw new InstructionSyntaxException(this, "Argument %s is requested, but wasn't provided".formatted(quoted(argumentName)), "Please, add this argument when you use the instruction");
+            throw new InstructionSyntaxException(this, STR."Argument '\{argumentName}' is requested, but wasn't provided", "Please, add this argument when you use the instruction");
         }
 
         return type.cast(getArgument(argumentName).value());

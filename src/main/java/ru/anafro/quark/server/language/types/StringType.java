@@ -3,8 +3,6 @@ package ru.anafro.quark.server.language.types;
 import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.language.entities.StringEntity;
 
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
-
 public class StringType extends EntityType<StringEntity> {
     public StringType() {
         super("str", String.class, StringEntity.class, "float", "boolean", "long", "double", "int", "date");
@@ -17,7 +15,7 @@ public class StringType extends EntityType<StringEntity> {
 
     @Override
     public String toInstructionForm(Entity entity) {
-        return quoted(((StringEntity) entity).getValue());
+        return entity.toInstructionForm();
     }
 
     @Override

@@ -11,8 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.anafro.quark.server.utils.strings.Wrapper.quoted;
-
 public class InstructionEntityConstructorArguments implements Iterable<InstructionEntityConstructorArgument> {
     private final List<InstructionEntityConstructorArgument> arguments;
 
@@ -58,7 +56,7 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
 
     public void add(InstructionEntityConstructorArgument argument) {
         if (has(argument.getName())) {
-            throw new InstructionParserException("An argument with name %s already exists".formatted(quoted(argument.getName())));
+            throw new InstructionParserException(STR."An argument with name '\{argument.getName()}' already exists");
         }
 
         arguments.add(argument);
@@ -77,7 +75,7 @@ public class InstructionEntityConstructorArguments implements Iterable<Instructi
 
     private <T extends Entity> T get(Class<T> type, String argumentName) {
         if (doesntHave(argumentName)) {
-            throw new DatabaseException("Requesting an argument %s, which does not exist".formatted(quoted(argumentName))); // TODO: Make a new exception type
+            throw new DatabaseException(STR."Requesting an argument '\{argumentName}', which does not exist"); // TODO: Make a new exception type
         }
 
         return type.cast(getArgument(argumentName).getEntity());
