@@ -435,4 +435,17 @@ public class Table implements Iterable<TableRecord> {
         header.swapColumns(firstColumnName, secondColumnName);
         header.save();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return Objects.equals(name, table.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

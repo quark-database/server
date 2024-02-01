@@ -109,4 +109,17 @@ public class Database {
     public Table table(String scheduledCommands) {
         return getTable(scheduledCommands);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Database database = (Database) o;
+        return Objects.equals(directory.getName(), database.getDirectory().getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(directory.getName());
+    }
 }
