@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class Table implements Iterable<TableRecord> {
     private static final DatabasesDirectory databasesDirectory = DatabasesDirectory.getInstance();
@@ -102,6 +104,10 @@ public class Table implements Iterable<TableRecord> {
         }
 
         byName(tableName).delete();
+    }
+
+    public static Table create(String tableName, ColumnDescription... descriptions) {
+        return create(new TableName(tableName), list(descriptions));
     }
 
     public static Table create(TableName tableName, List<ColumnDescription> columns) {
