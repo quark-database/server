@@ -20,10 +20,10 @@ public final class Exceptions {
         return stringWriter.toString();
     }
 
-    public static String getPrettyTrace(Throwable throwable) {
+    public static String makePrettyTrace(StackTraceElement[] stackTrace) {
         var trace = new TextBuffer();
 
-        for (var line : throwable.getStackTrace()) {
+        for (var line : stackTrace) {
             if (Classes.isQuarkPackageName(line.getClassName())) {
                 trace.appendLine(STR."<blue>\{Classes.cutPackageName(line.getClassName())}</><white>.<salad>\{line.getMethodName()}<white>(), line \{line.getLineNumber()}</>");
             } else {
@@ -32,6 +32,10 @@ public final class Exceptions {
         }
 
         return trace.getContent();
+    }
+
+    public static String getPrettyTrace(Throwable throwable) {
+        return makePrettyTrace(throwable.getStackTrace());
     }
 
     public static String format(Throwable throwable) {
