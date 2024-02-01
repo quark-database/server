@@ -6,9 +6,7 @@ import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.logging.Logger;
-import ru.anafro.quark.server.multithreading.Threads;
 import ru.anafro.quark.server.utils.strings.Strings;
-import ru.anafro.quark.server.utils.time.TimeSpan;
 import ru.anafro.quark.server.utils.types.classes.Enums;
 
 import java.util.Optional;
@@ -27,14 +25,6 @@ import static ru.anafro.quark.server.logging.LoggingLevel.INFO;
  * @since Quark 1.1
  */
 public class CommandLoop implements Runnable {
-
-    /**
-     * The delay in seconds to wait before running command loops.
-     *
-     * @since Quark 1.1
-     */
-    private static final TimeSpan DELAY_BEFORE_RUNNING = TimeSpan.milliseconds(600);
-
     /**
      * The parser that handles commands received.
      *
@@ -45,7 +35,7 @@ public class CommandLoop implements Runnable {
     private final Logger logger = new Logger(getClass());
     private String failedCommand = null;
     private CommandArguments failedArguments = null;
-    private boolean isRunning = false;
+    private boolean isRunning = true;
     private boolean isCleanModeOn = false;
 
     /**
@@ -65,12 +55,12 @@ public class CommandLoop implements Runnable {
      * @since Quark 1.1
      */
     @Override
-    public void run() {
-        Threads.sleepFor(DELAY_BEFORE_RUNNING);
+    public synchronized void run() {
+        while (Quark.server().isClosed()) {
+            Thread.yield();
+        }
+
         Greeter.greet();
-
-        this.isRunning = true;
-
         while (this.isRunning) {
             var prompt = Console.prompt("Quark").transform(this::preparePrompt);
 
