@@ -7,6 +7,7 @@ import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.utils.files.Directory;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Database {
     private static final String SYSTEM_DATABASE_NAME = Quark.NAME;
@@ -61,7 +62,7 @@ public class Database {
         return new Table(this.getName(), tableName);
     }
 
-    public List<Table> allTables() {
+    public List<Table> tables() {
         return DatabasesDirectory
                 .getInstance()
                 .getDatabaseDirectory(this.getName())
@@ -103,11 +104,11 @@ public class Database {
     }
 
     public void clear() {
-        allTables().forEach(Table::delete);
+        tables().forEach(Table::delete);
     }
 
-    public Table table(String scheduledCommands) {
-        return getTable(scheduledCommands);
+    public Table table(String tableName) {
+        return getTable(tableName);
     }
 
     @Override
