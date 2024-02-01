@@ -79,7 +79,7 @@ public class ListTablesInstruction extends Instruction {
         var database = arguments.getDatabase();
 
         result.header("table name");
-        for (var table : database.allTables()) {
+        for (var table : database.tables()) {
             result.row(table.getName());
         }
 
