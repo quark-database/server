@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.database.data.files;
 
 import ru.anafro.quark.server.database.data.ColumnDescription;
+import ru.anafro.quark.server.database.data.RecordField;
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.data.exceptions.*;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static ru.anafro.quark.server.language.Expressions.eval;
 
@@ -86,6 +88,41 @@ public class TableHeader {
                     throw new ColumnModifierIsNotApplicableForProvidedTypeException(modifierEntity, fieldValue);
                 }
             }
+        }
+    }
+
+    public void prepareRecord(TableRecord record) {
+        var fields = record.getFields();
+
+        if (fields.size() != columns.size() - columns.stream().filter(ColumnDescription::isGenerated).count()) {
+            throw new RecordFieldCountMismatchesTableHeaderException(table, fields.size());
+        }
+
+        var fieldIndex = new AtomicInteger();
+        for (var column : columns) {
+            column.tryGetGeneratingModifier().ifPresentOrElse(entity -> {
+                var field = new RecordField(column.name(), null);
+                var modifier = entity.getModifier();
+                var arguments = entity.getModifierArguments();
+
+                modifier.prepareField(table, field, arguments);
+
+                fields.add(field);
+            }, () -> {
+                var field = fields.get(fieldIndex.getAndIncrement());
+                var value = field.getEntity();
+                var columnType = column.type();
+
+                if (columnType.canBeCastedFrom(value.getType())) {
+                    value = columnType.cast(value);
+                }
+
+                if (value.doesntHaveType(columnType)) {
+                    throw new RecordTypeMismatchesTableHeaderException(table, column, value);
+                }
+
+                record.add(column.name(), value);
+            });
         }
     }
 

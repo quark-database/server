@@ -14,7 +14,7 @@ public record TableRecordChanger(String column, String lambda) implements Record
     @Override
     public Void apply(TableRecord record) {
         if (record.doesntHaveField(column)) {
-            throw new TableRecordChangerTriesToChangeFieldThatDoesNotExistException(record.getTable(), this);
+            throw new TableRecordChangerTriesToChangeFieldThatDoesNotExistException(this);
         }
 
         var filledLambda = fillLambda(record);
@@ -25,7 +25,7 @@ public record TableRecordChanger(String column, String lambda) implements Record
         }
 
         if (lambdaResult.doesntHaveType(record.getField(column).getEntity().getType()) || record.getField(column).getEntity().getType().canBeCastedFrom(lambdaResult.getType())) {
-            throw new TableRecordChangerWrongTypeException(record.getTable(), this, lambdaResult);
+            throw new TableRecordChangerWrongTypeException(this, lambdaResult);
         }
 
         record.getField(column).set(lambdaResult);

@@ -1,8 +1,6 @@
 package ru.anafro.quark.server.database.data;
 
 import org.jetbrains.annotations.NotNull;
-import ru.anafro.quark.server.database.data.exceptions.RecordFieldCountMismatchesTableHeaderException;
-import ru.anafro.quark.server.database.data.exceptions.RecordTypeMismatchesTableHeaderException;
 import ru.anafro.quark.server.database.views.TableViewRow;
 import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.language.entities.ListEntity;
@@ -11,50 +9,15 @@ import ru.anafro.quark.server.utils.collections.Lists;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static ru.anafro.quark.server.utils.objects.Nulls.nullByDefault;
 
 public class TableRecord implements Iterable<RecordField> {
-    private final Table table;
     private final ArrayList<RecordField> fields;
 
     public TableRecord(Table table, ArrayList<Entity> fields) {
-        this.table = table;
         this.fields = Lists.empty();
-
-        var columns = table.columns();
-
-        if (fields.size() != columns.size() - columns.stream().filter(ColumnDescription::isGenerated).count()) {
-            throw new RecordFieldCountMismatchesTableHeaderException(table, fields.size());
-        }
-
-        var fieldIndex = new AtomicInteger();
-        for (var column : columns) {
-            column.tryGetGeneratingModifier().ifPresentOrElse(entity -> {
-                var field = new RecordField(column.name(), null);
-                var modifier = entity.getModifier();
-                var arguments = entity.getModifierArguments();
-
-                modifier.prepareField(table, field, arguments);
-
-                this.fields.add(field);
-            }, () -> {
-                var value = fields.get(fieldIndex.getAndIncrement());
-                var columnType = column.type();
-
-                if (columnType.canBeCastedFrom(value.getType())) {
-                    value = columnType.cast(value);
-                }
-
-                if (value.doesntHaveType(columnType)) {
-                    throw new RecordTypeMismatchesTableHeaderException(table, column, value);
-                }
-
-                this.fields.add(new RecordField(column.name(), value));
-            });
-        }
     }
 
     public TableRecord(Table table, Object... fields) {
@@ -93,10 +56,6 @@ public class TableRecord implements Iterable<RecordField> {
         return getField(name) != null;
     }
 
-    public Table getTable() {
-        return table;
-    }
-
     public ArrayList<RecordField> getFields() {
         return fields;
     }
@@ -129,6 +88,10 @@ public class TableRecord implements Iterable<RecordField> {
 
     public TableViewRow toTableViewRow() {
         return new TableViewRow(fields.toArray());
+    }
+
+    public void add(String columnName, Entity value) {
+        add(new RecordField(columnName, value));
     }
 
     public void removeField(String columnName) {

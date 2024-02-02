@@ -1,14 +1,18 @@
 package ru.anafro.quark.server.database.data;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.anafro.quark.server.database.data.exceptions.DatabaseExistsException;
+import ru.anafro.quark.server.database.data.exceptions.DatabaseNotFoundException;
 import ru.anafro.quark.server.utils.collections.Collections;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.anafro.quark.server.database.data.ColumnDescription.column;
 import static ru.anafro.quark.server.database.data.Database.database;
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
+import static ru.anafro.quark.server.database.data.Table.table;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 class DatabaseTest {
@@ -20,12 +24,18 @@ class DatabaseTest {
         database("Existing Database 3").delete();
         database("Existing Database 4").delete();
         database("Existing Database 5").delete();
+        database("Existing Database 6").delete();
+        database("Existing Database 6 (Copy)").delete();
+        database("Existing Database 7").delete();
+        database("Existing Database 7 (Copy)").delete();
         database("Not-Existing Database").delete();
         database("Not-Existing Database 2").delete();
         database("Not-Existing Database 3").delete();
         database("Not-Existing Database 4").delete();
         database("Not-Existing Database 5").delete();
         database("Not-Existing Database 6").delete();
+        database("Not-Existing Database 7").delete();
+        database("Not-Existing Database 7 (Copy)").delete();
     }
 
     @Test
@@ -173,5 +183,64 @@ class DatabaseTest {
                 database("Existing Database 5").table("Fourth Table")
         );
         assertTrue(Collections.equalsIgnoreOrder(expectedTables, actualTables));
+    }
+
+
+    @Test
+    @DisplayName("Should copy empty database")
+    public void shouldCopyEmptyDatabase() {
+        // Given
+        Database.create("Existing Database 6");
+
+        // When
+        database("Existing Database 6").copy("Existing Database 6 (Copy)");
+
+        // Then
+        assertTrue(Database.exists("Copied Database 6 (Copy)"));
+        assertTrue(database("Copied Database 6 (Copy)").tables().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should copy database with tables")
+    public void shouldCopyDatabaseWithTables() {
+        // Given
+        Database.create("Existing Database 7");
+        Table.create("Existing Database 7.A");
+        Table.create("Existing Database 7.B", column("a", "str"));
+        Table.create("Existing Database 7.C", column("a", "str"));
+        Table.create("Existing Database 7.D", column("a", "str"), column("b", "int"));
+        table("Existing Database 7.C").insert("ABC");
+        table("Existing Database 7.D").insert("ABC", 123);
+
+        // When
+        database("Existing Database 7").copy("Existing Database 7 (Copy)");
+
+        // Then
+        assertTrue(Database.exists("Existing Database 7 (Copy)"));
+        assertTrue(Table.exists("Existing Database 7 (Copy).A"));
+        assertTrue(table("Existing Database 7 (Copy).A").columns().isEmpty());
+
+        assertTrue(Table.exists("Existing Database 7 (Copy).B"));
+        assertEquals(table("Existing Database 7 (Copy).B").columns(), list(column("a", "str")));
+
+        assertTrue(Table.exists("Existing Database 7 (Copy).C"));
+        assertEquals(table("Existing Database 7 (Copy).C").columns(), list(column("a", "str")));
+
+        assertTrue(Table.exists("Existing Database 7 (Copy).D"));
+        assertEquals(table("Existing Database 7 (Copy).D").columns(), list(column("a", "str"), column("b", "int")));
+        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).D").all(), list(record())));
+    }
+
+    @Test
+    @DisplayName("Should throw DatabaseNotFoundException on database copy which does not exist")
+    public void shouldThrowDatabaseNotFoundExceptionOnDatabaseCopyWhichDoesNotExist() {
+        // When
+        try {
+            database("Not-Existing Database 7").copy("Not-Existing Database 7 (Copy)");
+
+            // Then
+            fail();
+        } catch (DatabaseNotFoundException _) {
+        }
     }
 }

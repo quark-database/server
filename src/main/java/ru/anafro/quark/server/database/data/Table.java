@@ -178,6 +178,7 @@ public class Table implements Iterable<TableRecord> {
 
     public void insert(TableRecord record) {
         header.ensureRecordIsValid(record);
+        header.prepareRecord(record);
         records.insert(record);
     }
 
