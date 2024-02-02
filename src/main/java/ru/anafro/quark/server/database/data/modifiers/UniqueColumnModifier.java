@@ -24,7 +24,7 @@ public class UniqueColumnModifier extends ColumnModifier {
     public boolean isFieldValid(Table table, RecordField field, InstructionEntityConstructorArguments arguments) {
         var valueAlreadyExists = new AtomicBoolean(true);
 
-        table.selectAll().forEach(record -> {
+        table.all().forEach(record -> {
             if (record.getField(field.getColumnName()).getEntity().equals(field.getEntity())) {
                 valueAlreadyExists.set(false);
             }

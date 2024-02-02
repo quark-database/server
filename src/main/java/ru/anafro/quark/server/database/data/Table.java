@@ -192,12 +192,12 @@ public class Table implements Iterable<TableRecord> {
         return loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.NO_FURTHER_MANIPULATIONS));
     }
 
-    public RecordCollection selectAll() {
+    public RecordCollection all() {
         return loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
     }
 
     public RecordCollection select(TableRecordSelector selector, RecordIterationLimiter limiter) {
-        return selectAll().select(selector, limiter);
+        return all().select(selector, limiter);
     }
 
     public TableViewHeader createViewHeader() {
@@ -264,7 +264,7 @@ public class Table implements Iterable<TableRecord> {
     @NotNull
     @Override
     public Iterator<TableRecord> iterator() {
-        return selectAll().iterator();
+        return all().iterator();
     }
 
     public void store(RecordCollection collection) {
@@ -280,7 +280,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void addColumn(ColumnDescription description, RecordFieldGenerator generator) {
-        var records = selectAll();
+        var records = all();
         var columnName = description.name();
         var columnType = description.type();
 
@@ -333,7 +333,7 @@ public class Table implements Iterable<TableRecord> {
             throw new ColumnNotFoundException(this, changer.column());
         }
 
-        var records = selectAll();
+        var records = all();
 
         for (var record : records) {
             if (selector.selects(record)) {
@@ -346,7 +346,7 @@ public class Table implements Iterable<TableRecord> {
 
     public int count(TableRecordSelector selector) {
         // TODO: selectAll.count()
-        return selectAll().select(selector, RecordIterationLimiter.UNLIMITED).count();
+        return all().select(selector, RecordIterationLimiter.UNLIMITED).count();
     }
 
     public void deleteColumn(String columnName) {
@@ -354,7 +354,7 @@ public class Table implements Iterable<TableRecord> {
             throw new QueryException(STR."Table '\{name}' does not contain column '\{columnName}'.");
         }
 
-        var records = selectAll();
+        var records = all();
         records.forEach(record -> record.removeField(columnName));
 
         columns().removeIf(column -> column.name().equals(columnName));
@@ -367,7 +367,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void delete(RecordLambda<Boolean> selector, RecordIterationLimiter limiter) {
-        var records = selectAll();
+        var records = all();
         records.remove(selector, limiter);
 
         store(records);
@@ -426,7 +426,7 @@ public class Table implements Iterable<TableRecord> {
             ));
         }
 
-        var records = selectAll();
+        var records = all();
 
         for (var record : records) {
             record.reorderFields(order);
