@@ -3,6 +3,7 @@ package ru.anafro.quark.server.database.data;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.entities.ColumnModifierEntity;
 import ru.anafro.quark.server.language.types.EntityType;
+import ru.anafro.quark.server.utils.collections.Collections;
 
 import java.util.List;
 import java.util.Objects;
@@ -84,7 +85,7 @@ public final class ColumnDescription {
         var that = (ColumnDescription) obj;
         return Objects.equals(this.name, that.name) &&
                 Objects.equals(this.type, that.type) &&
-                Objects.equals(this.modifiers, that.modifiers);
+                Collections.equalsIgnoreOrder(this.modifiers, that.modifiers);
     }
 
     @Override
@@ -99,5 +100,4 @@ public final class ColumnDescription {
                 "type=" + type + ", " +
                 "modifiers=" + modifiers + ']';
     }
-
 }
