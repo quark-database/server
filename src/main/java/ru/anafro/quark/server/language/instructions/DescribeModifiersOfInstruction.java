@@ -29,7 +29,7 @@ public class DescribeModifiersOfInstruction extends Instruction {
 
         result.header("column name", "modifier name");
 
-        for (var column : table.getColumns()) {
+        for (var column : table.columns()) {
             for (var entity : column.modifiers()) {
                 var columnName = column.name();
                 var modifierName = entity.getModifier().getName();

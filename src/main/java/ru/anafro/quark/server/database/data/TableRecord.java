@@ -24,7 +24,7 @@ public class TableRecord implements Iterable<RecordField> {
         this.table = table;
         this.fields = Lists.empty();
 
-        var columns = table.getColumns();
+        var columns = table.columns();
 
         if (fields.size() != columns.size() - columns.stream().filter(ColumnDescription::isGenerated).count()) {
             throw new RecordFieldCountMismatchesTableHeaderException(table, fields.size());

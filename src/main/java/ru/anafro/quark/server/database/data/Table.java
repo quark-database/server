@@ -257,7 +257,7 @@ public class Table implements Iterable<TableRecord> {
         return !hasColumn(columnName);
     }
 
-    public List<ColumnDescription> getColumns() {
+    public List<ColumnDescription> columns() {
         return header.getColumns();
     }
 
@@ -357,7 +357,7 @@ public class Table implements Iterable<TableRecord> {
         var records = selectAll();
         records.forEach(record -> record.removeField(columnName));
 
-        getColumns().removeIf(column -> column.name().equals(columnName));
+        columns().removeIf(column -> column.name().equals(columnName));
         saveHeader();
         store(records);
     }

@@ -80,7 +80,7 @@ public class ListColumnsInstruction extends Instruction {
         var table = arguments.getTable();
 
         result.header("column name");
-        for (var column : table.getColumns()) {
+        for (var column : table.columns()) {
             result.row(column.name());
         }
 
