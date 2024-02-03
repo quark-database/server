@@ -6,6 +6,7 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
@@ -95,5 +96,11 @@ public final class Lists {
 
     public static <T, K> int indexOfKey(List<T> list, K key, Function<T, ?> keyGetter) {
         return list.stream().map(keyGetter).toList().indexOf(key);
+    }
+
+    public static <A, B> void forEachZipped(List<A> first, List<B> second, BiConsumer<A, B> action) {
+        for (int i = 0; i < Math.min(first.size(), second.size()); i++) {
+            action.accept(first.get(i), second.get(i));
+        }
     }
 }
