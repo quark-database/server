@@ -1,9 +1,9 @@
 package ru.anafro.quark.server.database.data;
 
 import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.views.TableViewRow;
 import ru.anafro.quark.server.language.entities.Entity;
-import ru.anafro.quark.server.language.entities.ListEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
@@ -11,17 +11,35 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.anafro.quark.server.utils.collections.Collections.emptyList;
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 import static ru.anafro.quark.server.utils.objects.Nulls.nullByDefault;
 
 public class TableRecord implements Iterable<RecordField> {
-    private final ArrayList<RecordField> fields;
+    private final List<RecordField> fields;
 
-    public TableRecord(Table table, ArrayList<Entity> fields) {
-        this.fields = Lists.empty();
+    public TableRecord(List<String> columnNames, List<Entity> fields) {
+        this.fields = emptyList();
+
+        Lists.forEachZipped(columnNames, fields, (columnName, field) -> {
+            this.fields.add(new RecordField(columnName, field));
+        });
     }
 
-    public TableRecord(Table table, Object... fields) {
-        this(table, ListEntity.of(fields).getValue());
+    public TableRecord(List<RecordField> fields) {
+        this.fields = fields;
+    }
+
+    public TableRecord(TableHeader header, List<Entity> fields) {
+        this(header.getColumns().stream().map(ColumnDescription::name).toList(), fields);
+    }
+
+    public static TableRecord record(RecordField... fields) {
+        return new TableRecord(list(fields));
+    }
+
+    public static TableRecord record(TableHeader header, Object... fields) {
+        return new TableRecord(header, Entity.wrapMany(fields));
     }
 
     public RecordField getField(String name) {
@@ -56,7 +74,7 @@ public class TableRecord implements Iterable<RecordField> {
         return getField(name) != null;
     }
 
-    public ArrayList<RecordField> getFields() {
+    public List<RecordField> getFields() {
         return fields;
     }
 

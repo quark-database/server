@@ -193,7 +193,7 @@ public class InstructionArguments implements Iterable<InstructionArgument> {
     }
 
     public TableRecord getRecord(Table table) {
-        return new TableRecord(table, new ListEntity("any", this.get(RecordEntity.class, "record").getValues()));
+        return new TableRecord(table.getHeader(), this.get(RecordEntity.class, "record").getValues());
     }
 
     public Stream<InstructionArgument> stream() {

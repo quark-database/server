@@ -51,7 +51,7 @@ public record UntypedTableRecord(ArrayList<String> values) implements Iterable<S
             fields.add(value);
         }
 
-        return new TableRecord(header.getTable(), fields);
+        return new TableRecord(header, fields);
     }
 
     public String valueAt(int index) {

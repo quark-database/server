@@ -134,7 +134,7 @@ public class Table implements Iterable<TableRecord> {
         var table = create(tableName, columns);
 
         records.stream()
-                .map(record -> new TableRecord(table, record))
+                .map(record -> new TableRecord(table.getHeader(), record.getValues()))
                 .forEach(collection::add);
 
         table.store(collection);
@@ -173,12 +173,10 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void insert(Object... recordEntities) {
-        insert(new TableRecord(this, recordEntities));
+        insert(TableRecord.record(header, recordEntities));
     }
 
     public void insert(TableRecord record) {
-        header.ensureRecordIsValid(record);
-        header.prepareRecord(record);
         records.insert(record);
     }
 

@@ -107,7 +107,7 @@ public class TableHeader {
 
                 modifier.prepareField(table, field, arguments);
 
-                fields.add(field);
+                record.add(field);
             }, () -> {
                 var field = fields.get(fieldIndex.getAndIncrement());
                 var value = field.getEntity();
@@ -121,7 +121,7 @@ public class TableHeader {
                     throw new RecordTypeMismatchesTableHeaderException(table, column, value);
                 }
 
-                record.add(column.name(), value);
+                field.set(value);
             });
         }
     }

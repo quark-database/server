@@ -12,6 +12,10 @@ public class RecordField {
         this.value = value;
     }
 
+    public static RecordField field(String columnName, Object value) {
+        return new RecordField(columnName, Entity.wrap(value));
+    }
+
     public static RecordField empty(String columnName) {
         return new RecordField(columnName, new NullEntity());
     }

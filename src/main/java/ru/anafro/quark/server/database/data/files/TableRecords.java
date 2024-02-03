@@ -57,6 +57,8 @@ public class TableRecords implements Iterable<TableRecord> {
     }
 
     public void insert(TableRecord record) {
+        table.getHeader().ensureRecordIsValid(record);
+        table.getHeader().prepareRecord(record);
         try (var bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.newLine();
             bufferedWriter.write(record.toTableLine());

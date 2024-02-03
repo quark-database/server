@@ -6,6 +6,7 @@ import ru.anafro.quark.server.language.entities.exceptions.InstructionEntityCast
 import ru.anafro.quark.server.language.types.EntityType;
 import ru.anafro.quark.server.utils.patterns.exceptions.ObjectIsMissingInRegistryException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +31,10 @@ public abstract class Entity implements Comparable<Entity> {
         }
 
         return null;
+    }
+
+    public static <T> List<Entity> wrapMany(T[] objects) {
+        return Arrays.stream(objects).map(Entity::wrap).toList();
     }
 
     public <T> T valueAs(Class<T> clazz) {
