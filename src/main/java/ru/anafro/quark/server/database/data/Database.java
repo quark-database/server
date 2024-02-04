@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
 import ru.anafro.quark.server.database.data.exceptions.DatabaseExistsException;
-import ru.anafro.quark.server.database.exceptions.QueryException;
+import ru.anafro.quark.server.database.data.exceptions.DatabaseNotFoundException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.utils.files.Directory;
@@ -50,6 +50,8 @@ public class Database {
     }
 
     public static Database create(String databaseName) {
+
+
         if (exists(databaseName)) {
             throw new DatabaseExistsException(databaseName);
         }
@@ -85,8 +87,12 @@ public class Database {
     }
 
     public Database copy(String destinationName) {
+        if (doesntExist()) {
+            throw new DatabaseNotFoundException(getName());
+        }
+
         if (exists(destinationName)) {
-            throw new QueryException(STR."Destination database '\{destinationName}' already exists.");
+            throw new DatabaseExistsException(destinationName);
         }
 
         var sibling = directory.getSibling(destinationName);
@@ -109,6 +115,10 @@ public class Database {
 
     public Table table(String tableName) {
         return getTable(tableName);
+    }
+
+    public boolean doesntExist() {
+        return directory.doesntExist();
     }
 
     @Override
