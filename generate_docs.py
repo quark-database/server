@@ -9,6 +9,7 @@ MD_DOCS_TAG = "<!-- Quark:Docs -->"
 
 
 def generate_documentation():
+    subprocess.Popen(["ls", "-d", "./"])
     quark_server = subprocess.Popen(["java", "--enable-preview", "-jar", QUARK_SERVER_PATH])
     time.sleep(5)
     quark_server.terminate()
