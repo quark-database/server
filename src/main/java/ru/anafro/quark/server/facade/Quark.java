@@ -567,6 +567,10 @@ public final class Quark {
     }
 
     private static void initializeDebuggers() {
+        if (!Debugger.isSupported()) {
+            return;
+        }
+
         debuggers.add(
                 new InstructionLexerDebugger(),
                 new InstructionParserDebugger(),

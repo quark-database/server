@@ -9,9 +9,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Debugger extends JFrame {
+public abstract class Debugger {
     private static final int EXTRA_FRAME_HEIGHT = 40;
     protected final Logger logger = new Logger(getClass());
+    protected final JFrame frame;
     protected final Panel panel;
     protected final String name;
 
@@ -19,23 +20,26 @@ public abstract class Debugger extends JFrame {
     public Debugger(String title, String name, int width, int height) {
         this.name = name;
         this.panel = new Panel(new Rectangle(0, 0, width, height));
+        this.frame = new JFrame(STR."\{title} - Quark Server (Debug)");
 
-        setTitle(STR."\{title} - Quark Server (Debug)");
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(width, height + EXTRA_FRAME_HEIGHT));
+        frame.setResizable(false);
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
 
-        setPreferredSize(new Dimension(width, height + EXTRA_FRAME_HEIGHT));
-        setResizable(false);
-        setContentPane(panel);
-        pack();
-        setLocationRelativeTo(null);
-
-        String logoImagePath = AssetDirectory.getInstance().getAbsoluteFilePath("Icons", "Logo.png");
+        var logoImagePath = AssetDirectory.getInstance().getAbsoluteFilePath("Icons", "Logo.png");
 
         try {
-            setIconImage(ImageIO.read(new File(logoImagePath)));
+            frame.setIconImage(ImageIO.read(new File(logoImagePath)));
         } catch (IOException exception) {
             logger.debug(STR."Can't find the Quark logo at path \{logoImagePath}.");
         }
+    }
+
+    public static boolean isSupported() {
+        return !GraphicsEnvironment.isHeadless();
     }
 
     public void add(JComponent component) {
@@ -43,24 +47,23 @@ public abstract class Debugger extends JFrame {
     }
 
     public void open() {
-        if (isVisible()) {
+        if (frame.isVisible()) {
             pullToTop();
         } else {
-            setVisible(true);
+            frame.setVisible(true);
         }
 
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
     public void pullToTop() {
         EventQueue.invokeLater(() -> {
-            setState(NORMAL);
-            toFront();
-            repaint();
+            frame.setState(Frame.NORMAL);
+            frame.toFront();
+            frame.repaint();
         });
     }
 }
