@@ -23,7 +23,7 @@ def main():
     with open(README_TEMPLATE_PATH, 'r') as readme_template:
         readme_template_content = readme_template.read()
         readme_template_content = readme_template_content.replace(
-            MD_DOCS_TAG, '*It works!*')
+            MD_DOCS_TAG, documentation_content)
 
     with open(README_PATH, 'w') as readme:
         readme.write(readme_template_content)
