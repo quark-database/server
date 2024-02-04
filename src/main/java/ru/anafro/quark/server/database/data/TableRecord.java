@@ -9,6 +9,7 @@ import ru.anafro.quark.server.utils.collections.Lists;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.anafro.quark.server.utils.collections.Collections.emptyList;
@@ -130,5 +131,18 @@ public class TableRecord implements Iterable<RecordField> {
     @Override
     public String toString() {
         return Lists.join(fields, field -> field.getEntity().toInstructionForm());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TableRecord that = (TableRecord) o;
+        return Objects.equals(fields, that.fields);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fields);
     }
 }
