@@ -10,6 +10,7 @@ name: Java CI with Maven
 
 permissions:
   checks: write
+  contents: write
 
 on:
   push:
@@ -42,6 +43,7 @@ jobs:
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           generate-branches-badge: true
           jacoco-csv-file: build/site/jacoco-ut/jacoco.csv
 
