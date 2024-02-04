@@ -17,10 +17,7 @@ import ru.anafro.quark.server.language.entities.*;
 import ru.anafro.quark.server.language.exceptions.GeneratedValueMismatchesColumnTypeException;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.files.Directory;
-import ru.anafro.quark.server.utils.files.exceptions.FileException;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +28,6 @@ import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class Table implements Iterable<TableRecord> {
     private static final DatabasesDirectory databasesDirectory = DatabasesDirectory.getInstance();
-    private final String name;
     private final Database database;
     private final Directory directory;
     private final TableHeader header;
@@ -45,9 +41,8 @@ public class Table implements Iterable<TableRecord> {
             throw new TableNotFoundException(fullName);
         }
 
-        this.name = tableName;
         this.database = Database.byName(databaseName);
-        this.directory = databasesDirectory.getTableDirectory(database.getName(), this.name);
+        this.directory = databasesDirectory.getTableDirectory(database.getName(), tableName);
         this.header = new TableHeader(this);
         this.records = new TableRecords(this);
         this.variableDirectory = new VariableDirectory(this);
@@ -143,7 +138,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public String getName() {
-        return name;
+        return directory.getName();
     }
 
     public Database getDatabase() {
@@ -163,13 +158,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void rename(String newName) {
-        try {
-            var databaseDirectory = database.getDirectory();
-
-            Files.move(databaseDirectory.getFilePath(name), databaseDirectory.getFilePath(newName));
-        } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
-        }
+        directory.rename(newName);
     }
 
     public void insert(Object... recordEntities) {
@@ -350,7 +339,7 @@ public class Table implements Iterable<TableRecord> {
 
     public void deleteColumn(String columnName) {
         if (doesntHaveColumn(columnName)) {
-            throw new QueryException(STR."Table '\{name}' does not contain column '\{columnName}'.");
+            throw new QueryException(STR."Table '\{getName()}' does not contain column '\{columnName}'.");
         }
 
         var records = all();
@@ -446,11 +435,11 @@ public class Table implements Iterable<TableRecord> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Table table = (Table) o;
-        return Objects.equals(name, table.name);
+        return Objects.equals(getName(), table.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(getName());
     }
 }
