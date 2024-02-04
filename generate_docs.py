@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import time
 
 QUARK_SERVER_PATH = "build/Quark Server-jar-with-dependencies.jar"
@@ -9,7 +10,7 @@ MD_DOCS_TAG = "<!-- Quark:Docs -->"
 
 
 def generate_documentation():
-    subprocess.Popen(["ls", "-d", "./"])
+    subprocess.Popen(["ls", "-d", "./"], stdout=sys.stdout).communicate()
     quark_server = subprocess.Popen(["java", "--enable-preview", "-jar", QUARK_SERVER_PATH])
     time.sleep(5)
     quark_server.terminate()
