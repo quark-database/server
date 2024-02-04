@@ -36,6 +36,9 @@ jobs:
         run: mvn -B test --file pom.xml
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v4.1.0
+      - name: JaCoCo Report
+        uses: Madrapps/jacoco-report@v1.6.1
+
         if: success() || failure() # always run even if the previous step fails
         with:
           report_paths: '**/build/surefire-reports/TEST-*.xml'
