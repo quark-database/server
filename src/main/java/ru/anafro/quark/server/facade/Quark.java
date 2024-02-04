@@ -19,6 +19,7 @@ import ru.anafro.quark.server.database.views.TableView;
 import ru.anafro.quark.server.debug.*;
 import ru.anafro.quark.server.debug.components.Debugger;
 import ru.anafro.quark.server.development.HotReloadService;
+import ru.anafro.quark.server.documentation.DocumentationGenerator;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.exceptions.QuarkExceptionHandler;
 import ru.anafro.quark.server.language.Instruction;
@@ -220,6 +221,7 @@ public final class Quark {
         initializeServer();
         initializeSchemes();
         repairDirectories();
+        generateDocumentation();
     }
 
     /**
@@ -266,6 +268,10 @@ public final class Quark {
                 "original-Quark Server.jar",
                 STR."QuarkServer-\{version.getShortVersion()}-SNAPSHOT-shaded.jar"
         );
+    }
+
+    private static void generateDocumentation() {
+        DocumentationGenerator.generate();
     }
 
     private static void initializeDefaultExceptionHandler() {
