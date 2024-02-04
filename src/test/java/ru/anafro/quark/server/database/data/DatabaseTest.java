@@ -30,6 +30,18 @@ class DatabaseTest {
         database("Existing Database 6 (Copy)").delete();
         database("Existing Database 7").delete();
         database("Existing Database 7 (Copy)").delete();
+        database("Existing Database 8").delete();
+        database("Existing Database 8 (Copy)").delete();
+        database("Existing Database 9").delete();
+        database("Existing Database 9 (Copy)").delete();
+        database("Existing Database 10").delete();
+        database("Existing Database 11").delete();
+        database("Existing Database 11 (Renamed)").delete();
+        database("Existing Database 12").delete();
+        database("Existing Database 13").delete();
+        database("Existing Database 14").delete();
+        database("Existing Database 15").delete();
+        database("Existing Database 15 (Copy)").delete();
         database("Not-Existing Database").delete();
         database("Not-Existing Database 2").delete();
         database("Not-Existing Database 3").delete();
@@ -38,6 +50,10 @@ class DatabaseTest {
         database("Not-Existing Database 6").delete();
         database("Not-Existing Database 7").delete();
         database("Not-Existing Database 7 (Copy)").delete();
+        database("Not-Existing Database 8").delete();
+        database("Not-Existing Database 8 (Renamed)").delete();
+        database("Not-Existing Database 9").delete();
+        database("Not-Existing Database 9 (Copy)").delete();
     }
 
     @Test
@@ -253,6 +269,160 @@ class DatabaseTest {
         // When
         try {
             database("Not-Existing Database 7").copy("Not-Existing Database 7 (Copy)");
+
+            // Then
+            fail();
+        } catch (DatabaseNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw DatabaseExistsException on database copy when destination database already exists")
+    public void shouldThrowDatabaseExistsExceptionOnDatabaseCopyWhenDestinationDatabaseAlreadyExists() {
+        // Given
+        Database.create("Existing Database 8");
+        Database.create("Existing Database 8 (Copy)");
+
+        // When
+        try {
+            database("Existing Database 8").copy("Existing Database 8 (Copy)");
+
+            // Then
+            fail();
+        } catch (DatabaseExistsException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should clone database on copy scheme of empty database")
+    public void shouldCloneDatabaseOnCopySchemeOfEmptyDatabase() {
+        // Given
+        Database.create("Existing Database 9");
+
+        // When
+        database("Existing Database 9").copyScheme("Existing Database 9 (Copy)");
+
+        // Then
+        assertTrue(Database.exists("Existing Database 9 (Copy)"));
+    }
+
+    @Test
+    @DisplayName("Should delete all tables on database clear")
+    public void shouldDeleteAllTablesOnDatabaseClear() {
+        // Given
+        Database.create("Existing Database 10");
+        Table.create("Existing Database 10.A");
+        Table.create("Existing Database 10.B", column("a", "str"));
+        Table.create("Existing Database 10.C", column("a", "str"));
+        table("Existing Database 10.C").insert("ABC");
+        table("Existing Database 10.C").insert("DEF");
+        table("Existing Database 10.C").insert("GHI");
+
+        // When
+        database("Existing Database 10").clear();
+
+        // Then
+        assertTrue(database("Existing Database 10").tables().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should rename existing table")
+    public void shouldRenameExistingTable() {
+        // Given
+        Database.create("Existing Database 11");
+
+        // When
+        database("Existing Database 11").rename("Existing Database 11 (Renamed)");
+
+        // Then
+        assertTrue(Database.doesntExist("Existing Database 11"));
+        assertTrue(Database.exists("Existing Database 11 (Renamed)"));
+    }
+
+    @Test
+    @DisplayName("Should throw DatabaseNotFoundException on not-existing database rename")
+    public void shouldThrowDatabaseNotFoundExceptionOnNotExistingDatabaseRename() {
+        // When
+        try {
+            database("Not-Existing Database 8").rename("Not-Existing Database 8 (Renamed)");
+
+            // Then
+            fail();
+        } catch (DatabaseNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should return same hash code for same databases")
+    public void shouldReturnSameHashCodeForSameDatabases() {
+        // Given
+        Database.create("Existing Database 12");
+        var firstDatabase = database("Existing Database 12");
+        var secondDatabase = database("Existing Database 12");
+
+        // When
+        var firstDatabaseHashcode = firstDatabase.hashCode();
+        var secondDatabaseHashcode = secondDatabase.hashCode();
+
+        // Then
+        assertEquals(firstDatabaseHashcode, secondDatabaseHashcode);
+    }
+
+    @Test
+    @DisplayName("Should return different hash codes for different databases")
+    public void shouldReturnDifferentHashCodesForDifferentDatabases() {
+        // Given
+        Database.create("Existing Database 13");
+        Database.create("Existing Database 14");
+        var firstDatabase = database("Existing Database 13");
+        var secondDatabase = database("Existing Database 14");
+
+        // When
+        var firstDatabaseHashcode = firstDatabase.hashCode();
+        var secondDatabaseHashcode = secondDatabase.hashCode();
+
+        // Then
+        assertNotEquals(firstDatabaseHashcode, secondDatabaseHashcode);
+    }
+
+    @Test
+    @DisplayName("Should copy scheme of database with tables, but clear the tables")
+    public void shouldCopySchemeOfDatabaseWithTablesButClearTheTables() {
+        // Given
+        Database.create("Existing Database 15");
+        Table.create("Existing Database 15.A");
+        Table.create("Existing Database 15.B", column("a", "str"));
+        Table.create("Existing Database 15.C", column("a", "str"));
+        Table.create("Existing Database 15.D", column("a", "str"), column("b", "int"));
+        table("Existing Database 15.C").insert("ABC");
+        table("Existing Database 15.D").insert("ABC", 123);
+
+        // When
+        database("Existing Database 15").copyScheme("Existing Database 15 (Copy)");
+
+        // Then
+        assertTrue(Database.exists("Existing Database 15 (Copy)"));
+        assertTrue(Table.exists("Existing Database 15 (Copy).A"));
+        assertTrue(table("Existing Database 15 (Copy).A").columns().isEmpty());
+
+        assertTrue(Table.exists("Existing Database 15 (Copy).B"));
+        assertEquals(table("Existing Database 15 (Copy).B").columns(), list(column("a", "str")));
+
+        assertTrue(Table.exists("Existing Database 15 (Copy).C"));
+        assertEquals(table("Existing Database 15 (Copy).C").columns(), list(column("a", "str")));
+        assertTrue(table("Existing Database 15 (Copy).C").all().toList().isEmpty());
+
+        assertTrue(Table.exists("Existing Database 15 (Copy).D"));
+        assertEquals(table("Existing Database 15 (Copy).D").columns(), list(column("a", "str"), column("b", "int")));
+        assertTrue(table("Existing Database 15 (Copy).D").all().toList().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should throw DatabaseNotFoundException on not-existing database scheme copy")
+    public void shouldThrowDatabaseNotFoundExceptionOnNotExistingDatabaseSchemeCopy() {
+        // When
+        try {
+            database("Not-Existing Database 9").copyScheme("Not-Existing Database 9 (Copy)");
 
             // Then
             fail();
