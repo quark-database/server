@@ -1,5 +1,5 @@
-README_TEMPLATE_PATH = "../Readme-Template.md"
-README_PATH = "../README.md"
+README_TEMPLATE_PATH = "Readme-Template.md"
+README_PATH = "README.md"
 MD_DOCS_TAG = "<!-- Quark:Docs -->"
 
 
