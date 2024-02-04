@@ -73,10 +73,6 @@ jobs:
         
       - name: Update Quark documentation in README.md
         run: |
-          if [[ `git status --porcelain` ]]; then
-            git config --global user.name 'anafro'
-            git config --global user.email 'anafro@users.noreply.github.com'
-            git add -A
-            git commit -m "Update Quark documentation"
-            git push
-          fi
+          git add -A
+          git commit -m "Update Quark documentation"
+          git push
