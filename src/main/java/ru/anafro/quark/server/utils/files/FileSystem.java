@@ -2,6 +2,7 @@ package ru.anafro.quark.server.utils.files;
 
 import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 import ru.anafro.quark.server.utils.files.exceptions.CannotCreateDirectoryException;
+import ru.anafro.quark.server.utils.files.exceptions.FileRenameException;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +73,14 @@ public final class FileSystem {
                     var _ = directory.delete();
                 }
             }
+        }
+    }
+
+    public static Path rename(Path path, String newName) {
+        try {
+            return Files.move(path, path.resolveSibling(newName));
+        } catch (IOException exception) {
+            throw new FileRenameException(path, newName, exception);
         }
     }
 }
