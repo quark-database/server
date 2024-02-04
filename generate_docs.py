@@ -2,7 +2,7 @@ import subprocess
 import sys
 import time
 
-QUARK_SERVER_PATH = "build/Quark Server-jar-with-dependencies.jar"
+QUARK_SERVER_PATH = "Quark Server-jar-with-dependencies.jar"
 DOCUMENTATION_PATH = "build/Documentation.md"
 README_TEMPLATE_PATH = "Readme-Template.md"
 README_PATH = "README.md"
