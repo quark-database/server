@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
 public class TableRecords implements Iterable<TableRecord> {
     public static final String NAME = "Table's Records.qrecords";
@@ -53,15 +54,15 @@ public class TableRecords implements Iterable<TableRecord> {
     @NotNull
     @Override
     public Iterator<TableRecord> iterator() {
-        return new TableFileRecordIterator(this);
+        return new InMemoryTableFileRecordIterator(this).iterator();
     }
 
     public void insert(TableRecord record) {
         table.getHeader().ensureRecordIsValid(record);
         table.getHeader().prepareRecord(record);
         try (var bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            bufferedWriter.newLine();
             bufferedWriter.write(record.toTableLine());
+            bufferedWriter.newLine();
         } catch (IOException exception) {
             throw new RecordsFileInsertionFailedException(this, record, exception);
         }
@@ -81,9 +82,31 @@ public class TableRecords implements Iterable<TableRecord> {
         }
     }
 
+    private static class InMemoryTableFileRecordIterator implements Iterable<TableRecord> {
+        private final TableRecords tableRecords;
+        private final List<TableRecord> records;
+
+        public InMemoryTableFileRecordIterator(TableRecords tableRecords) {
+            this.tableRecords = tableRecords;
+            this.records = new ru.anafro.quark.server.utils.files.File(tableRecords.getFile().toPath())
+                    .readLines()
+                    .stream()
+                    .map(UntypedTableRecord::fromString)
+                    .map(record -> record.applyTypesFrom(tableRecords.getTable().getHeader()))
+                    .toList();
+        }
+
+        @NotNull
+        @Override
+        public Iterator<TableRecord> iterator() {
+            return records.iterator();
+        }
+    }
+
+    @Deprecated(since = "3")
     private static class TableFileRecordIterator implements Iterator<TableRecord> {
         private final TableRecords tableRecords;
-        private final BufferedReader tableFileBufferedReader;
+        private BufferedReader tableFileBufferedReader = null;
         private boolean readerNextLineResultStored = false;
         private String bufferedFileLine = null;
 
@@ -94,14 +117,6 @@ public class TableRecords implements Iterable<TableRecord> {
             } catch (IOException exception) {
                 throw new DatabaseFileNotFoundException(tableRecords);
             }
-        }
-
-        protected TableRecords getTableFile() {
-            return tableRecords;
-        }
-
-        protected BufferedReader getTableFileBufferedReader() {
-            return tableFileBufferedReader;
         }
 
         private void readNextLineToBufferIfDidNot() {
