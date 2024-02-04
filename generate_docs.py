@@ -15,6 +15,8 @@ def generate_documentation():
 
 
 def main():
+    generate_documentation()
+
     with open(DOCUMENTATION_PATH, 'r') as documentation:
         documentation_content = documentation.read()
 
