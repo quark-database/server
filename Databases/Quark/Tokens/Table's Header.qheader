@@ -1,0 +1,1 @@
+@list(@int("id", @incrementing(), @required(), @positive(), @unique()), @str("token", @required()), @str("permission", @required()))
