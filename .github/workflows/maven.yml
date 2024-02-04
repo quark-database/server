@@ -30,15 +30,17 @@ jobs:
           java-version: '21'
           distribution: 'oracle'
           cache: maven
+          
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
       - name: Test with Maven
         run: mvn -B test --file pom.xml
+
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v4.1.0
-        if: success() || failure() # always run even if the previous step fails
+
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
         with:
-          report_paths: '**/build/surefire-reports/TEST-*.xml'
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-#    - name: Update dependency graph
-#      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+          generate-branches-badge: true
