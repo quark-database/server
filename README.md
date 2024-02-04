@@ -25,7 +25,7 @@ Permission: `column.add`
 
 Syntax:
 ```sql
-<blue>add column</> <gray>(</><blue>column</>: definition<gray>)</>: table = <blue>str</>, generator = <blue>generator</>;
+add column (column: definition): table = str, generator = generator;
 ```
 
 ### `change in`
@@ -36,7 +36,7 @@ Permission: `table.change`
 
 Syntax:
 ```sql
-<blue>change in</> <gray>(</><blue>str</>: table<gray>)</>: selector = <blue>selector</>, changer = <blue>changer</>;
+change in (str: table): selector = selector, changer = changer;
 ```
 
 ### `change port to`
@@ -47,7 +47,7 @@ Permission: `server.port.change`
 
 Syntax:
 ```sql
-<blue>change port to</> <gray>(</><blue>int</>: port<gray>)</>;
+change port to (int: port);
 ```
 
 ### `clear database`
@@ -58,7 +58,7 @@ Permission: `database.clear`
 
 Syntax:
 ```sql
-<blue>clear database</> <gray>(</><blue>str</>: database<gray>)</>;
+clear database (str: database);
 ```
 
 ### `clear table`
@@ -69,7 +69,7 @@ Permission: `table.clear`
 
 Syntax:
 ```sql
-<blue>clear table</> <gray>(</><blue>str</>: table<gray>)</>;
+clear table (str: table);
 ```
 
 ### `clone database`
@@ -80,7 +80,7 @@ Permission: `database.clone`
 
 Syntax:
 ```sql
-<blue>clone database</> <gray>(</><blue>str</>: prototype<gray>)</>: destination = <blue>str</>;
+clone database (str: prototype): destination = str;
 ```
 
 ### `clone database scheme`
@@ -91,7 +91,7 @@ Permission: `database.scheme`
 
 Syntax:
 ```sql
-<blue>clone database scheme</> <gray>(</><blue>str</>: prototype<gray>)</>: destination = <blue>str</>;
+clone database scheme (str: prototype): destination = str;
 ```
 
 ### `clone table`
@@ -102,7 +102,7 @@ Permission: `table.clone`
 
 Syntax:
 ```sql
-<blue>clone table</> <gray>(</><blue>str</>: prototype<gray>)</>: destination = <blue>str</>;
+clone table (str: prototype): destination = str;
 ```
 
 ### `clone table scheme`
@@ -113,7 +113,7 @@ Permission: `table.scheme`
 
 Syntax:
 ```sql
-<blue>clone table scheme</> <gray>(</><blue>str</>: prototype<gray>)</>: destination = <blue>str</>;
+clone table scheme (str: prototype): destination = str;
 ```
 
 ### `create database`
@@ -124,7 +124,7 @@ Permission: `database.create`
 
 Syntax:
 ```sql
-<blue>create database</> <gray>(</><blue>str</>: name<gray>)</>;
+create database (str: name);
 ```
 
 ### `create table`
@@ -135,7 +135,7 @@ Permission: `table.create`
 
 Syntax:
 ```sql
-<blue>create table</> <gray>(</><blue>str</>: table<gray>)</>: columns = <blue>list of column</>, records = <blue>list of record</>;
+create table (str: table): columns = list of column, records = list of record;
 ```
 
 ### `create token`
@@ -146,7 +146,7 @@ Permission: `token.create`
 
 Syntax:
 ```sql
-<blue>create token</> <gray>(</><blue>str</>: token<gray>)</>: permissions = <blue>list of str</>;
+create token (str: token): permissions = list of str;
 ```
 
 ### `_debug`
@@ -157,7 +157,7 @@ Permission: `!unsafe.debug`
 
 Syntax:
 ```sql
-<blue>_debug</>: json = <blue>str</>;
+_debug: json = str;
 ```
 
 ### `delete column`
@@ -168,7 +168,7 @@ Permission: `column.delete`
 
 Syntax:
 ```sql
-<blue>delete column</> <gray>(</><blue>str</>: name<gray>)</>: table = <blue>str</>;
+delete column (str: name): table = str;
 ```
 
 ### `delete database`
@@ -179,7 +179,7 @@ Permission: `database.delete`
 
 Syntax:
 ```sql
-<blue>delete database</> <gray>(</><blue>str</>: database<gray>)</>;
+delete database (str: database);
 ```
 
 ### `delete from`
@@ -190,7 +190,7 @@ Permission: `json.delete`
 
 Syntax:
 ```sql
-<blue>delete from</> <gray>(</><blue>str</>: table<gray>)</>: selector = <blue>selector</>, skip = <blue>int</>, limit = <blue>int</>;
+delete from (str: table): selector = selector, skip = int, limit = int;
 ```
 
 ### `delete table`
@@ -201,7 +201,7 @@ Permission: `table.delete`
 
 Syntax:
 ```sql
-<blue>delete table</> <gray>(</><blue>str</>: table<gray>)</>;
+delete table (str: table);
 ```
 
 ### `eval`
@@ -212,7 +212,7 @@ Permission: `!unsafe.eval`
 
 Syntax:
 ```sql
-<blue>eval</> <gray>(</><blue>?</>: entity<gray>)</>;
+eval (?: entity);
 ```
 
 ### `factory reset`
@@ -223,7 +223,7 @@ Permission: `!unsafe.factory-reset`
 
 Syntax:
 ```sql
-<blue>factory reset</>;
+factory reset;
 ```
 
 ### `grant token`
@@ -234,7 +234,7 @@ Permission: `token.grand`
 
 Syntax:
 ```sql
-<blue>grant token</> <gray>(</><blue>str</>: token<gray>)</>: permission = <blue>str</>;
+grant token (str: token): permission = str;
 ```
 
 ### `insert into`
@@ -245,7 +245,7 @@ Permission: `table.insert`
 
 Syntax:
 ```sql
-<blue>insert into</> <gray>(</><blue>str</>: table<gray>)</>: record = <blue>record</>;
+insert into (str: table): record = record;
 ```
 
 ### `list columns in`
@@ -256,7 +256,7 @@ Permission: `column.list`
 
 Syntax:
 ```sql
-<blue>list columns in</> <gray>(</><blue>str</>: table<gray>)</>;
+list columns in (str: table);
 ```
 
 ### `list databases`
@@ -267,7 +267,7 @@ Permission: `databases.list`
 
 Syntax:
 ```sql
-<blue>list databases</>;
+list databases;
 ```
 
 ### `list tables in`
@@ -278,7 +278,7 @@ Permission: `table.list`
 
 Syntax:
 ```sql
-<blue>list tables in</> <gray>(</><blue>str</>: database<gray>)</>;
+list tables in (str: database);
 ```
 
 ### `redefine column in`
@@ -289,7 +289,7 @@ Permission: `column.redefine`
 
 Syntax:
 ```sql
-<blue>redefine column in</> <gray>(</><blue>str</>: table<gray>)</>: definition = <blue>column</>;
+redefine column in (str: table): definition = column;
 ```
 
 ### `redefine permissions for token`
@@ -300,7 +300,7 @@ Permission: `token.redefine`
 
 Syntax:
 ```sql
-<blue>redefine permissions for token</> <gray>(</><blue>str</>: token<gray>)</>: permissions = <blue>list of str</>;
+redefine permissions for token (str: token): permissions = list of str;
 ```
 
 ### `reload server`
@@ -311,7 +311,7 @@ Permission: `server.reload`
 
 Syntax:
 ```sql
-<blue>reload server</>;
+reload server;
 ```
 
 ### `rename column in`
@@ -322,7 +322,7 @@ Permission: `column.rename`
 
 Syntax:
 ```sql
-<blue>rename column in</> <gray>(</><blue>str</>: table<gray>)</>: old = <blue>str</>, new = <blue>str</>;
+rename column in (str: table): old = str, new = str;
 ```
 
 ### `rename database`
@@ -333,7 +333,7 @@ Permission: `database.rename`
 
 Syntax:
 ```sql
-<blue>rename database</>: old = <blue>str</>, new = <blue>str</>;
+rename database: old = str, new = str;
 ```
 
 ### `rename server to`
@@ -344,7 +344,7 @@ Permission: `server.rename`
 
 Syntax:
 ```sql
-<blue>rename server to</> <gray>(</><blue>str</>: new<gray>)</>;
+rename server to (str: new);
 ```
 
 ### `rename table`
@@ -355,7 +355,7 @@ Permission: `table.rename`
 
 Syntax:
 ```sql
-<blue>rename table</>: old = <blue>str</>, new = <blue>str</>;
+rename table: old = str, new = str;
 ```
 
 ### `reorder columns in`
@@ -366,7 +366,7 @@ Permission: `column.reorder`
 
 Syntax:
 ```sql
-<blue>reorder columns in</> <gray>(</><blue>str</>: table<gray>)</>: order = <blue>list of str</>;
+reorder columns in (str: table): order = list of str;
 ```
 
 ### `run command`
@@ -377,7 +377,7 @@ Permission: `server.command`
 
 Syntax:
 ```sql
-<blue>run command</> <gray>(</><blue>str</>: command<gray>)</>;
+run command (str: command);
 ```
 
 ### `schedule command`
@@ -388,7 +388,7 @@ Permission: `server.schedule.command`
 
 Syntax:
 ```sql
-<blue>schedule command</> <gray>(</><blue>str</>: command<gray>)</>: period = <blue>long</>;
+schedule command (str: command): period = long;
 ```
 
 ### `schedule query`
@@ -399,7 +399,7 @@ Permission: `server.schedule.query`
 
 Syntax:
 ```sql
-<blue>schedule query</> <gray>(</><blue>str</>: query<gray>)</>: period = <blue>long</>;
+schedule query (str: query): period = long;
 ```
 
 ### `select from`
@@ -410,7 +410,7 @@ Permission: `json.select`
 
 Syntax:
 ```sql
-<blue>select from</> <gray>(</><blue>str</>: table<gray>)</>: selector = <blue>selector</>, skip = <blue>int</>, limit = <blue>int</>;
+select from (str: table): selector = selector, skip = int, limit = int;
 ```
 
 ### `stop server`
@@ -421,7 +421,7 @@ Permission: `server.stop`
 
 Syntax:
 ```sql
-<blue>stop server</>;
+stop server;
 ```
 
 ### `swap columns in`
@@ -432,7 +432,7 @@ Permission: `columns.swap`
 
 Syntax:
 ```sql
-<blue>swap columns in</> <gray>(</><blue>str</>: table<gray>)</>: first = <blue>str</>, second = <blue>str</>;
+swap columns in (str: table): first = str, second = str;
 ```
 
 ### `remove permission from token`
@@ -443,7 +443,7 @@ Permission: `token.remove permission`
 
 Syntax:
 ```sql
-<blue>remove permission from token</> <gray>(</><blue>str</>: token<gray>)</>: permission = <blue>str</>;
+remove permission from token (str: token): permission = str;
 ```
 
 ### `_describe instructions`
@@ -454,7 +454,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>_describe instructions</>;
+_describe instructions;
 ```
 
 ### `_describe constructors`
@@ -465,7 +465,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>_describe constructors</>;
+_describe constructors;
 ```
 
 ### `_hint next elements`
@@ -476,7 +476,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>_hint next elements</>: query = <blue>str</>, caret position = <blue>int</>;
+_hint next elements: query = str, caret position = int;
 ```
 
 ### `get server name`
@@ -487,7 +487,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>get server name</>;
+get server name;
 ```
 
 ### `secret`
@@ -498,7 +498,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>secret</>;
+secret;
 ```
 
 ### `add modifier to`
@@ -509,7 +509,7 @@ Permission: `table.add modifier`
 
 Syntax:
 ```sql
-<blue>add modifier to</> <gray>(</><blue>str</>: table<gray>)</>: column = <blue>str</>, modifier = <blue>modifier</>;
+add modifier to (str: table): column = str, modifier = modifier;
 ```
 
 ### `list plugins`
@@ -520,7 +520,7 @@ Permission: `server.plugins`
 
 Syntax:
 ```sql
-<blue>list plugins</>;
+list plugins;
 ```
 
 ### `find in`
@@ -531,7 +531,7 @@ Permission: `table.find`
 
 Syntax:
 ```sql
-<blue>find in</> <gray>(</><blue>str</>: table<gray>)</>: finder = <blue>finder</>;
+find in (str: table): finder = finder;
 ```
 
 ### `count in`
@@ -542,7 +542,7 @@ Permission: `table.count in`
 
 Syntax:
 ```sql
-<blue>count in</> <gray>(</><blue>str</>: table<gray>)</>: selector = <blue>selector</>;
+count in (str: table): selector = selector;
 ```
 
 ### `_describe modifiers of`
@@ -553,7 +553,7 @@ Permission: `table.describe modifiers`
 
 Syntax:
 ```sql
-<blue>_describe modifiers of</> <gray>(</><blue>str</>: table<gray>)</>;
+_describe modifiers of (str: table);
 ```
 
 ### `clear scheduled commands`
@@ -564,7 +564,7 @@ Permission: `server.schedule.command.clear`
 
 Syntax:
 ```sql
-<blue>clear scheduled commands</>;
+clear scheduled commands;
 ```
 
 ### `clear scheduled queries`
@@ -575,7 +575,7 @@ Permission: `server.schedule.query.clear`
 
 Syntax:
 ```sql
-<blue>clear scheduled queries</>;
+clear scheduled queries;
 ```
 
 ### `get variable in`
@@ -586,7 +586,7 @@ Permission: `table.variable.get`
 
 Syntax:
 ```sql
-<blue>get variable in</> <gray>(</><blue>str</>: table<gray>)</>: name = <blue>str</>;
+get variable in (str: table): name = str;
 ```
 
 ### `set variable in`
@@ -597,7 +597,7 @@ Permission: `table.variable.set`
 
 Syntax:
 ```sql
-<blue>set variable in</> <gray>(</><blue>str</>: table<gray>)</>: name = <blue>str</>, value = <blue>?</>;
+set variable in (str: table): name = str, value = ?;
 ```
 
 ### `list variables in`
@@ -608,7 +608,7 @@ Permission: `table.variable.list`
 
 Syntax:
 ```sql
-<blue>list variables in</> <gray>(</><blue>str</>: table<gray>)</>;
+list variables in (str: table);
 ```
 
 ### `delete variable in`
@@ -619,7 +619,7 @@ Permission: `table.variable.delete`
 
 Syntax:
 ```sql
-<blue>delete variable in</> <gray>(</><blue>str</>: table<gray>)</>: name = <blue>str</>;
+delete variable in (str: table): name = str;
 ```
 
 ### `exclude from`
@@ -630,7 +630,7 @@ Permission: `table.exclude`
 
 Syntax:
 ```sql
-<blue>exclude from</> <gray>(</><blue>str</>: table<gray>)</>: finder = <blue>finder</>;
+exclude from (str: table): finder = finder;
 ```
 
 ### `get version`
@@ -641,7 +641,7 @@ Permission: `any`
 
 Syntax:
 ```sql
-<blue>get version</>;
+get version;
 ```
 
 ### `var`
@@ -652,7 +652,7 @@ Permission: `var`
 
 Syntax:
 ```sql
-<blue>var</> <gray>(</><blue>str</>: name<gray>)</>: value = <blue>?</>;
+var (str: name): value = ?;
 ```
 
 
