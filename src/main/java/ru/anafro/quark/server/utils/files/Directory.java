@@ -1,11 +1,10 @@
 package ru.anafro.quark.server.utils.files;
 
 import org.jetbrains.annotations.NotNull;
-import ru.anafro.quark.server.utils.files.exceptions.FileException;
+import ru.anafro.quark.server.utils.files.exceptions.*;
 import ru.anafro.quark.server.utils.files.filters.FileFilter;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,8 +16,8 @@ import java.util.stream.Stream;
 import static ru.anafro.quark.server.utils.arrays.Arrays.allMatch;
 
 public class Directory implements Iterable<File> {
-    private final Path path;
     private final FileFilter[] filters;
+    private Path path;
 
     public Directory(Path path, FileFilter... filters) {
         this.path = path;
@@ -63,29 +62,23 @@ public class Directory implements Iterable<File> {
         return new Directory(path.getRoot());
     }
 
-    public Path createFile(String fileName) {
-        try {
-            return Files.createFile(getFilePath(fileName));
-        } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
-        }
+    public File createFile(String fileName) {
+        var file = new File(path.resolve(fileName));
+        file.create();
+
+        return file;
     }
 
     public void createFile(String fileName, String content) {
-        var filePath = createFile(fileName);
-
-        try {
-            Files.writeString(filePath, content, StandardCharsets.UTF_8);
-        } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
-        }
+        var file = createFile(fileName);
+        file.write(content);
     }
 
     public Directory createDirectory(String directoryName) {
         try {
             return new Directory(Files.createDirectories(getFilePath(directoryName)));
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new DirectoryCreateException(directoryName, exception);
         }
     }
 
@@ -99,23 +92,46 @@ public class Directory implements Iterable<File> {
         try (var paths = Files.list(path)) {
             return paths.filter(path -> path.toFile().isDirectory()).map(Directory::new).toList();
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new DirectoryListException(this, exception);
         }
     }
 
     public Directory getSibling(String siblingName) {
-        return getRoot().getDirectory(siblingName);
+        return new Directory(path.resolveSibling(siblingName));
     }
 
-    public void copy(Path path) {
-        files().forEach(file -> file.copy(path));
+    public void copy(Path destinationPath) {
+        destinationPath.toFile().mkdirs();
+
+        paths()
+                .forEach(source -> {
+                    if (path.getNameCount() == source.getNameCount()) {
+                        return;
+                    }
+
+                    var destination = destinationPath.resolve(source.subpath(path.getNameCount(), source.getNameCount()));
+
+                    try {
+                        var sourceFile = source.toFile();
+                        var destinationFile = destination.toFile();
+                        if (sourceFile.isDirectory()) {
+                            destinationFile.getParentFile().mkdirs();
+                        } else {
+                            destinationFile.getParentFile().mkdirs();
+                        }
+
+                        Files.copy(source, destination);
+                    } catch (IOException exception) {
+                        throw new DirectoryCopyException(this, source, destination, exception);
+                    }
+                });
     }
 
     public void moveTo(String directoryName) {
         try {
             Files.move(path, getRoot().getFilePath(directoryName));
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new DirectoryMoveException(this, directoryName, exception);
         }
     }
 
@@ -131,7 +147,7 @@ public class Directory implements Iterable<File> {
         try (var walk = Files.walk(path)) {
             return walk.filter(path -> this.passThroughFilters(new File(path))).toList().stream();
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new DirectoryWalkException(this, exception);
         }
     }
 
@@ -153,5 +169,9 @@ public class Directory implements Iterable<File> {
 
     private boolean passThroughFilters(File file) {
         return allMatch(filters, filter -> filter.passes(file));
+    }
+
+    public void rename(String newName) {
+        this.path = FileSystem.rename(path, newName);
     }
 }

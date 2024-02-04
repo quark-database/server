@@ -1,6 +1,6 @@
 package ru.anafro.quark.server.utils.files;
 
-import ru.anafro.quark.server.utils.files.exceptions.FileException;
+import ru.anafro.quark.server.utils.files.exceptions.*;
 import ru.anafro.quark.server.utils.strings.Strings;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class File implements Comparable<File>, Appendable {
         try {
             return Files.readString(path);
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileReadException(this, exception);
         }
     }
 
@@ -69,7 +69,7 @@ public class File implements Comparable<File>, Appendable {
         try {
             return Files.readAllLines(path);
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileReadException(this, exception);
         }
     }
 
@@ -86,8 +86,12 @@ public class File implements Comparable<File>, Appendable {
             create();
             Files.writeString(path, text, options);
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileWriteException(this, exception);
         }
+    }
+
+    public Path getPath() {
+        return path;
     }
 
     public URI getURI() {
@@ -98,13 +102,13 @@ public class File implements Comparable<File>, Appendable {
         try {
             return getURI().toURL();
         } catch (MalformedURLException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileURLException(this, exception);
         }
     }
 
     private void ensureExists() throws FileException {
         if (doesntExist()) {
-            throw new FileException(STR."The file \{path} does not exist.");
+            throw new FileNotFoundException(this);
         }
     }
 
@@ -113,7 +117,11 @@ public class File implements Comparable<File>, Appendable {
     }
 
     public void delete() {
-        @SuppressWarnings("unused") var _ = file.delete();
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException exception) {
+            throw new FileDeleteException(this, exception);
+        }
     }
 
     public void create() {
@@ -124,7 +132,7 @@ public class File implements Comparable<File>, Appendable {
         try {
             @SuppressWarnings("unused") var _ = file.createNewFile();
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileCreateException(this, exception);
         }
     }
 
@@ -132,7 +140,7 @@ public class File implements Comparable<File>, Appendable {
         try {
             Files.copy(path, destination);
         } catch (IOException exception) {
-            throw new FileException(exception.getMessage());
+            throw new FileCopyException(this, exception);
         }
     }
 
@@ -153,15 +161,15 @@ public class File implements Comparable<File>, Appendable {
                         }
 
                         if (!key.reset()) {
-                            throw new FileException("Can't reset the file watcher.");
+                            throw new FileWatcherResetFailureException(this);
                         }
                     }
                 } catch (InterruptedException exception) {
-                    throw new FileException(exception.getMessage());
+                    throw new FileWatcherInterruptionException(this, exception);
                 }
             };
         } catch (IOException exception) {
-            throw new FileException(STR."\{exception.getClass()}: \{exception.getMessage()}");
+            throw new FileCreateWatcherException(this, exception);
         }
     }
 
