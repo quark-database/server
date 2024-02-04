@@ -9,6 +9,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/quark-database/.github?include_prereleases=&sort=semver&color=blue)](https://github.com/quark-database/server/releases/)
 [![License](https://img.shields.io/badge/License-MIT-blue)](#license)
 [![issues - server](https://img.shields.io/github/issues/quark-database/.github)](https://github.com/quark-database/server/issues)
+![Coverage](.github/badges/jacoco.svg)
 
 ## About Quark Server
 
