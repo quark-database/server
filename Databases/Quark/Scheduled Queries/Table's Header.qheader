@@ -1,1 +1,0 @@
-@list(@int("id", @incrementing(), @required(), @positive(), @unique()), @str("query", @required()), @long("period", @required()))
