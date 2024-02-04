@@ -71,9 +71,6 @@ jobs:
       - name: Generate Quark documentation
         run: python generate_docs.py
 
-      - name: Print project tree
-        run: tree -d ./
-
       - name: Update Quark documentation in README.md
         run: |
           if [[ `git status --porcelain` ]]; then
