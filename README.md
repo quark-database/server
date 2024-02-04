@@ -17,5 +17,5 @@
 
 ## Documentation
 
-<!-- Quark:Docs -->
+*It works!*
 
