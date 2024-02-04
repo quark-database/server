@@ -34,7 +34,7 @@ public class DocumentationGenerator {
 
                     Parameters:
 
-                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."`\{parameter.getName()}: \{parameter.getType()}`", "\n\n")}
+                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."* `\{parameter.getName()}: \{parameter.getType()}`", "\n\n")}
 
                     Syntax:
                     ```sql
@@ -54,7 +54,7 @@ public class DocumentationGenerator {
 
                     Parameters:
 
-                    \{Lists.join(constructor.getParameters().asList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}`", "\n\n")}
+                    \{Lists.join(constructor.getParameters().asList(), parameter -> STR."* `\{parameter.name()}: \{parameter.type()}`", "\n\n")}
 
                     Syntax:
                     ```sql
@@ -73,7 +73,7 @@ public class DocumentationGenerator {
 
                     Parameters:
 
-                    \{Lists.join(command.getParameters().toList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}` - \{parameter.longDescription()}", "\n\n")}
+                    \{Lists.join(command.getParameters().toList(), parameter -> STR."* `\{parameter.name()}: \{parameter.type()}` - \{parameter.longDescription()}", "\n\n")}
 
                     Syntax:
                     ```sql
