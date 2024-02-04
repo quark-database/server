@@ -67,3 +67,16 @@ jobs:
         with:
           name: jacoco-report
           path: target/site/jacoco/
+      
+      - name: Generate Quark documentation
+        run: python generate_docs.py
+        
+      - name: Update Quark documentation in README.md
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            git config --global user.name 'anafro'
+            git config --global user.email 'anafro@users.noreply.github.com'
+            git add -A
+            git commit -m "Update Quark documentation"
+            git push
+          fi
