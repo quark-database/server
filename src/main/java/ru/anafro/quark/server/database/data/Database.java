@@ -50,8 +50,6 @@ public class Database {
     }
 
     public static Database create(String databaseName) {
-
-
         if (exists(databaseName)) {
             throw new DatabaseExistsException(databaseName);
         }
