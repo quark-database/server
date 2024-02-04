@@ -30,16 +30,23 @@ jobs:
           java-version: '21'
           distribution: 'oracle'
           cache: maven
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+
       - name: Test with Maven
         run: mvn -B test --file pom.xml
+
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v4.1.0
+
       - name: JaCoCo Report
         uses: Madrapps/jacoco-report@v1.6.1
-
-        if: success() || failure() # always run even if the previous step fails
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: |
+            ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
+            ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
         with:
           report_paths: '**/build/surefire-reports/TEST-*.xml'
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
