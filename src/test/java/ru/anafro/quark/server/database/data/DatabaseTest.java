@@ -12,7 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.anafro.quark.server.database.data.ColumnDescription.column;
 import static ru.anafro.quark.server.database.data.Database.database;
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
+import static ru.anafro.quark.server.database.data.RecordField.field;
 import static ru.anafro.quark.server.database.data.Table.table;
+import static ru.anafro.quark.server.database.data.TableRecord.record;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 class DatabaseTest {
@@ -39,6 +41,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should create database when database does not exist")
     void shouldCreateDatabaseWhenDatabaseDoesntExist() {
         // Given
         String databaseName = "Not-Existing Database";
@@ -51,6 +54,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should throw DatabaseExistsException when database exists")
     void shouldThrowDatabaseExistsExceptionWhenDatabaseExists() {
         // Given
         Database.create("Existing Database");
@@ -67,6 +71,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should return database on create if doesnt exist when database exists")
     void shouldReturnDatabaseOnCreateIfDoesntExistWhenDatabaseExists() {
         // Given
         Database.create("Existing Database 2");
@@ -80,6 +85,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should return database on create if doesn't exist when database doesn't exist")
     void shouldReturnDatabaseOnCreateIfDoesntExistWhenDatabaseDoesntExist() {
         // Given
         String databaseName = "Not-Existing Database 2";
@@ -92,6 +98,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should return system database when there are no databases created")
     void shouldReturnSystemDatabaseWhenThereAreNoDatabasesCreated() {
         // Given
         // A freshly installed Quark Server.
@@ -105,6 +112,7 @@ class DatabaseTest {
 
 
     @Test
+    @DisplayName("Should return system database and created databases when there are some databases created")
     void shouldReturnSystemDatabaseAndCreatedDatabasesWhenThereAreSomeDatabasesCreated() {
         // Given
         Database.create("Not-Existing Database 3");
@@ -127,6 +135,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should delete not-existing database")
     void shouldDeleteNotExistingDatabase() {
         // Given
         // A freshly installed Quark Server.
@@ -139,6 +148,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should delete existing database")
     void shouldDeleteExistingDatabase() {
         // Given
         Database.create("Existing Database 3");
@@ -151,6 +161,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should return empty list of tables for new database")
     void shouldReturnEmptyListOfTablesForNewDatabase() {
         // Given
         Database.create("Existing Database 4");
@@ -164,6 +175,7 @@ class DatabaseTest {
     }
 
     @Test
+    @DisplayName("Should return list of tables")
     void shouldReturnListOfTables() {
         // Given
         Database.create("Existing Database 5");
@@ -196,8 +208,8 @@ class DatabaseTest {
         database("Existing Database 6").copy("Existing Database 6 (Copy)");
 
         // Then
-        assertTrue(Database.exists("Copied Database 6 (Copy)"));
-        assertTrue(database("Copied Database 6 (Copy)").tables().isEmpty());
+        assertTrue(Database.exists("Existing Database 6 (Copy)"));
+        assertTrue(database("Existing Database 6 (Copy)").tables().isEmpty());
     }
 
     @Test
@@ -225,15 +237,19 @@ class DatabaseTest {
 
         assertTrue(Table.exists("Existing Database 7 (Copy).C"));
         assertEquals(table("Existing Database 7 (Copy).C").columns(), list(column("a", "str")));
+        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).C").all().toList(), list(record(field("a", "ABC")))));
 
         assertTrue(Table.exists("Existing Database 7 (Copy).D"));
         assertEquals(table("Existing Database 7 (Copy).D").columns(), list(column("a", "str"), column("b", "int")));
-        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).D").all(), list(record())));
+        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).D").all().toList(), list(record(field("a", "ABC"), field("b", 123)))));
     }
 
     @Test
     @DisplayName("Should throw DatabaseNotFoundException on database copy which does not exist")
     public void shouldThrowDatabaseNotFoundExceptionOnDatabaseCopyWhichDoesNotExist() {
+        // Given
+        // A freshly installed Quark Server.
+
         // When
         try {
             database("Not-Existing Database 7").copy("Not-Existing Database 7 (Copy)");
