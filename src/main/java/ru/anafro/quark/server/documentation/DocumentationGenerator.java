@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.documentation;
 
+import ru.anafro.quark.server.console.Console;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.files.File;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
@@ -20,7 +21,7 @@ public class DocumentationGenerator {
 
                     Syntax:
                     ```sql
-                    \{instruction.getSyntax()}
+                    \{instruction.getSyntax().transform(Console::colorless)}
                     ```
                     """);
         }

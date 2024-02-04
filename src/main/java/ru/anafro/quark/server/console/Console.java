@@ -90,6 +90,16 @@ public final class Console {
         return coloredMessage.replace("</>", ConsoleColor.RESET.getAnsi());
     }
 
+    public static String colorless(String message) {
+        var coloredMessage = message;
+
+        for (var color : ConsoleColor.values()) {
+            coloredMessage = coloredMessage.replace(STR."<\{color.name().toLowerCase()}>", "");
+        }
+
+        return coloredMessage.replace("</>", "");
+    }
+
     private static void printErasable(String message) {
         print(message);
         erase(message.length());
