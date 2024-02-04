@@ -58,8 +58,8 @@ public class Directory implements Iterable<File> {
         return path;
     }
 
-    public Directory getRoot() {
-        return new Directory(path.getRoot());
+    public Directory getParent() {
+        return new Directory(path.getParent());
     }
 
     public File createFile(String fileName) {
@@ -129,7 +129,7 @@ public class Directory implements Iterable<File> {
 
     public void moveTo(String directoryName) {
         try {
-            Files.move(path, getRoot().getFilePath(directoryName));
+            Files.move(path, getParent().getFilePath(directoryName));
         } catch (IOException exception) {
             throw new DirectoryMoveException(this, directoryName, exception);
         }
