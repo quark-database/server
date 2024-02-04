@@ -18,7 +18,7 @@ def generate_documentation():
 
 def main():
     generate_documentation()
-    subprocess.Popen(["tree", "-d", "./"], stdout=sys.stdout).communicate()
+    subprocess.Popen(["tree", "./"], stdout=sys.stdout).communicate()
 
     with open(DOCUMENTATION_PATH, 'r') as documentation:
         documentation_content = documentation.read()
