@@ -68,11 +68,11 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco/
 
-      - name: Print project tree
-        run: tree -d ./
-
       - name: Generate Quark documentation
         run: python generate_docs.py
+
+      - name: Print project tree
+        run: tree -d ./
 
       - name: Update Quark documentation in README.md
         run: |
