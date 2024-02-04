@@ -61,7 +61,7 @@ public class CommandLoop implements Runnable {
         }
 
         Greeter.greet();
-        while (this.isRunning) {
+        while (this.isRunning && Console.hasNextLine()) {
             var prompt = Console.prompt(Quark.NAME).transform(this::preparePrompt);
 
             try {

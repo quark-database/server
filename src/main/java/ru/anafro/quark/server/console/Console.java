@@ -64,7 +64,7 @@ public final class Console {
 
     public static void sleep(String message, TimeSpan delay) {
         breakLine();
-        
+
         var lastMessage = new AtomicReference<>("");
 
         Threads.repeatWithInterval(timeLeft -> {
@@ -93,6 +93,10 @@ public final class Console {
     private static void printErasable(String message) {
         print(message);
         erase(message.length());
+    }
+
+    public static boolean hasNextLine() {
+        return scanner.hasNextLine();
     }
 }
 
