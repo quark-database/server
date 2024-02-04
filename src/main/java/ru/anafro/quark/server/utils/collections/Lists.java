@@ -86,6 +86,10 @@ public final class Lists {
         return join(collection.stream().map(presentation).toList());
     }
 
+    public static <T> String join(List<? extends T> collection, Function<T, String> presentation, String delimiter) {
+        return join(collection.stream().map(presentation).toList(), delimiter);
+    }
+
     public static <T> Optional<T> tryGet(ArrayList<T> list, int index) {
         if (Collections.isInvalidIndex(list, index)) {
             return Optional.empty();
