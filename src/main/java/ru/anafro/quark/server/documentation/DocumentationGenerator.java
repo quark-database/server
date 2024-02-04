@@ -33,7 +33,8 @@ public class DocumentationGenerator {
                     Permission: `\{instruction.getPermission()}`
 
                     Parameters:
-                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."`\{parameter.getName()}: \{parameter.getType()}`}", "\n\n")}
+
+                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."`\{parameter.getName()}: \{parameter.getType()}`", "\n\n")}
 
                     Syntax:
                     ```sql
