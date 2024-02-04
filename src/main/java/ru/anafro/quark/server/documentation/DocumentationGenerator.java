@@ -13,9 +13,12 @@ public class DocumentationGenerator {
     public static void generate() {
         var documentation = new TextBuffer(STR."""
                 This documentation is for \{Quark.NAME} \{Quark.version()}.
-                For earlier versions of Quark, please, search for README.md
-                in the release commit with tag you want. We are currently working
-                on a documentation system with multiple versions.
+
+                > ℹ️ Note for users of Quark older \{Quark.version().getShortVersion()}
+                >
+                > For older versions of Quark, please, search for README.md
+                > in the release commit with tag you want. We are currently working
+                > on a documentation system with multiple versions. Thank you.
                 """);
 
         documentation.appendLine("""
@@ -30,7 +33,7 @@ public class DocumentationGenerator {
                     Permission: `\{instruction.getPermission()}`
 
                     Parameters:
-                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."`\{parameter.getName()}: \{parameter.getType()}`}\n\n")}
+                    \{Lists.join(instruction.getParameters().stream().toList(), parameter -> STR."`\{parameter.getName()}: \{parameter.getType()}`}", "\n\n")}
 
                     Syntax:
                     ```sql
@@ -50,7 +53,7 @@ public class DocumentationGenerator {
 
                     Parameters:
 
-                    \{Lists.join(constructor.getParameters().asList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}`\n\n")}
+                    \{Lists.join(constructor.getParameters().asList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}`", "\n\n")}
 
                     Syntax:
                     ```sql
@@ -69,7 +72,7 @@ public class DocumentationGenerator {
 
                     Parameters:
 
-                    \{Lists.join(command.getParameters().toList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}` - \{parameter.longDescription()}\n\n")}
+                    \{Lists.join(command.getParameters().toList(), parameter -> STR."`\{parameter.name()}: \{parameter.type()}` - \{parameter.longDescription()}", "\n\n")}
 
                     Syntax:
                     ```sql
