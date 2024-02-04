@@ -85,9 +85,7 @@ public class Database {
     }
 
     public Database copy(String destinationName) {
-        if (doesntExist()) {
-            throw new DatabaseNotFoundException(getName());
-        }
+        ensureExists();
 
         if (exists(destinationName)) {
             throw new DatabaseExistsException(destinationName);
@@ -100,11 +98,18 @@ public class Database {
     }
 
     public void copyScheme(String destinationName) {
-        copy(destinationName).clear();
+        copy(destinationName).tables().forEach(Table::clear);
     }
 
     public void rename(String newName) {
+        ensureExists();
         directory.moveTo(newName);
+    }
+
+    public void ensureExists() {
+        if (doesntExist()) {
+            throw new DatabaseNotFoundException(getName());
+        }
     }
 
     public void clear() {
