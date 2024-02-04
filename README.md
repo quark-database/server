@@ -34,11 +34,12 @@ Adds a new column to a table
 Permission: `column.add`
 
 Parameters:
-`definition: column`}
 
-`table: str`}
+* `definition: column`
 
-`generator: generator`}
+* `table: str`
+
+* `generator: generator`
 
 Syntax:
 ```sql
@@ -51,11 +52,12 @@ Changes records match the condition
 Permission: `table.change`
 
 Parameters:
-`table: str`}
 
-`selector: selector`}
+* `table: str`
 
-`changer: changer`}
+* `selector: selector`
+
+* `changer: changer`
 
 Syntax:
 ```sql
@@ -68,7 +70,8 @@ Changes the server port
 Permission: `server.port.change`
 
 Parameters:
-`port: int`}
+
+* `port: int`
 
 Syntax:
 ```sql
@@ -81,7 +84,8 @@ Deletes all the tables inside the database
 Permission: `database.clear`
 
 Parameters:
-`database: str`}
+
+* `database: str`
 
 Syntax:
 ```sql
@@ -94,7 +98,8 @@ Removes all the records from the table
 Permission: `table.clear`
 
 Parameters:
-`table: str`}
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -107,9 +112,10 @@ Copies the database with all the contents
 Permission: `database.clone`
 
 Parameters:
-`prototype: str`}
 
-`destination: str`}
+* `prototype: str`
+
+* `destination: str`
 
 Syntax:
 ```sql
@@ -122,9 +128,10 @@ Clones the database, but clears the tables
 Permission: `database.scheme`
 
 Parameters:
-`prototype: str`}
 
-`destination: str`}
+* `prototype: str`
+
+* `destination: str`
 
 Syntax:
 ```sql
@@ -137,9 +144,10 @@ Clones the table
 Permission: `table.clone`
 
 Parameters:
-`prototype: str`}
 
-`destination: str`}
+* `prototype: str`
+
+* `destination: str`
 
 Syntax:
 ```sql
@@ -152,9 +160,10 @@ Clones the table, but deletes the records
 Permission: `table.scheme`
 
 Parameters:
-`prototype: str`}
 
-`destination: str`}
+* `prototype: str`
+
+* `destination: str`
 
 Syntax:
 ```sql
@@ -167,7 +176,8 @@ Creates a database
 Permission: `database.create`
 
 Parameters:
-`name: str`}
+
+* `name: str`
 
 Syntax:
 ```sql
@@ -180,11 +190,12 @@ Creates a table
 Permission: `table.create`
 
 Parameters:
-`table: str`}
 
-`columns: list of column`}
+* `table: str`
 
-`records: list of record`}
+* `columns: list of column`
+
+* `records: list of record`
 
 Syntax:
 ```sql
@@ -197,9 +208,10 @@ Creates an access token
 Permission: `token.create`
 
 Parameters:
-`token: str`}
 
-`permissions: list of str`}
+* `token: str`
+
+* `permissions: list of str`
 
 Syntax:
 ```sql
@@ -212,7 +224,8 @@ Does stuff for Quark developers. Don't use.
 Permission: `!unsafe.debug`
 
 Parameters:
-`json: str`}
+
+* `json: str`
 
 Syntax:
 ```sql
@@ -225,9 +238,10 @@ Deletes a column in a table
 Permission: `column.delete`
 
 Parameters:
-`name: str`}
 
-`table: str`}
+* `name: str`
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -240,7 +254,8 @@ Deletes a database
 Permission: `database.delete`
 
 Parameters:
-`database: str`}
+
+* `database: str`
 
 Syntax:
 ```sql
@@ -253,13 +268,14 @@ Deletes records meet the condition
 Permission: `json.delete`
 
 Parameters:
-`table: str`}
 
-`selector: selector`}
+* `table: str`
 
-`skip: int`}
+* `selector: selector`
 
-`limit: int`}
+* `skip: int`
+
+* `limit: int`
 
 Syntax:
 ```sql
@@ -272,7 +288,8 @@ Deletes a table
 Permission: `table.delete`
 
 Parameters:
-`table: str`}
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -285,7 +302,8 @@ Evaluates the Quark QL entity.
 Permission: `!unsafe.eval`
 
 Parameters:
-`entity: ?`}
+
+* `entity: ?`
 
 Syntax:
 ```sql
@@ -300,6 +318,7 @@ Permission: `!unsafe.factory-reset`
 Parameters:
 
 
+
 Syntax:
 ```sql
 factory reset;
@@ -311,9 +330,10 @@ Grants a token a permission
 Permission: `token.grand`
 
 Parameters:
-`token: str`}
 
-`permission: str`}
+* `token: str`
+
+* `permission: str`
 
 Syntax:
 ```sql
@@ -326,9 +346,10 @@ Inserts a new record to a table
 Permission: `table.insert`
 
 Parameters:
-`table: str`}
 
-`record: record`}
+* `table: str`
+
+* `record: record`
 
 Syntax:
 ```sql
@@ -341,7 +362,8 @@ Lists columns in a table
 Permission: `column.list`
 
 Parameters:
-`table: str`}
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -356,6 +378,7 @@ Permission: `databases.list`
 Parameters:
 
 
+
 Syntax:
 ```sql
 list databases;
@@ -367,7 +390,8 @@ Lists tables in a database
 Permission: `table.list`
 
 Parameters:
-`database: str`}
+
+* `database: str`
 
 Syntax:
 ```sql
@@ -380,9 +404,10 @@ Changes the definition of a column
 Permission: `column.redefine`
 
 Parameters:
-`table: str`}
 
-`definition: column`}
+* `table: str`
+
+* `definition: column`
 
 Syntax:
 ```sql
@@ -395,9 +420,10 @@ Defines a new set of permissions for a token
 Permission: `token.redefine`
 
 Parameters:
-`token: str`}
 
-`permissions: list of str`}
+* `token: str`
+
+* `permissions: list of str`
 
 Syntax:
 ```sql
@@ -412,6 +438,7 @@ Permission: `server.reload`
 Parameters:
 
 
+
 Syntax:
 ```sql
 reload server;
@@ -423,11 +450,12 @@ Renames a column in a table
 Permission: `column.rename`
 
 Parameters:
-`table: str`}
 
-`old: str`}
+* `table: str`
 
-`new: str`}
+* `old: str`
+
+* `new: str`
 
 Syntax:
 ```sql
@@ -440,9 +468,10 @@ Renames a database
 Permission: `database.rename`
 
 Parameters:
-`old: str`}
 
-`new: str`}
+* `old: str`
+
+* `new: str`
 
 Syntax:
 ```sql
@@ -455,7 +484,8 @@ Renames the server
 Permission: `server.rename`
 
 Parameters:
-`new: str`}
+
+* `new: str`
 
 Syntax:
 ```sql
@@ -468,9 +498,10 @@ Renames a table
 Permission: `table.rename`
 
 Parameters:
-`old: str`}
 
-`new: str`}
+* `old: str`
+
+* `new: str`
 
 Syntax:
 ```sql
@@ -483,9 +514,10 @@ Changes the column order
 Permission: `column.reorder`
 
 Parameters:
-`table: str`}
 
-`order: list of str`}
+* `table: str`
+
+* `order: list of str`
 
 Syntax:
 ```sql
@@ -498,7 +530,8 @@ Runs a command
 Permission: `server.command`
 
 Parameters:
-`command: str`}
+
+* `command: str`
 
 Syntax:
 ```sql
@@ -511,9 +544,10 @@ Schedules a command
 Permission: `server.schedule.command`
 
 Parameters:
-`command: str`}
 
-`period: long`}
+* `command: str`
+
+* `period: long`
 
 Syntax:
 ```sql
@@ -526,9 +560,10 @@ Schedules a query
 Permission: `server.schedule.query`
 
 Parameters:
-`query: str`}
 
-`period: long`}
+* `query: str`
+
+* `period: long`
 
 Syntax:
 ```sql
@@ -541,13 +576,14 @@ Selects records from a table
 Permission: `json.select`
 
 Parameters:
-`table: str`}
 
-`selector: selector`}
+* `table: str`
 
-`skip: int`}
+* `selector: selector`
 
-`limit: int`}
+* `skip: int`
+
+* `limit: int`
 
 Syntax:
 ```sql
@@ -562,6 +598,7 @@ Permission: `server.stop`
 Parameters:
 
 
+
 Syntax:
 ```sql
 stop server;
@@ -573,11 +610,12 @@ Swaps two columns in a table
 Permission: `columns.swap`
 
 Parameters:
-`table: str`}
 
-`first: str`}
+* `table: str`
 
-`second: str`}
+* `first: str`
+
+* `second: str`
 
 Syntax:
 ```sql
@@ -590,9 +628,10 @@ Removes a permission from a token
 Permission: `token.remove permission`
 
 Parameters:
-`token: str`}
 
-`permission: str`}
+* `token: str`
+
+* `permission: str`
 
 Syntax:
 ```sql
@@ -605,6 +644,7 @@ Describes all the instructions. Don't use.
 Permission: `any`
 
 Parameters:
+
 
 
 Syntax:
@@ -620,6 +660,7 @@ Permission: `any`
 Parameters:
 
 
+
 Syntax:
 ```sql
 _describe constructors;
@@ -631,9 +672,10 @@ Hints the next elements for editor hints. Don't use.
 Permission: `any`
 
 Parameters:
-`query: str`}
 
-`caret position: int`}
+* `query: str`
+
+* `caret position: int`
 
 Syntax:
 ```sql
@@ -646,6 +688,7 @@ Returns the server name
 Permission: `any`
 
 Parameters:
+
 
 
 Syntax:
@@ -661,6 +704,7 @@ Permission: `any`
 Parameters:
 
 
+
 Syntax:
 ```sql
 secret;
@@ -672,11 +716,12 @@ Adds a new table modifier
 Permission: `table.add modifier`
 
 Parameters:
-`table: str`}
 
-`column: str`}
+* `table: str`
 
-`modifier: modifier`}
+* `column: str`
+
+* `modifier: modifier`
 
 Syntax:
 ```sql
@@ -691,6 +736,7 @@ Permission: `server.plugins`
 Parameters:
 
 
+
 Syntax:
 ```sql
 list plugins;
@@ -702,9 +748,10 @@ Quickly finds a record by a single field
 Permission: `table.find`
 
 Parameters:
-`table: str`}
 
-`finder: finder`}
+* `table: str`
+
+* `finder: finder`
 
 Syntax:
 ```sql
@@ -717,9 +764,10 @@ Counts records matching condition
 Permission: `table.count in`
 
 Parameters:
-`table: str`}
 
-`selector: selector`}
+* `table: str`
+
+* `selector: selector`
 
 Syntax:
 ```sql
@@ -732,7 +780,8 @@ Shows all the modifiers of the table. Don't use
 Permission: `table.describe modifiers`
 
 Parameters:
-`table: str`}
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -745,6 +794,7 @@ Clears all the scheduled commands.
 Permission: `server.schedule.command.clear`
 
 Parameters:
+
 
 
 Syntax:
@@ -760,6 +810,7 @@ Permission: `server.schedule.query.clear`
 Parameters:
 
 
+
 Syntax:
 ```sql
 clear scheduled queries;
@@ -771,9 +822,10 @@ Shows the variable value of the table
 Permission: `table.variable.get`
 
 Parameters:
-`table: str`}
 
-`name: str`}
+* `table: str`
+
+* `name: str`
 
 Syntax:
 ```sql
@@ -786,11 +838,12 @@ Sets a new value for a variable in the table
 Permission: `table.variable.set`
 
 Parameters:
-`table: str`}
 
-`name: str`}
+* `table: str`
 
-`value: ?`}
+* `name: str`
+
+* `value: ?`
 
 Syntax:
 ```sql
@@ -803,7 +856,8 @@ Shows all the variables inside the table
 Permission: `table.variable.list`
 
 Parameters:
-`table: str`}
+
+* `table: str`
 
 Syntax:
 ```sql
@@ -816,9 +870,10 @@ Deletes a variable in the table
 Permission: `table.variable.delete`
 
 Parameters:
-`table: str`}
 
-`name: str`}
+* `table: str`
+
+* `name: str`
 
 Syntax:
 ```sql
@@ -831,9 +886,10 @@ Excludes the records matches the finder
 Permission: `table.exclude`
 
 Parameters:
-`table: str`}
 
-`finder: finder`}
+* `table: str`
+
+* `finder: finder`
 
 Syntax:
 ```sql
@@ -848,6 +904,7 @@ Permission: `any`
 Parameters:
 
 
+
 Syntax:
 ```sql
 get version;
@@ -859,9 +916,10 @@ Defines a variable
 Permission: `var`
 
 Parameters:
-`name: str`}
 
-`value: ?`}
+* `name: str`
+
+* `value: ?`
 
 Syntax:
 ```sql
@@ -877,7 +935,7 @@ Abs
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -889,7 +947,7 @@ Sin
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -901,7 +959,7 @@ Cos
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -913,7 +971,7 @@ Tan
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -925,9 +983,9 @@ Atan2
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -939,7 +997,7 @@ Sqrt
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -951,7 +1009,7 @@ Log
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -963,7 +1021,7 @@ Log10
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -975,9 +1033,9 @@ Pow
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -989,7 +1047,7 @@ Exp
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1001,9 +1059,9 @@ Min
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1015,9 +1073,9 @@ Max
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1029,7 +1087,7 @@ Floor
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1041,7 +1099,7 @@ Ceil
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1053,7 +1111,7 @@ Rint
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1065,7 +1123,7 @@ Round
 
 Parameters:
 
-`arg0: float`
+* `arg0: float`
 
 Syntax:
 ```sql
@@ -1077,9 +1135,9 @@ Add exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1091,7 +1149,7 @@ Decrement exact
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
 Syntax:
 ```sql
@@ -1103,7 +1161,7 @@ Increment exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
 Syntax:
 ```sql
@@ -1115,9 +1173,9 @@ Multiply exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1129,9 +1187,9 @@ Multiply high
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1143,9 +1201,9 @@ Unsigned multiply high
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1157,7 +1215,7 @@ Negate exact
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
 Syntax:
 ```sql
@@ -1169,9 +1227,9 @@ Subtract exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1183,11 +1241,11 @@ Fma
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
-`arg2: double`
+* `arg2: double`
 
 Syntax:
 ```sql
@@ -1199,9 +1257,9 @@ Copy sign
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1213,7 +1271,7 @@ Signum
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1225,11 +1283,11 @@ Clamp
 
 Parameters:
 
-`arg0: float`
+* `arg0: float`
 
-`arg1: float`
+* `arg1: float`
 
-`arg2: float`
+* `arg2: float`
 
 Syntax:
 ```sql
@@ -1241,9 +1299,9 @@ Scalb
 
 Parameters:
 
-`arg0: float`
+* `arg0: float`
 
-`arg1: int`
+* `arg1: int`
 
 Syntax:
 ```sql
@@ -1255,7 +1313,7 @@ Get exponent
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1267,9 +1325,9 @@ Floor mod
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
-`arg1: int`
+* `arg1: int`
 
 Syntax:
 ```sql
@@ -1281,7 +1339,7 @@ Asin
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1293,7 +1351,7 @@ Acos
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1305,7 +1363,7 @@ Atan
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1317,7 +1375,7 @@ Cbrt
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1329,9 +1387,9 @@ double @cbrt(double: arg0)
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1343,9 +1401,9 @@ Floor div
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1357,9 +1415,9 @@ Ceil div
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1371,9 +1429,9 @@ Ceil mod
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1385,7 +1443,7 @@ Power of two d
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
 Syntax:
 ```sql
@@ -1397,7 +1455,7 @@ Power of two f
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
 Syntax:
 ```sql
@@ -1409,7 +1467,7 @@ Sinh
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1421,7 +1479,7 @@ Cosh
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1433,7 +1491,7 @@ Tanh
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1445,9 +1503,9 @@ Hypot
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1459,7 +1517,7 @@ Expm1
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1471,7 +1529,7 @@ Log1p
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1483,7 +1541,7 @@ To radians
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1495,7 +1553,7 @@ To degrees
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1519,9 +1577,9 @@ Divide exact
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
-`arg1: int`
+* `arg1: int`
 
 Syntax:
 ```sql
@@ -1533,9 +1591,9 @@ Floor div exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1547,9 +1605,9 @@ Ceil div exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
-`arg1: long`
+* `arg1: long`
 
 Syntax:
 ```sql
@@ -1561,7 +1619,7 @@ To int exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
 Syntax:
 ```sql
@@ -1573,9 +1631,9 @@ Multiply full
 
 Parameters:
 
-`arg0: int`
+* `arg0: int`
 
-`arg1: int`
+* `arg1: int`
 
 Syntax:
 ```sql
@@ -1587,7 +1645,7 @@ Abs exact
 
 Parameters:
 
-`arg0: long`
+* `arg0: long`
 
 Syntax:
 ```sql
@@ -1599,7 +1657,7 @@ Ulp
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1611,9 +1669,9 @@ Next after
 
 Parameters:
 
-`arg0: float`
+* `arg0: float`
 
-`arg1: double`
+* `arg1: double`
 
 Syntax:
 ```sql
@@ -1625,7 +1683,7 @@ Next up
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1637,7 +1695,7 @@ Next down
 
 Parameters:
 
-`arg0: double`
+* `arg0: double`
 
 Syntax:
 ```sql
@@ -1649,11 +1707,11 @@ Limit
 
 Parameters:
 
-`integer: int`
+* `integer: int`
 
-`min: int`
+* `min: int`
 
-`max: int`
+* `max: int`
 
 Syntax:
 ```sql
@@ -1665,11 +1723,11 @@ Between
 
 Parameters:
 
-`min: int`
+* `min: int`
 
-`integer: int`
+* `integer: int`
 
-`max: int`
+* `max: int`
 
 Syntax:
 ```sql
@@ -1681,7 +1739,7 @@ Count digits
 
 Parameters:
 
-`integer: int`
+* `integer: int`
 
 Syntax:
 ```sql
@@ -1693,9 +1751,9 @@ Index limit
 
 Parameters:
 
-`integer: int`
+* `integer: int`
 
-`length: int`
+* `length: int`
 
 Syntax:
 ```sql
@@ -1707,9 +1765,9 @@ Positive modulus
 
 Parameters:
 
-`integer: int`
+* `integer: int`
 
-`divisor: int`
+* `divisor: int`
 
 Syntax:
 ```sql
@@ -1733,7 +1791,7 @@ The string in upper case
 
 Parameters:
 
-`string to uppercase: str`
+* `string to uppercase: str`
 
 Syntax:
 ```sql
@@ -1745,7 +1803,7 @@ The string in lower case
 
 Parameters:
 
-`string to lowercase: str`
+* `string to lowercase: str`
 
 Syntax:
 ```sql
@@ -1757,7 +1815,7 @@ A new list of values
 
 Parameters:
 
-`values: ?`
+* `values: ?`
 
 Syntax:
 ```sql
@@ -1793,7 +1851,7 @@ Concatenated string
 
 Parameters:
 
-`strings: str`
+* `strings: str`
 
 Syntax:
 ```sql
@@ -1805,7 +1863,7 @@ The selector
 
 Parameters:
 
-`selector lambda: str`
+* `selector lambda: str`
 
 Syntax:
 ```sql
@@ -1817,7 +1875,7 @@ Result of and
 
 Parameters:
 
-`booleans: boolean`
+* `booleans: boolean`
 
 Syntax:
 ```sql
@@ -1829,7 +1887,7 @@ Capitalized string
 
 Parameters:
 
-`string to capitalize: str`
+* `string to capitalize: str`
 
 Syntax:
 ```sql
@@ -1841,7 +1899,7 @@ The string with case inverted
 
 Parameters:
 
-`string where to switch case: str`
+* `string where to switch case: str`
 
 Syntax:
 ```sql
@@ -1853,7 +1911,7 @@ Number of elements inside the list
 
 Parameters:
 
-`list to count elements: list of ?`
+* `list to count elements: list of ?`
 
 Syntax:
 ```sql
@@ -1865,7 +1923,7 @@ Count of digits of the integer
 
 Parameters:
 
-`integer: int`
+* `integer: int`
 
 Syntax:
 ```sql
@@ -1889,7 +1947,7 @@ An empty list with specified type
 
 Parameters:
 
-`type name of a new list: str`
+* `type name of a new list: str`
 
 Syntax:
 ```sql
@@ -1901,9 +1959,9 @@ Is string ends with the suffix
 
 Parameters:
 
-`string: str`
+* `string: str`
 
-`suffix: str`
+* `suffix: str`
 
 Syntax:
 ```sql
@@ -1915,9 +1973,9 @@ Are these objects equal
 
 Parameters:
 
-`first object: ?`
+* `first object: ?`
 
-`second object: ?`
+* `second object: ?`
 
 Syntax:
 ```sql
@@ -1929,7 +1987,7 @@ The value of the binary string
 
 Parameters:
 
-`binary string to convert to integer: str`
+* `binary string to convert to integer: str`
 
 Syntax:
 ```sql
@@ -1941,7 +1999,7 @@ The value of the hex string
 
 Parameters:
 
-`hex string to convert to integer: str`
+* `hex string to convert to integer: str`
 
 Syntax:
 ```sql
@@ -1953,7 +2011,7 @@ The value of the octal string
 
 Parameters:
 
-`octal string to convert to integer: str`
+* `octal string to convert to integer: str`
 
 Syntax:
 ```sql
@@ -1965,9 +2023,9 @@ Is the first number greater than the second
 
 Parameters:
 
-`first number: float`
+* `first number: float`
 
-`second number: float`
+* `second number: float`
 
 Syntax:
 ```sql
@@ -1979,9 +2037,9 @@ Is the first number greater than the second or equals to
 
 Parameters:
 
-`first number: float`
+* `first number: float`
 
-`second number: float`
+* `second number: float`
 
 Syntax:
 ```sql
@@ -1993,7 +2051,7 @@ Is the string empty
 
 Parameters:
 
-`string: str`
+* `string: str`
 
 Syntax:
 ```sql
@@ -2005,9 +2063,9 @@ A joined list
 
 Parameters:
 
-`first list: list of ?`
+* `first list: list of ?`
 
-`more lists: list of ?`
+* `more lists: list of ?`
 
 Syntax:
 ```sql
@@ -2019,7 +2077,7 @@ The left trimmed string
 
 Parameters:
 
-`string to trim: str`
+* `string to trim: str`
 
 Syntax:
 ```sql
@@ -2031,7 +2089,7 @@ The length of the string
 
 Parameters:
 
-`string to count characters in: str`
+* `string to count characters in: str`
 
 Syntax:
 ```sql
@@ -2043,9 +2101,9 @@ Is the first number is less than the second
 
 Parameters:
 
-`first number: float`
+* `first number: float`
 
-`second number: float`
+* `second number: float`
 
 Syntax:
 ```sql
@@ -2057,9 +2115,9 @@ Is the first number is less than the second or equals to
 
 Parameters:
 
-`first number: float`
+* `first number: float`
 
-`second number: float`
+* `second number: float`
 
 Syntax:
 ```sql
@@ -2071,9 +2129,9 @@ Is the string matches regex
 
 Parameters:
 
-`string to check: str`
+* `string to check: str`
 
-`regex lambda: str`
+* `regex lambda: str`
 
 Syntax:
 ```sql
@@ -2085,7 +2143,7 @@ The reversed string
 
 Parameters:
 
-`string to reverse: str`
+* `string to reverse: str`
 
 Syntax:
 ```sql
@@ -2097,7 +2155,7 @@ The result of or
 
 Parameters:
 
-`booleans: boolean`
+* `booleans: boolean`
 
 Syntax:
 ```sql
@@ -2121,9 +2179,9 @@ The random value
 
 Parameters:
 
-`inclusive min: int`
+* `inclusive min: int`
 
-`exclusive max: int`
+* `exclusive max: int`
 
 Syntax:
 ```sql
@@ -2135,9 +2193,9 @@ The repeated string
 
 Parameters:
 
-`string to repeat: str`
+* `string to repeat: str`
 
-`times to repeat: int`
+* `times to repeat: int`
 
 Syntax:
 ```sql
@@ -2149,11 +2207,11 @@ The string with replaced entries
 
 Parameters:
 
-`string where to replace: str`
+* `string where to replace: str`
 
-`string to be replaced: str`
+* `string to be replaced: str`
 
-`string to replace: str`
+* `string to replace: str`
 
 Syntax:
 ```sql
@@ -2165,7 +2223,7 @@ The right trimmed string
 
 Parameters:
 
-`string to trim: str`
+* `string to trim: str`
 
 Syntax:
 ```sql
@@ -2177,7 +2235,7 @@ The sorted list
 
 Parameters:
 
-`list to sort: list`
+* `list to sort: list`
 
 Syntax:
 ```sql
@@ -2189,9 +2247,9 @@ The string parts
 
 Parameters:
 
-`string to split: str`
+* `string to split: str`
 
-`delimiter: str`
+* `delimiter: str`
 
 Syntax:
 ```sql
@@ -2203,9 +2261,9 @@ Does the string start with the prefix
 
 Parameters:
 
-`string: str`
+* `string: str`
 
-`prefix: str`
+* `prefix: str`
 
 Syntax:
 ```sql
@@ -2217,9 +2275,9 @@ Does the string contain the entry
 
 Parameters:
 
-`string where to search: str`
+* `string where to search: str`
 
-`searching string: str`
+* `searching string: str`
 
 Syntax:
 ```sql
@@ -2231,7 +2289,7 @@ The binary string
 
 Parameters:
 
-`integer to convert to binary string: int`
+* `integer to convert to binary string: int`
 
 Syntax:
 ```sql
@@ -2243,9 +2301,9 @@ The boolean
 
 Parameters:
 
-`string to convert to boolean: str`
+* `string to convert to boolean: str`
 
-`default boolean value if conversation fails: boolean`
+* `default boolean value if conversation fails: boolean`
 
 Syntax:
 ```sql
@@ -2257,9 +2315,9 @@ The float
 
 Parameters:
 
-`string to convert to float: str`
+* `string to convert to float: str`
 
-`default float value if conversation fails: float`
+* `default float value if conversation fails: float`
 
 Syntax:
 ```sql
@@ -2271,7 +2329,7 @@ The hex string
 
 Parameters:
 
-`integer to convert to hex string: int`
+* `integer to convert to hex string: int`
 
 Syntax:
 ```sql
@@ -2283,9 +2341,9 @@ The integer
 
 Parameters:
 
-`string to convert to integer: str`
+* `string to convert to integer: str`
 
-`default integer value if conversation fails: int`
+* `default integer value if conversation fails: int`
 
 Syntax:
 ```sql
@@ -2297,7 +2355,7 @@ The octal string
 
 Parameters:
 
-`integer to convert to octal string: int`
+* `integer to convert to octal string: int`
 
 Syntax:
 ```sql
@@ -2309,7 +2367,7 @@ The trimmed string
 
 Parameters:
 
-`string to trim: str`
+* `string to trim: str`
 
 Syntax:
 ```sql
@@ -2321,9 +2379,9 @@ Fraction
 
 Parameters:
 
-`number to divide: float`
+* `number to divide: float`
 
-`divisor: float`
+* `divisor: float`
 
 Syntax:
 ```sql
@@ -2335,7 +2393,7 @@ The product
 
 Parameters:
 
-`numbers to multiply: float`
+* `numbers to multiply: float`
 
 Syntax:
 ```sql
@@ -2347,7 +2405,7 @@ Negated value
 
 Parameters:
 
-`boolean to invert: boolean`
+* `boolean to invert: boolean`
 
 Syntax:
 ```sql
@@ -2359,9 +2417,9 @@ The difference
 
 Parameters:
 
-`number to subtract from: float`
+* `number to subtract from: float`
 
-`numbers to subtract: float`
+* `numbers to subtract: float`
 
 Syntax:
 ```sql
@@ -2373,7 +2431,7 @@ The sum
 
 Parameters:
 
-`numbers to sum: float`
+* `numbers to sum: float`
 
 Syntax:
 ```sql
@@ -2385,7 +2443,7 @@ The record
 
 Parameters:
 
-`values: ?`
+* `values: ?`
 
 Syntax:
 ```sql
@@ -2397,9 +2455,9 @@ The record changer
 
 Parameters:
 
-`column name to change: str`
+* `column name to change: str`
 
-`changer lambda: str`
+* `changer lambda: str`
 
 Syntax:
 ```sql
@@ -2411,7 +2469,7 @@ The null constant
 
 Parameters:
 
-`type of null: str`
+* `type of null: str`
 
 Syntax:
 ```sql
@@ -2423,7 +2481,7 @@ The field generator
 
 Parameters:
 
-`lambda: str`
+* `lambda: str`
 
 Syntax:
 ```sql
@@ -2435,9 +2493,9 @@ The finder
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`finding object: ?`
+* `finding object: ?`
 
 Syntax:
 ```sql
@@ -2449,7 +2507,7 @@ The date from unix timestamp
 
 Parameters:
 
-`unix time stamp: long`
+* `unix time stamp: long`
 
 Syntax:
 ```sql
@@ -2461,7 +2519,7 @@ The amount of milliseconds
 
 Parameters:
 
-`milliseconds: long`
+* `milliseconds: long`
 
 Syntax:
 ```sql
@@ -2473,7 +2531,7 @@ The amount of milliseconds
 
 Parameters:
 
-`seconds: long`
+* `seconds: long`
 
 Syntax:
 ```sql
@@ -2485,7 +2543,7 @@ The amount of milliseconds
 
 Parameters:
 
-`minutes: long`
+* `minutes: long`
 
 Syntax:
 ```sql
@@ -2497,7 +2555,7 @@ The amount of milliseconds
 
 Parameters:
 
-`hours: long`
+* `hours: long`
 
 Syntax:
 ```sql
@@ -2509,7 +2567,7 @@ The amount of milliseconds
 
 Parameters:
 
-`days: long`
+* `days: long`
 
 Syntax:
 ```sql
@@ -2521,7 +2579,7 @@ The amount of milliseconds
 
 Parameters:
 
-`weeks: long`
+* `weeks: long`
 
 Syntax:
 ```sql
@@ -2533,7 +2591,7 @@ The amount of milliseconds
 
 Parameters:
 
-`months: long`
+* `months: long`
 
 Syntax:
 ```sql
@@ -2545,7 +2603,7 @@ The amount of milliseconds
 
 Parameters:
 
-`years: long`
+* `years: long`
 
 Syntax:
 ```sql
@@ -2557,9 +2615,9 @@ The date from the format passed in
 
 Parameters:
 
-`date format: str`
+* `date format: str`
 
-`formatted date: str`
+* `formatted date: str`
 
 Syntax:
 ```sql
@@ -2667,9 +2725,9 @@ Casted entity
 
 Parameters:
 
-`casting entity: ?`
+* `casting entity: ?`
 
-`cast type: str`
+* `cast type: str`
 
 Syntax:
 ```sql
@@ -2681,7 +2739,7 @@ The value of the variable
 
 Parameters:
 
-`variable name: str`
+* `variable name: str`
 
 Syntax:
 ```sql
@@ -2693,9 +2751,9 @@ The column modifier
 
 Parameters:
 
-`min: float`
+* `min: float`
 
-`max: float`
+* `max: float`
 
 Syntax:
 ```sql
@@ -2947,7 +3005,7 @@ The column modifier
 
 Parameters:
 
-`default value: ?`
+* `default value: ?`
 
 Syntax:
 ```sql
@@ -2959,9 +3017,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -2973,9 +3031,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -2987,9 +3045,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -3001,9 +3059,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -3015,9 +3073,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -3029,9 +3087,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -3043,9 +3101,9 @@ The column description
 
 Parameters:
 
-`column name: str`
+* `column name: str`
 
-`modifiers: modifier`
+* `modifiers: modifier`
 
 Syntax:
 ```sql
@@ -3072,9 +3130,9 @@ Opens up the help menu contains all the commands with descriptions and syntax
 
 Parameters:
 
-`command: STRING` - If you need a help with some command (for example, you don't know the argument names or the command purpose), just add a command name to display the help
+* `command: STRING` - If you need a help with some command (for example, you don't know the argument names or the command purpose), just add a command name to display the help
 
-`constructor: STRING` - If you need a help with some constructor. just add the constructor name
+* `constructor: STRING` - If you need a help with some constructor. just add the constructor name
 
 Syntax:
 ```sql
@@ -3086,9 +3144,9 @@ Takes a module with the name passed with 'for' argument and changes it's minimal
 
 Parameters:
 
-`for: STRING` - A module that the minimal logging level should be changed for
+* `for: STRING` - A module that the minimal logging level should be changed for
 
-`to: STRING` - A minimal logging level required to log
+* `to: STRING` - A minimal logging level required to log
 
 Syntax:
 ```sql
@@ -3100,7 +3158,7 @@ Opens up a debug dialog 'named'
 
 Parameters:
 
-`for: STRING` - The name of debug dialog you want to open
+* `for: STRING` - The name of debug dialog you want to open
 
 Syntax:
 ```sql
@@ -3112,7 +3170,7 @@ Enables the debug logging for a module with name passed in the 'for' argument
 
 Parameters:
 
-`for: STRING` - A name of the module which log level should be switched to 'debug'
+* `for: STRING` - A name of the module which log level should be switched to 'debug'
 
 Syntax:
 ```sql
@@ -3124,7 +3182,7 @@ Disables the debug for a module with name passed as the 'for' argument
 
 Parameters:
 
-`for: STRING` - The module name which log level should be switched back to 'info'
+* `for: STRING` - The module name which log level should be switched back to 'info'
 
 Syntax:
 ```sql
@@ -3160,9 +3218,9 @@ Runs an instruction or a command
 
 Parameters:
 
-`instruction: STRING` - An instruction that should be run
+* `instruction: STRING` - An instruction that should be run
 
-`command: STRING` - A command that should be run
+* `command: STRING` - A command that should be run
 
 Syntax:
 ```sql
@@ -3174,9 +3232,9 @@ Runs the small developers tests for Quark developers.
 
 Parameters:
 
-`for: STRING` - A name of the test to be run
+* `for: STRING` - A name of the test to be run
 
-`json: STRING` - A json for testing code. The usage of json passed differs from test to test.
+* `json: STRING` - A json for testing code. The usage of json passed differs from test to test.
 
 Syntax:
 ```sql
@@ -3188,7 +3246,7 @@ Evaluates a Quark QL entity
 
 Parameters:
 
-`expression: STRING` - An expression to evaluate
+* `expression: STRING` - An expression to evaluate
 
 Syntax:
 ```sql
@@ -3298,7 +3356,7 @@ Lists objects of type you specify
 
 Parameters:
 
-`of: STRING` - Type of objects you want to specify
+* `of: STRING` - Type of objects you want to specify
 
 Syntax:
 ```sql
@@ -3310,7 +3368,7 @@ Formats the instruction that passed in
 
 Parameters:
 
-`instruction: STRING` - The instruction you want to be formatted
+* `instruction: STRING` - The instruction you want to be formatted
 
 Syntax:
 ```sql
