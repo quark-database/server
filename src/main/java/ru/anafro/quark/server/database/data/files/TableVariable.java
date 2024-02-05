@@ -2,11 +2,12 @@ package ru.anafro.quark.server.database.data.files;
 
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.exceptions.VariableFileWrongLinesCountException;
+import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.entities.Entity;
 import ru.anafro.quark.server.language.entities.NullEntity;
-import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.utils.files.File;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -80,5 +81,18 @@ public class TableVariable {
 
     public void delete() {
         file.delete();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TableVariable that = (TableVariable) o;
+        return Objects.equals(table, that.table) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(table, name);
     }
 }
