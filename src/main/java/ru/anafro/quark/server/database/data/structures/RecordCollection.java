@@ -5,12 +5,16 @@ import ru.anafro.quark.server.database.data.RecordIterationLimiter;
 import ru.anafro.quark.server.database.data.RecordLambda;
 import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.database.data.TableRecordFinder;
+import ru.anafro.quark.server.language.entities.RecordEntity;
+import ru.anafro.quark.server.utils.collections.Collections;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public abstract class RecordCollection implements Iterable<TableRecord> {
     public RecordCollection() {
@@ -31,6 +35,10 @@ public abstract class RecordCollection implements Iterable<TableRecord> {
         for (var record : records) {
             add(record);
         }
+    }
+
+    public boolean same(RecordEntity... records) {
+        return Collections.equalsIgnoreOrder(toList().stream().map(TableRecord::toEntity).toList(), list(records));
     }
 
     public abstract RecordCollection select(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter);
