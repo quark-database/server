@@ -2,7 +2,7 @@ package ru.anafro.quark.server.database.data;
 
 import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
-import ru.anafro.quark.server.database.data.exceptions.DatabaseFileException;
+import ru.anafro.quark.server.database.data.exceptions.TableExistsException;
 import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
 import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.data.files.TableRecords;
@@ -233,6 +233,10 @@ public class Table implements Iterable<TableRecord> {
         variable.set(value);
     }
 
+    public void setVariable(String name, Object value) {
+        setVariable(name, Entity.wrap(value));
+    }
+
     public Optional<ColumnDescription> getColumn(String columnName) {
         return header.getColumn(columnName);
     }
@@ -333,7 +337,6 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public int count(TableRecordSelector selector) {
-        // TODO: selectAll.count()
         return all().select(selector, RecordIterationLimiter.UNLIMITED).count();
     }
 
