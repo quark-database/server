@@ -32,7 +32,7 @@ public class TableScheme {
     }
 
     public void down() {
-        Table.deleteIfExists(tableName);
+        Table.deleteIfExists(tableName.toCompoundedString());
     }
 
     public TableName getTableName() {
