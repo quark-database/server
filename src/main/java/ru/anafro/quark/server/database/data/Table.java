@@ -93,7 +93,7 @@ public class Table implements Iterable<TableRecord> {
         }
     }
 
-    public static void deleteIfExists(TableName tableName) {
+    public static void deleteIfExists(String tableName) {
         if (doesntExist(tableName)) {
             return;
         }
