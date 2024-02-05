@@ -12,9 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.anafro.quark.server.database.data.ColumnDescription.column;
 import static ru.anafro.quark.server.database.data.Database.database;
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
-import static ru.anafro.quark.server.database.data.RecordField.field;
 import static ru.anafro.quark.server.database.data.Table.table;
-import static ru.anafro.quark.server.database.data.TableRecord.record;
+import static ru.anafro.quark.server.language.entities.RecordEntity.record;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 class DatabaseTest {
@@ -253,11 +252,11 @@ class DatabaseTest {
 
         assertTrue(Table.exists("Existing Database 7 (Copy).C"));
         assertEquals(table("Existing Database 7 (Copy).C").columns(), list(column("a", "str")));
-        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).C").all().toList(), list(record(field("a", "ABC")))));
+        assertTrue(table("Existing Database 7 (Copy).C").all().same(record("ABC")));
 
         assertTrue(Table.exists("Existing Database 7 (Copy).D"));
         assertEquals(table("Existing Database 7 (Copy).D").columns(), list(column("a", "str"), column("b", "int")));
-        assertTrue(Collections.equalsIgnoreOrder(table("Existing Database 7 (Copy).D").all().toList(), list(record(field("a", "ABC"), field("b", 123)))));
+        assertTrue(table("Existing Database 7 (Copy).D").all().same(record("ABC", 123)));
     }
 
     @Test
