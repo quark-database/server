@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.views.TableViewRow;
 import ru.anafro.quark.server.language.entities.Entity;
+import ru.anafro.quark.server.language.entities.RecordEntity;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
@@ -135,8 +136,22 @@ public class TableRecord implements Iterable<RecordField> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        if (o instanceof RecordEntity entity) {
+            return fields.stream().map(RecordField::getEntity).toList().equals(entity.getValues());
+        }
+
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+
         TableRecord that = (TableRecord) o;
         return Objects.equals(fields, that.fields);
     }
