@@ -82,7 +82,7 @@ public class CloneTableInstruction extends Instruction {
         var prototype = arguments.getTable("prototype");
         var destinationName = arguments.getTableName("destination");
 
-        prototype.copy(destinationName);
+        prototype.copy(destinationName.toCompoundedString());
         result.ok("The table is cloned.");
     }
 }

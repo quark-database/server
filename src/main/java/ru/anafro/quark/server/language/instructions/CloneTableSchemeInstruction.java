@@ -68,7 +68,7 @@ public class CloneTableSchemeInstruction extends Instruction {
         var prototype = arguments.getTable("prototype");
         var destinationName = arguments.getTableName("destination");
 
-        prototype.copyScheme(destinationName);
+        prototype.copyScheme(destinationName.toCompoundedString());
         result.ok("The table scheme is cloned.");
     }
 }
