@@ -124,6 +124,10 @@ public class Table implements Iterable<TableRecord> {
         return byName(tableName);
     }
 
+    public static Table create(String tableName, List<ColumnDescription> columns, List<RecordEntity> records) {
+        return create(new TableName(tableName), columns, records);
+    }
+
     public static Table create(TableName tableName, List<ColumnDescription> columns, List<RecordEntity> records) {
         var collection = new LinearRecordCollection();
         var table = create(tableName, columns);
