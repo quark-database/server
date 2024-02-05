@@ -141,6 +141,10 @@ public class TableRecord implements Iterable<RecordField> {
         return Objects.equals(fields, that.fields);
     }
 
+    public RecordEntity toEntity() {
+        return new RecordEntity(fields.stream().map(RecordField::getEntity).toArray(Entity[]::new));
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(fields);
