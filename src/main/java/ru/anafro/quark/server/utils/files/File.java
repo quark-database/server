@@ -74,7 +74,7 @@ public class File implements Comparable<File>, Appendable {
     }
 
     public void write(String text) {
-        writeWithOptions(text, StandardOpenOption.WRITE);
+        writeWithOptions(text, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     public void append(String text) {
