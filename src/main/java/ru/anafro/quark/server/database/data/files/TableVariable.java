@@ -64,7 +64,7 @@ public class TableVariable {
     }
 
     public <T extends Entity> void update(Function<T, T> changer) {
-        get().ifPresent(this::set);
+        get().ifPresent(value -> this.set(changer.apply((T) value)));
     }
 
     public Table getTable() {
