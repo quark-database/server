@@ -109,7 +109,7 @@ public class Table implements Iterable<TableRecord> {
         Database.createIfDoesntExist(tableName.getDatabaseName());
 
         if (exists(tableName)) {
-            throw new DatabaseFileException(STR."Table '\{tableName}' already exists.");
+            throw new TableExistsException(tableName.toCompoundedString());
         }
 
         var databasesDirectory = DatabasesDirectory.getInstance();
