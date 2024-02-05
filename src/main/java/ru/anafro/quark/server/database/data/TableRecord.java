@@ -121,8 +121,9 @@ public class TableRecord implements Iterable<RecordField> {
     public void reorderFields(List<String> newOrder) {
         var reorderedFields = new ArrayList<RecordField>();
 
-        for (var nextFieldName : newOrder) {
-            reorderedFields.add(fields.stream().filter(field -> field.getColumnName().equals(nextFieldName)).findFirst().orElseThrow());
+
+        for (var newColumn : newOrder) {
+            reorderedFields.add(fields.stream().filter(field -> field.getColumnName().equals(newColumn)).findFirst().orElseThrow());
         }
 
         fields.clear();
