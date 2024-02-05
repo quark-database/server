@@ -46,7 +46,7 @@ public class TreeDebugger extends Debugger {
             var table = Table.byName(tableName);
             var tree = new PageTreeRecordCollection(columnName);
 
-            table.getRecords().forEach(tree::add);
+            table.all().forEach(tree::add);
 
             treeOutputArea.setText(tree.getTree().toString());
             treeOutputArea.setForeground(Color.BLACK);

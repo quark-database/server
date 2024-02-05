@@ -2,10 +2,10 @@ package ru.anafro.quark.server.debug;
 
 import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
-import ru.anafro.quark.server.language.Expressions;
 import ru.anafro.quark.server.debug.components.Debugger;
 import ru.anafro.quark.server.debug.components.TextArea;
 import ru.anafro.quark.server.debug.components.TextField;
+import ru.anafro.quark.server.language.Expressions;
 import ru.anafro.quark.server.utils.exceptions.Exceptions;
 import ru.anafro.quark.server.utils.integers.Integers;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
@@ -49,7 +49,7 @@ public class HashtableDebugger extends Debugger {
             var hashtable = new HashtableRecordCollection(columnName);
             var output = new TextBuffer();
 
-            table.getRecords().forEach(hashtable::add);
+            table.all().forEach(hashtable::add);
 
             var value = Expressions.eval(stringValue);
             var index = Integers.positiveModulus(value.hashCode(), hashtable.getRecordChains().length);
