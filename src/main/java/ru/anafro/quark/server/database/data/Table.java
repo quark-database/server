@@ -149,12 +149,8 @@ public class Table implements Iterable<TableRecord> {
         return header;
     }
 
-    public TableRecords getRecords() {  // TODO: Encapsulate?
-        return records;
-    }
-
-    public VariableDirectory getVariableDirectory() {  // TODO: Encapsulate
-        return variableDirectory;
+    public List<TableVariable> variables() {
+        return variableDirectory.all();
     }
 
     public void rename(String newName) {

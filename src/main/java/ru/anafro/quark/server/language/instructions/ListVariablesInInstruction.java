@@ -31,7 +31,7 @@ public class ListVariablesInInstruction extends Instruction {
 
         result.header("variable name", "variable value", "variable type");
 
-        for (var variable : table.getVariableDirectory()) {
+        for (var variable : table.variables()) {
             variable.get().ifPresent(value -> {
                 var variableName = variable.getName();
                 var variableCode = value.toInstructionForm();
