@@ -3,15 +3,17 @@ package ru.anafro.quark.server.database.data;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.anafro.quark.server.database.data.exceptions.TableExistsException;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.database.data.exceptions.*;
 import ru.anafro.quark.server.database.views.TableViewHeader;
 import ru.anafro.quark.server.utils.collections.Collections;
 import ru.anafro.quark.server.utils.collections.Iterators;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.anafro.quark.server.database.data.ColumnDescription.column;
+import static ru.anafro.quark.server.database.data.ColumnModifier.modifier;
 import static ru.anafro.quark.server.database.data.Database.database;
+import static ru.anafro.quark.server.database.data.ExpressionTableRecordSelector.selector;
+import static ru.anafro.quark.server.database.data.RecordFieldGenerator.generator;
 import static ru.anafro.quark.server.database.data.Table.systemTable;
 import static ru.anafro.quark.server.database.data.Table.table;
 import static ru.anafro.quark.server.language.entities.RecordEntity.record;
@@ -769,5 +771,388 @@ class TableTest {
 
         // Then
         assertTrue(Iterators.equals(table("Existing Database.A").all().iterator(), actualIterator));
+    }
+
+    @Test
+    @DisplayName("Should add column")
+    public void shouldAddColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        table("Existing Database.A").addColumn(column("d", "str"), generator("@concat(:a, \"XYZ\")"));
+
+        // Then
+        assertEquals(list(
+                column("a", "str"),
+                column("b", "int"),
+                column("c", "long"),
+                column("d", "str")
+        ), table("Existing Database.A").columns());
+        assertTrue(table("Existing Database.A").all().same(
+                record("ABC", 123, 456L, "ABCXYZ"),
+                record("DEF", 123, 456L, "DEFXYZ"),
+                record("GHI", 123, 456L, "GHIXYZ")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnExistsException on addColumn when column with such name already exists")
+    public void shouldThrowColumnExistsExceptionOnAddColumnWhenColumnWithSuchNameAlreadyExists() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").addColumn(column("c", "str"), generator("@concat(:a, \"XYZ\")"));
+
+            // Then
+            fail();
+        } catch (ColumnExistsException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should add column with generating modifier without generator specified")
+    public void shouldAddColumnWithGeneratingModifierWithoutGeneratorSpecified() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        table("Existing Database.A").addColumn(
+                column("d", "int", modifier("incrementing"))
+        );
+
+        // Then
+        assertEquals(list(
+                column("a", "str"),
+                column("b", "int"),
+                column("c", "long"),
+                column("d", "int", modifier("incrementing"))
+        ), table("Existing Database.A").columns());
+        assertTrue(table("Existing Database.A").all().same(
+                record("ABC", 123, 456L, 1),
+                record("DEF", 123, 456L, 2),
+                record("GHI", 123, 456L, 3)
+        ));
+    }
+
+    @Test
+    @DisplayName("Should throw BadGeneratorException on addColumn with generator that does not return type of the column")
+    public void shouldThrowBadGeneratorExceptionOnAddColumnWithGeneratorThatDoesNotReturnTypeOfTheColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").addColumn(column("d", "date"), generator("@concat(:a, \"XYZ\")"));
+
+            // Then
+            fail();
+        } catch (BadGeneratorException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should add column with generator not returning exact column type, but type that can be casted to column type")
+    public void shouldAddColumnWithGeneratorNotReturningExactColumnTypeButTypeThatCanBeCastedToColumnType() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        table("Existing Database.A").addColumn(column("d", "int"), generator("\"123\""));
+
+
+        // Then
+        assertEquals(list(
+                column("a", "str"),
+                column("b", "int"),
+                column("c", "long"),
+                column("d", "int")
+        ), table("Existing Database.A").columns());
+        assertTrue(table("Existing Database.A").all().same(
+                record("ABC", 123, 456L, 123),
+                record("DEF", 123, 456L, 123),
+                record("GHI", 123, 456L, 123)
+        ));
+    }
+
+    @Test
+    @DisplayName("Should throw NeedGeneratorException on adding column with no generating modifier and not providing a generator")
+    public void shouldThrowNeedGeneratorExceptionOnAddingColumnWithNoGeneratingModifierAndNotProvidingAGenerator() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "int"),
+                        column("c", "long")
+                ),
+                list(
+                        record("ABC", 123, 456L),
+                        record("DEF", 123, 456L),
+                        record("GHI", 123, 456L)
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").addColumn(column("d", "date"));
+
+            // Then
+            fail();
+        } catch (NeedGeneratorException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should count")
+    public void shouldCount() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("tag", "str")
+                ),
+                list(
+                        record("not that"),
+                        record("neither that"),
+                        record("SELECT ME"),
+                        record("AND ME"),
+                        record("i don't want to be selected"),
+                        record("PLEASE ME"),
+                        record("I BEG YOU, SELECT ME")
+                ));
+
+        // When
+        var actualCount = table("Existing Database.A").count(selector("@string contains(:tag, \"ME\")"));
+
+        // Then
+        assertEquals(4, actualCount);
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on addModifier on not-existing column")
+    public void shouldThrowColumnNotFoundExceptionOnAddModifierOnNotExistingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("tag", "str")
+                ),
+                list(
+                        record("not that"),
+                        record("neither that"),
+                        record("SELECT ME"),
+                        record("AND ME"),
+                        record("i don't want to be selected"),
+                        record("PLEASE ME"),
+                        record("I BEG YOU, SELECT ME")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").addModifier("x", modifier("incrementing"));
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should add modifier")
+    public void shouldAddModifier() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "str")
+                ),
+                list(
+                        record("hello", "hi"),
+                        record("what's up", "i'm good"),
+                        record("what you doing?", "unit testing")
+                ));
+
+        // When
+        table("Existing Database.A").addModifier("a", modifier("unique"));
+
+        // Then
+        assertEquals(list(
+                column("a", "str", modifier("unique")),
+                column("b", "str")
+        ), table("Existing Database.A").columns());
+    }
+
+    @Test
+    @DisplayName("Should throw ModifierExistsException on adding modifier to column, which already has a modifier with same name")
+    public void shouldThrowModifierExistsExceptionOnAddingModifierToColumnWhichAlreadyHasAModifierWithSameName() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str")
+                ),
+                list(
+                        record("hello", "hi"),
+                        record("what's up", "i'm good"),
+                        record("what you doing?", "unit testing")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").addModifier("a", modifier("unique"));
+
+            // Then
+            fail();
+        } catch (ModifierExistsException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should swap columns")
+    public void shouldSwapColumns() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        table("Existing Database.A").swapColumns("a", "c");
+
+        // Then
+        assertEquals(list(
+                column("c", "str"),
+                column("b", "str"),
+                column("a", "str", modifier("unique"))
+        ), table("Existing Database.A").columns());
+        assertTrue(table("Existing Database.A").all().same(
+                record("greeting", "hi", "hello"),
+                record("mood", "i'm good", "what's up"),
+                record("action", "unit testing", "what you doing?")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException when if swapping not existing columns")
+    public void shouldThrowColumnNotFoundExceptionWhenIfSwappingNotExistingColumns() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").swapColumns("a", "x");
+
+            // Then
+            fail("Swapping two columns somehow succeeded: the first exists, the second doesn't");
+        } catch (ColumnNotFoundException _) {
+        }
+
+        // When
+        try {
+            table("Existing Database.A").swapColumns("x", "b");
+
+            // Then
+            fail("Swapping two columns somehow succeeded: the first doesn't exist, the second does");
+        } catch (ColumnNotFoundException _) {
+        }
+
+        // When
+        try {
+            table("Existing Database.A").swapColumns("x", "y");
+
+            // Then
+            fail("Swapping two columns somehow succeeded: both column don't exist");
+        } catch (ColumnNotFoundException _) {
+        }
     }
 }
