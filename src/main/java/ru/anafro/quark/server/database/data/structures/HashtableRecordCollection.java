@@ -11,6 +11,7 @@ import ru.anafro.quark.server.utils.integers.Integers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class HashtableRecordCollection extends RecordCollection {
     public final int HASHTABLE_SIZE = 16;
@@ -32,7 +33,7 @@ public class HashtableRecordCollection extends RecordCollection {
     }
 
     @Override
-    public RecordCollection select(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter) {
+    public RecordCollection select(Function<TableRecord, Boolean> selectionCondition, RecordIterationLimiter limiter) {
         var collection = new LinearRecordCollection();
 
         for (var record : this) {

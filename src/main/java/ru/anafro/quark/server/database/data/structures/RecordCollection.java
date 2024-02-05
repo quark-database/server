@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
@@ -41,7 +42,7 @@ public abstract class RecordCollection implements Iterable<TableRecord> {
         return Collections.equalsIgnoreOrder(toList().stream().map(TableRecord::toEntity).toList(), list(records));
     }
 
-    public abstract RecordCollection select(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter);
+    public abstract RecordCollection select(Function<TableRecord, Boolean> selectionCondition, RecordIterationLimiter limiter);
 
     public abstract void remove(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter);
 

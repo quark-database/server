@@ -8,7 +8,10 @@ import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.data.files.TableRecords;
 import ru.anafro.quark.server.database.data.files.TableVariable;
 import ru.anafro.quark.server.database.data.files.VariableDirectory;
-import ru.anafro.quark.server.database.data.structures.*;
+import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
+import ru.anafro.quark.server.database.data.structures.LinearRecordCollection;
+import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
+import ru.anafro.quark.server.database.data.structures.RecordCollection;
 import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.views.TableViewHeader;
 import ru.anafro.quark.server.exceptions.QuarkException;
@@ -22,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
@@ -169,13 +173,6 @@ public class Table implements Iterable<TableRecord> {
         records.insert(record);
     }
 
-    public RecordCollection loadRecords(RecordCollectionResolver resolver) {
-        RecordCollection collection = resolver.createEmptyCollection();
-        collection.addAll(records);
-
-        return collection;
-    }
-
     public RecordCollection all() {
         var collection = new LinearRecordCollection();
         collection.addAll(records);
@@ -183,7 +180,7 @@ public class Table implements Iterable<TableRecord> {
         return collection;
     }
 
-    public RecordCollection select(TableRecordSelector selector, RecordIterationLimiter limiter) {
+    public RecordCollection select(Function<TableRecord, Boolean> selector, RecordIterationLimiter limiter) {
         return all().select(selector, limiter);
     }
 
@@ -199,13 +196,14 @@ public class Table implements Iterable<TableRecord> {
         getDirectory().delete();
     }
 
-    public Table copy(TableName destinationName) {
+    public Table copy(String destinationName) {
         if (exists(destinationName)) {
-            throw new QueryException(STR."Table '\{destinationName}' already exists.");
+            throw new TableExistsException(destinationName);
         }
 
-        var databaseName = destinationName.getDatabaseName();
-        var tableName = destinationName.getTableName();
+        var name = new TableName(destinationName);
+        var databaseName = name.getDatabaseName();
+        var tableName = name.getTableName();
         var database = Database.createIfDoesntExist(databaseName);
         var databaseDirectory = database.getDirectory();
         var destinationPath = databaseDirectory.getFilePath(tableName);
@@ -215,7 +213,7 @@ public class Table implements Iterable<TableRecord> {
         return byName(destinationName);
     }
 
-    public void copyScheme(TableName destinationName) {
+    public void copyScheme(String destinationName) {
         copy(destinationName).clear();
     }
 

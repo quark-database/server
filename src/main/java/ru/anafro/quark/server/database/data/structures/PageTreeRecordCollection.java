@@ -10,6 +10,7 @@ import ru.anafro.quark.server.utils.exceptions.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class PageTreeRecordCollection extends RecordCollection {
     private final String keyColumn;
@@ -25,7 +26,7 @@ public class PageTreeRecordCollection extends RecordCollection {
     }
 
     @Override
-    public RecordCollection select(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter) {
+    public RecordCollection select(Function<TableRecord, Boolean> selectionCondition, RecordIterationLimiter limiter) {
         throw new NotImplementedException();
     }
 

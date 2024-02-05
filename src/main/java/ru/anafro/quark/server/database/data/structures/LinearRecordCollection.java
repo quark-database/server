@@ -9,6 +9,7 @@ import ru.anafro.quark.server.database.data.TableRecordFinder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class LinearRecordCollection extends RecordCollection {
     private final ArrayList<TableRecord> records = new ArrayList<>();
@@ -30,19 +31,23 @@ public class LinearRecordCollection extends RecordCollection {
     }
 
     @Override
-    public RecordCollection select(RecordLambda<Boolean> selectionCondition, RecordIterationLimiter limiter) {
+    public RecordCollection select(Function<TableRecord, Boolean> selectionCondition, RecordIterationLimiter limiter) {
         var collection = new LinearRecordCollection();
 
         for (var record : this) {
-            if (limiter.fitsTheLimit()) {
-                if (limiter.isSkipNeeded()) {
-                    limiter.skipped();
-                } else if (selectionCondition.apply(record)) {
-                    collection.add(record);
-                    limiter.selected();
-                }
-            } else {
+            if (!selectionCondition.apply(record)) {
+                continue;
+            }
+
+            if (!limiter.fitsTheLimit()) {
                 break;
+            }
+
+            if (limiter.isSkipNeeded()) {
+                limiter.skipped();
+            } else {
+                collection.add(record);
+                limiter.selected();
             }
         }
 
