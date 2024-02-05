@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.database.data;
 
+import ru.anafro.quark.server.database.data.exceptions.ModifierExistsException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.entities.ColumnModifierEntity;
 import ru.anafro.quark.server.language.types.EntityType;
@@ -55,6 +56,10 @@ public final class ColumnDescription {
     }
 
     public void addModifier(ColumnModifierEntity modifier) {
+        if (hasModifier(modifier.getModifier().getName())) {
+            throw new ModifierExistsException(this, modifier);
+        }
+
         modifiers.add(modifier);
     }
 
