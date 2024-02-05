@@ -438,6 +438,10 @@ public class Table implements Iterable<TableRecord> {
         return Objects.equals(getName(), table.getName());
     }
 
+    public boolean isSystem() {
+        return database.isSystem();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getName());

@@ -136,4 +136,8 @@ public class Database {
     public int hashCode() {
         return Objects.hash(directory.getName());
     }
+
+    public boolean isSystem() {
+        return getName().equals(SYSTEM_DATABASE_NAME);
+    }
 }
