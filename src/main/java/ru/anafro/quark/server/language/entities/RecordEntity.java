@@ -1,12 +1,14 @@
 package ru.anafro.quark.server.language.entities;
 
 import org.jetbrains.annotations.NotNull;
+import ru.anafro.quark.server.database.data.TableRecord;
 import ru.anafro.quark.server.language.constructors.StringConstructorBuilder;
 import ru.anafro.quark.server.language.entities.exceptions.TypeCanNotBeUsedInRecordsException;
 import ru.anafro.quark.server.utils.collections.Lists;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 public class RecordEntity extends Entity implements Iterable<Entity> {
     private final ArrayList<Entity> values;
@@ -84,5 +86,16 @@ public class RecordEntity extends Entity implements Iterable<Entity> {
     @Override
     public Iterator<Entity> iterator() {
         return values.iterator();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (o instanceof TableRecord record) return record.equals(this);
+        if (getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        RecordEntity entities = (RecordEntity) o;
+        return Objects.equals(values, entities.values);
     }
 }
