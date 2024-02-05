@@ -195,4 +195,8 @@ public class File implements Comparable<File>, Appendable {
         append(String.valueOf(character));
         return this;
     }
+
+    public String getNameWithoutExtension() {
+        return Strings.removeTrailing(getName(), STR.".\{getExtension()}");
+    }
 }

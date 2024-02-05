@@ -176,12 +176,11 @@ public class Table implements Iterable<TableRecord> {
         return collection;
     }
 
-    public RecordCollection loadRecords() {
-        return loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.NO_FURTHER_MANIPULATIONS));
-    }
-
     public RecordCollection all() {
-        return loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
+        var collection = new LinearRecordCollection();
+        collection.addAll(records);
+
+        return collection;
     }
 
     public RecordCollection select(TableRecordSelector selector, RecordIterationLimiter limiter) {

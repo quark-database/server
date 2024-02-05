@@ -30,8 +30,8 @@ public class ListScheduledTasksCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        var queries = Table.byName("Quark.Scheduled Queries").loadRecords();
-        var commands = Table.byName("Quark.Scheduled Commands").loadRecords();
+        var queries = Table.byName("Quark.Scheduled Queries").all();
+        var commands = Table.byName("Quark.Scheduled Commands").all();
 
         queries.forEach(record -> {
             var query = record.getString("query");

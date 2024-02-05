@@ -21,8 +21,8 @@ public class Scheduler implements Iterable<ScheduledTask> {
         Table.ensureExists("Quark.Scheduled Queries");
         Table.ensureExists("Quark.Scheduled Commands");
 
-        var queries = Table.byName("Quark.Scheduled Queries").loadRecords();
-        var commands = Table.byName("Quark.Scheduled Commands").loadRecords();
+        var queries = Table.byName("Quark.Scheduled Queries").all();
+        var commands = Table.byName("Quark.Scheduled Commands").all();
 
         for (var query : queries) {
             tasks.add(new InstructionScheduledTask(

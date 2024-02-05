@@ -7,7 +7,6 @@ import ru.anafro.quark.server.database.data.exceptions.ReadingTheNextLineOfTable
 import ru.anafro.quark.server.database.data.exceptions.RecordsFileInsertionFailedException;
 import ru.anafro.quark.server.database.data.exceptions.RecordsFileWritingFailedException;
 import ru.anafro.quark.server.database.data.structures.RecordCollection;
-import ru.anafro.quark.server.database.data.structures.RecordCollectionResolver;
 import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.io.*;
@@ -41,7 +40,7 @@ public class TableRecords implements Iterable<TableRecord> {
     }
 
     public void change(TableRecordChanger changer, ExpressionTableRecordSelector selector) {
-        var records = table.loadRecords(new RecordCollectionResolver(RecordCollectionResolver.RecordCollectionResolverCase.SELECTOR_IS_TOO_COMPLEX));
+        var records = table.all();
         records.forEach(record -> {
             if (selector.selects(record)) {
                 changer.change(record);

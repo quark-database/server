@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.database.data.structures;
 
+@Deprecated(since = "3")
 public record RecordCollectionResolver(
         ru.anafro.quark.server.database.data.structures.RecordCollectionResolver.RecordCollectionResolverCase resolverCase) {
 
