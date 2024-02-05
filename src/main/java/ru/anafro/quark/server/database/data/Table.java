@@ -431,8 +431,17 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void swapColumns(String firstColumnName, String secondColumnName) {
-        header.swapColumns(firstColumnName, secondColumnName);
-        header.save();
+        if (doesntHaveColumn(firstColumnName)) {
+            throw new ColumnNotFoundException(this, firstColumnName);
+        }
+
+        if (doesntHaveColumn(secondColumnName)) {
+            throw new ColumnNotFoundException(this, secondColumnName);
+        }
+
+        var newOrder = this.getColumnOrder();
+        Collections.swap(newOrder, newOrder.indexOf(firstColumnName), newOrder.indexOf(secondColumnName));
+        reorderColumns(newOrder);
     }
 
     @Override
