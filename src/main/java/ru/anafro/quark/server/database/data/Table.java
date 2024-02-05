@@ -269,6 +269,10 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void addColumn(ColumnDescription description, RecordFieldGenerator generator) {
+        if (hasColumn(description.name())) {
+            throw new ColumnExistsException(this, description.name());
+        }
+
         var records = all();
         var columnName = description.name();
         var columnType = description.type();
