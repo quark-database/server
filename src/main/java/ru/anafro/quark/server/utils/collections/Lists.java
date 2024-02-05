@@ -107,4 +107,8 @@ public final class Lists {
             action.accept(first.get(i), second.get(i));
         }
     }
+
+    public static <T> List<T> copy(List<T> list) {
+        return new ArrayList<>(list);
+    }
 }
