@@ -18,10 +18,7 @@ import ru.anafro.quark.server.language.entities.*;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.files.Directory;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 import static ru.anafro.quark.server.database.data.Database.systemDatabase;
@@ -186,7 +183,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public TableViewHeader createViewHeader() {
-        return new TableViewHeader(header.getColumns().stream().map(ColumnDescription::name).toArray(String[]::new));
+        return new TableViewHeader(getColumnOrder().toArray(String[]::new));
     }
 
     public Directory getDirectory() {
@@ -292,7 +289,7 @@ public class Table implements Iterable<TableRecord> {
             }
         }, () -> {
             if (generator == null) {
-                throw new QueryException("Add column needs a generator or a generating modifier.");
+                throw new NeedGeneratorException(description);
             }
 
             for (var record : records) {
