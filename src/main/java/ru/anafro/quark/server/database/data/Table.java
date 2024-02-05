@@ -1,9 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
 import org.jetbrains.annotations.NotNull;
-import ru.anafro.quark.server.database.data.exceptions.ColumnNotFoundException;
-import ru.anafro.quark.server.database.data.exceptions.TableExistsException;
-import ru.anafro.quark.server.database.data.exceptions.TableNotFoundException;
+import ru.anafro.quark.server.database.data.exceptions.*;
 import ru.anafro.quark.server.database.data.files.TableHeader;
 import ru.anafro.quark.server.database.data.files.TableRecords;
 import ru.anafro.quark.server.database.data.files.TableVariable;
@@ -17,7 +15,6 @@ import ru.anafro.quark.server.database.views.TableViewHeader;
 import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.language.entities.*;
-import ru.anafro.quark.server.language.exceptions.GeneratedValueMismatchesColumnTypeException;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.files.Directory;
 
@@ -302,7 +299,7 @@ public class Table implements Iterable<TableRecord> {
                 }
 
                 if (generatedEntity.doesntHaveType(columnType)) {
-                    throw new GeneratedValueMismatchesColumnTypeException(generator, description, generatedEntity);
+                    throw new BadGeneratorException(generator, generatedEntity, description);
                 }
 
                 record.add(new RecordField(columnName, generatedEntity));
