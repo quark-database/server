@@ -154,6 +154,10 @@ public class Table implements Iterable<TableRecord> {
         return header;
     }
 
+    public List<String> getColumnOrder() {
+        return Lists.copy(header.getColumns().stream().map(ColumnDescription::name).toList());
+    }
+
     public List<TableVariable> variables() {
         return variableDirectory.all();
     }
