@@ -7,6 +7,10 @@ import ru.anafro.quark.server.language.Expressions;
 public record TableRecordChanger(String column, String lambda) implements RecordLambda<Void> {
     public static final String LAMBDA_FIELD_PREFIX = ":";
 
+    public static TableRecordChanger changer(String columnName, String lambda) {
+        return new TableRecordChanger(columnName, lambda);
+    }
+
     public void change(TableRecord record) {
         apply(record);
     }
