@@ -413,12 +413,13 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void reorderColumns(List<String> order) {
-        if (order.stream().anyMatch(columnName -> !header.hasColumn(columnName)) || header.getColumns().stream().anyMatch(columnDescription -> !order.contains(columnDescription.name()))) {
-            throw new QueryException("A new order cannot be applied, because it has extra columns or missed some existing ones (your order: %s, existing order: %s).".formatted(
-                    Lists.join(order),
-                    Lists.join(header.getColumns(), ColumnDescription::name)
-            ));
-        }
+        order.stream().filter(columnName -> header.doesntHaveColumn(columnName)).findFirst().ifPresent(notExistingColumn -> {
+            throw new ColumnNotFoundException(this, notExistingColumn);
+        });
+
+        header.getColumns().stream().filter(columnDescription -> !order.contains(columnDescription.name())).findFirst().ifPresent(missingColumn -> {
+            throw new IncompleteColumnOrderException(this, order, missingColumn.name());
+        });
 
         var records = all();
 
