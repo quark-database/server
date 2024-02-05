@@ -10,6 +10,10 @@ public class RecordIterationLimiter {
         this.limit = limit;
     }
 
+    public static RecordIterationLimiter limiter(int skip, int limit) {
+        return new RecordIterationLimiter(skip, limit);
+    }
+
     public boolean isSkipNeeded() {
         return skip > 0;
     }
