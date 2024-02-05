@@ -345,7 +345,7 @@ public class Table implements Iterable<TableRecord> {
 
     public void deleteColumn(String columnName) {
         if (doesntHaveColumn(columnName)) {
-            throw new QueryException(STR."Table '\{getName()}' does not contain column '\{columnName}'.");
+            throw new ColumnNotFoundException(this, columnName);
         }
 
         var records = all();
