@@ -20,6 +20,10 @@ public class RecordEntity extends Entity implements Iterable<Entity> {
         }
     }
 
+    public static RecordEntity record(Object... values) {
+        return new RecordEntity(Entity.wrapMany(values).toArray(Entity[]::new));
+    }
+
     private void add(Entity value) {
         values.add(value);
     }
