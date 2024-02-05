@@ -1,7 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
 public class RecordIterationLimiter {
-    public static final RecordIterationLimiter UNLIMITED = new RecordIterationLimiter(0, -1);
+    public static final RecordIterationLimiter UNLIMITED = new RecordIterationLimiter(0, Integer.MAX_VALUE);
     private int skip;
     private int limit;
 
@@ -19,13 +19,13 @@ public class RecordIterationLimiter {
     }
 
     public void skipped() {
-        if(isSkipNeeded()) {
+        if (isSkipNeeded()) {
             skip--;
         }
     }
 
     public void selected() {
-        if(fitsTheLimit()) {
+        if (fitsTheLimit()) {
             limit--;
         }
     }
