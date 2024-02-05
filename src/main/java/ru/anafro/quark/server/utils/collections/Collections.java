@@ -43,7 +43,7 @@ public final class Collections {
         return StreamSupport.stream(iterable.spliterator(), false).map(valueToString).collect(Collectors.joining(delimiter));
     }
 
-    public static <T> boolean equalsIgnoreOrder(Collection<T> first, Collection<T> second) {
+    public static <T1, T2> boolean equalsIgnoreOrder(Collection<T1> first, Collection<T2> second) {
         return first.size() == second.size() && first.containsAll(second) && second.containsAll(first);
     }
 }
