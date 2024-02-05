@@ -14,8 +14,11 @@ import static ru.anafro.quark.server.database.data.ColumnModifier.modifier;
 import static ru.anafro.quark.server.database.data.Database.database;
 import static ru.anafro.quark.server.database.data.ExpressionTableRecordSelector.selector;
 import static ru.anafro.quark.server.database.data.RecordFieldGenerator.generator;
+import static ru.anafro.quark.server.database.data.RecordIterationLimiter.limiter;
 import static ru.anafro.quark.server.database.data.Table.systemTable;
 import static ru.anafro.quark.server.database.data.Table.table;
+import static ru.anafro.quark.server.database.data.TableRecordChanger.changer;
+import static ru.anafro.quark.server.database.data.TableRecordFinder.finder;
 import static ru.anafro.quark.server.language.entities.RecordEntity.record;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
@@ -1153,6 +1156,381 @@ class TableTest {
             // Then
             fail("Swapping two columns somehow succeeded: both column don't exist");
         } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on table change when column of changer does not exist")
+    public void shouldThrowColumnNotFoundExceptionOnTableChangeWhenColumnOfChangerDoesNotExist() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").change(selector("@yes()"), changer("x", "@concat(:a, :c)"));
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should change records")
+    public void shouldChangeRecords() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        table("Existing Database.A").change(selector("@greater(@length(:c), 4)"), changer("a", "@concat(:a, \" \", :c)"));
+
+        // Then
+        assertTrue(table("Existing Database.A").all().same(
+                record("hello greeting", "hi", "greeting"),
+                record("what's up", "i'm good", "mood"),
+                record("what you doing? action", "unit testing", "action")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on not-existing column deletion")
+    public void shouldThrowColumnNotFoundExceptionOnNotExistingColumnDeletion() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").deleteColumn("x");
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should delete existing column")
+    public void shouldDeleteExistingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        table("Existing Database.A").deleteColumn("b");
+
+        // Then
+        assertEquals(list(
+                column("a", "str", modifier("unique")),
+                column("c", "str")
+        ), table("Existing Database.A").columns());
+        assertTrue(table("Existing Database.A").all().same(
+                record("hello", "greeting"),
+                record("what's up", "mood"),
+                record("what you doing?", "action")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should delete records")
+    public void shouldDeleteRecords() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action")
+                ));
+
+        // When
+        table("Existing Database.A").delete(selector("@greater(@length(:c), 4)"));
+
+
+        // Then
+        assertTrue(table("Existing Database.A").all().same(
+                record("what's up", "i'm good", "mood")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should delete records with limiter")
+    public void shouldDeleteRecordsWithLimiter() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        table("Existing Database.A").delete(selector("@greater(@length(:c), 4)"), limiter(1, 1));
+
+        // Then
+        assertTrue(table("Existing Database.A").all().same(
+                record("hello", "hi", "greeting"),
+                record("what's up", "i'm good", "mood"),
+                record("bye", "have a good one", "farewell")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should delete variable")
+    public void shouldDeleteVariable() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+        table("Existing Database.A").setVariable("v", 123);
+
+        // When
+        table("Existing Database.A").deleteVariable("v");
+
+        // Then
+        assertTrue(table("Existing Database.A").getVariable("v").isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should rename column")
+    public void shouldRenameColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        table("Existing Database.A").renameColumn("b", "x");
+
+        // Then
+        assertEquals(list(
+                column("a", "str", modifier("unique")),
+                column("x", "str"),
+                column("c", "str")
+        ), table("Existing Database.A").columns());
+    }
+
+    @Test
+    @DisplayName("Should exclude record by unique field")
+    public void shouldExcludeRecordByUniqueField() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        table("Existing Database.A").exclude(finder("a", "hello"));
+
+        // Then
+        assertTrue(table("Existing Database.A").all().same(
+                record("what's up", "i'm good", "mood"),
+                record("what you doing?", "unit testing", "action"),
+                record("bye", "have a good one", "farewell")
+        ));
+    }
+
+    @Test
+    @DisplayName("Should find existing record")
+    public void shouldFindExistingRecord() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        var foundRecord = table("Existing Database.A").find(finder("a", "hello"));
+
+
+        // Then
+        assertTrue(foundRecord.isPresent());
+        assertEquals(record("hello", "hi", "greeting"), foundRecord.get());
+    }
+
+    @Test
+    @DisplayName("Should not find not existing record")
+    public void shouldNotFindNotExistingRecord() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        var foundRecord = table("Existing Database.A").find(finder("a", "xxx"));
+
+        // Then
+        assertTrue(foundRecord.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on reorderColumns with not-existing columns")
+    public void shouldThrowColumnNotFoundExceptionOnReorderColumnsWithNotExistingColumns() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").reorderColumns(list("a", "b", "c", "x"));
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw IncompleteColumnOrderException on reorderColumns with missing column")
+    public void shouldThrowIncompleteColumnOrderExceptionOnReorderColumnsWithMissingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").reorderColumns(list("a", "b"));
+
+            // Then
+            fail();
+        } catch (IncompleteColumnOrderException _) {
         }
     }
 }
