@@ -309,6 +309,10 @@ public class Table implements Iterable<TableRecord> {
         saveHeader();
     }
 
+    public void addColumn(ColumnDescription column) {
+        addColumn(column, null);
+    }
+
     public void addModifier(String columnName, ColumnModifierEntity modifier) {
         getColumn(columnName)
                 .orElseThrow(() -> new ColumnNotFoundException(this, columnName))
