@@ -251,6 +251,60 @@ class TableTest {
     }
 
     @Test
+    @DisplayName("Should throw ColumnNotFoundException on rename not-existing column")
+    public void shouldThrowColumnNotFoundExceptionOnRenameNotExistingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str")
+                ),
+                list(
+                        record("ABC"),
+                        record("DEF"),
+                        record("GHI")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").renameColumn("x", "y");
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnExistsException on rename where table already has column with such new name")
+    public void shouldThrowColumnExistsExceptionOnRenameWhereTableAlreadyHasColumnWithSuchNewName() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str"),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("ABC", "ABC", "ABC"),
+                        record("DEF", "DEF", "DEF"),
+                        record("GHI", "GHI", "GHI")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").renameColumn("a", "c");
+
+            // Then
+            fail();
+        } catch (ColumnExistsException _) {
+        }
+    }
+
+    @Test
     @DisplayName("Should do nothing on ensureExists on existing table")
     public void shouldDoNothingOnEnsureExistsOnExistingTable() {
         // Given
@@ -1423,6 +1477,64 @@ class TableTest {
     }
 
     @Test
+    @DisplayName("Should throw BadFinderException on exclude by not unique field")
+    public void shouldThrowBadFinderExceptionOnExcludeByNotUniqueField() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").exclude(finder("b", "hello"));
+
+            // Then
+            fail();
+        } catch (BadFinderException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on exclude by not existing column")
+    public void shouldThrowColumnNotFoundExceptionOnExcludeByNotExistingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").exclude(finder("x", "xxx"));
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
     @DisplayName("Should find existing record")
     public void shouldFindExistingRecord() {
         // Given
@@ -1474,6 +1586,64 @@ class TableTest {
 
         // Then
         assertTrue(foundRecord.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should throw ColumnNotFoundException on find by not existing column")
+    public void shouldThrowColumnNotFoundExceptionOnFindByNotExistingColumn() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").find(finder("x", "xxx"));
+
+            // Then
+            fail();
+        } catch (ColumnNotFoundException _) {
+        }
+    }
+
+    @Test
+    @DisplayName("Should throw BadFinderException on find by not unique field")
+    public void shouldThrowBadFinderExceptionOnFindByNotUniqueField() {
+        // Given
+        Database.create("Existing Database");
+        Table.create(
+                "Existing Database.A",
+                list(
+                        column("a", "str", modifier("unique")),
+                        column("b", "str"),
+                        column("c", "str")
+                ),
+                list(
+                        record("hello", "hi", "greeting"),
+                        record("what's up", "i'm good", "mood"),
+                        record("what you doing?", "unit testing", "action"),
+                        record("bye", "have a good one", "farewell")
+                ));
+
+        // When
+        try {
+            table("Existing Database.A").find(finder("b", "hello"));
+
+            // Then
+            fail();
+        } catch (BadFinderException _) {
+        }
     }
 
     @Test
