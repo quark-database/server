@@ -397,22 +397,6 @@ Syntax:
 ```sql
 list tables in (str: database);
 ```
-#### `redefine column in`
-
-Changes the definition of a column
-
-Permission: `column.redefine`
-
-Parameters:
-
-* `table: str`
-
-* `definition: column`
-
-Syntax:
-```sql
-redefine column in (str: table): definition = column;
-```
 #### `redefine permissions for token`
 
 Defines a new set of permissions for a token
