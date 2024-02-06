@@ -8,7 +8,6 @@ import ru.anafro.quark.server.database.data.files.TableVariable;
 import ru.anafro.quark.server.database.data.files.VariableDirectory;
 import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection;
 import ru.anafro.quark.server.database.data.structures.LinearRecordCollection;
-import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
 import ru.anafro.quark.server.database.data.structures.RecordCollection;
 import ru.anafro.quark.server.database.views.TableViewHeader;
 import ru.anafro.quark.server.files.DatabasesDirectory;
@@ -372,7 +371,12 @@ public class Table implements Iterable<TableRecord> {
     public void exclude(TableRecordFinder finder) {
         var columnName = finder.columnName();
         var column = getColumn(columnName).orElseThrow(() -> new ColumnNotFoundException(this, columnName));
-        var records = column.hasModifier("unique") ? new HashtableRecordCollection(columnName) : new PageTreeRecordCollection(columnName);
+
+        if (column.doesntHaveModifier("unique")) {
+            throw new BadFinderException(this, finder);
+        }
+
+        var records = new HashtableRecordCollection(columnName);
 
         records.addAll(this);
         records.exclude(finder);
@@ -383,9 +387,12 @@ public class Table implements Iterable<TableRecord> {
     public Optional<TableRecord> find(TableRecordFinder finder) {
         var columnName = finder.columnName();
         var column = getColumn(columnName).orElseThrow(() -> new ColumnNotFoundException(this, columnName));
-        var records = column.hasModifier("unique") ?
-                new HashtableRecordCollection(finder.columnName()) :
-                new PageTreeRecordCollection(finder.columnName());
+
+        if (column.doesntHaveModifier("unique")) {
+            throw new BadFinderException(this, finder);
+        }
+
+        var records = new HashtableRecordCollection(columnName);
 
         records.addAll(this);
         records.forEach(records::add);

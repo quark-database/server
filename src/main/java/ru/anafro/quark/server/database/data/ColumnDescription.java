@@ -67,6 +67,10 @@ public final class ColumnDescription {
         return modifiers.stream().anyMatch(entity -> entity.getModifier().getName().equals(modifierName));
     }
 
+    public boolean doesntHaveModifier(String modifier) {
+        return !hasModifier(modifier);
+    }
+
     public void setName(String newName) {
         this.name = newName;
     }
