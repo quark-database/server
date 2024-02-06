@@ -65,6 +65,20 @@ public final class Lists {
         return joinedContainer.extractContent();
     }
 
+    public static <T> List<T> copies(int copies, T value) {
+        if (copies < 0) {
+            throw new IllegalArgumentException(STR."Lists.copies, where copies = \{copies} < 0 is invalid.");
+        }
+
+        List<T> list = empty();
+
+        for (int i = 0; i < copies; i++) {
+            list.add(value);
+        }
+
+        return list;
+    }
+
     /**
      * Joins a list with a comma as a separator between each element.
      *
@@ -90,7 +104,7 @@ public final class Lists {
         return join(collection.stream().map(presentation).toList(), delimiter);
     }
 
-    public static <T> Optional<T> tryGet(ArrayList<T> list, int index) {
+    public static <T> Optional<T> tryGet(List<T> list, int index) {
         if (Collections.isInvalidIndex(list, index)) {
             return Optional.empty();
         }
