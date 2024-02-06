@@ -5,6 +5,7 @@ import ru.anafro.quark.server.utils.strings.TextBuffer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -72,8 +73,11 @@ public class BTree<K extends Comparable<K>, V> implements Iterable<V> {
 
         // need to split root
         Node t = new Node(2);
-        t.getChildren().set(0, new Entry(root.getChildren().getFirst().key, null, root));
-        t.getChildren().set(1, new Entry(u.getChildren().getFirst().key, null, u));
+        var left = root.getChildren().getFirst();
+        var right = u.getChildren().getFirst();
+
+        t.getChildren().set(0, new Entry(left == null ? null : left.key, null, root));
+        t.getChildren().set(1, new Entry(right == null ? null : right.key, null, u));
         root = t;
         height++;
     }
@@ -242,14 +246,14 @@ public class BTree<K extends Comparable<K>, V> implements Iterable<V> {
 
     // helper B-tree node json type
     public final class Node {
-        private final ArrayList<Entry> children = new ArrayList<>(4);   // the array of children
+        private final List<Entry> children = Lists.copies(4, (Entry) null);   // the array of children
         private int childrenCount;                             // number of children
 
         private Node(int childrenCount) {
             this.childrenCount = childrenCount;
         }
 
-        public ArrayList<Entry> getChildren() {
+        public List<Entry> getChildren() {
             return children;
         }
 
