@@ -10,9 +10,7 @@ import ru.anafro.quark.server.database.data.structures.HashtableRecordCollection
 import ru.anafro.quark.server.database.data.structures.LinearRecordCollection;
 import ru.anafro.quark.server.database.data.structures.PageTreeRecordCollection;
 import ru.anafro.quark.server.database.data.structures.RecordCollection;
-import ru.anafro.quark.server.database.exceptions.QueryException;
 import ru.anafro.quark.server.database.views.TableViewHeader;
-import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.language.entities.*;
 import ru.anafro.quark.server.utils.collections.Lists;
@@ -395,17 +393,13 @@ public class Table implements Iterable<TableRecord> {
         return records.find(finder);
     }
 
-    public void redefineColumn(ColumnDescription description) {
-        if (header.doesntHaveColumn(description.name())) {
-            throw new QueryException(STR."Column \{description.name()} does not exist.");
+    public void renameColumn(String columnName, String newName) {
+        if (doesntHaveColumn(columnName)) {
+            throw new ColumnNotFoundException(this, columnName);
         }
 
-        header.redefineColumn(description);
-    }
-
-    public void renameColumn(String columnName, String newName) {
         if (hasColumn(newName)) {
-            throw new QuarkException(STR."The column \{newName} already exists.");
+            throw new ColumnExistsException(this, newName);
         }
 
         header.renameColumn(columnName, newName);

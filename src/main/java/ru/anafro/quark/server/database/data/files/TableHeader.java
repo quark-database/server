@@ -51,11 +51,6 @@ public class TableHeader {
         return !hasColumn(columnName);
     }
 
-    public void redefineColumn(ColumnDescription newColumnDescription) {
-        columns.removeIf(columnDescription -> columnDescription.name().equals(newColumnDescription.name()));
-        columns.add(newColumnDescription);
-    }
-
     public void ensureRecordIsValid(TableRecord record) {
         if (columnCount() != record.fieldCount()) {
             throw new RecordFieldCountMismatchesTableHeaderException(table, record.fieldCount());

@@ -507,7 +507,6 @@ public final class Quark {
                 new ListColumnsInstruction(),
                 new ListDatabasesInstruction(),
                 new ListTablesInstruction(),
-                new RedefineColumnInstruction(),
                 new RedefinePermissionsForTokenInstruction(),
                 new ReloadServerInstruction(),
                 new RenameColumnInInstruction(),
