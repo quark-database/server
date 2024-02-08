@@ -5,12 +5,14 @@ import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.lexer.InstructionLexer;
 import ru.anafro.quark.server.language.parser.InstructionParser;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.multithreading.Service;
 import ru.anafro.quark.server.networking.middlewares.Middleware;
 import ru.anafro.quark.server.networking.middlewares.QueryMiddleware;
 import ru.anafro.quark.server.networking.middlewares.TokenMiddleware;
 import ru.anafro.quark.server.plugins.events.ServerStoppedEvent;
 import ru.anafro.quark.server.utils.collections.Lists;
 import ru.anafro.quark.server.utils.networking.Networking;
+import ru.anafro.quark.server.utils.networking.NetworkingException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,12 +23,12 @@ import java.util.ArrayList;
  * but not handling - implement 'handle()' method to add
  * handling functionality.
  */
-public final class Server implements Runnable {
+public final class Server extends Service {
     private final InstructionLexer lexer = new InstructionLexer();
     private final InstructionParser parser = new InstructionParser();
     private final ArrayList<Middleware> middlewares = Lists.empty();
     private final Logger logger = new Logger(this.getClass());
-    private volatile boolean isRunning = true;
+    private volatile boolean isRunning = false;
     private ServerSocket socket;
 
     public Server() {
@@ -58,18 +60,27 @@ public final class Server implements Runnable {
      * client, makes a request, runs middlewares, and sends a response
      */
     @Override
-    public void run() {
+    public void start() {
+        if (this.isRunning) {
+            stop();
+        }
+
         this.socket = Networking.createServerSocket(Quark.configuration().getPort());
+        this.isRunning = true;
 
         while (this.isRunning()) {
-            var client = new Client(Networking.acceptClientSocket(socket));
-            var request = client.receiveRequest();
-            var middlewareResponse = passThroughMiddlewares(request);
+            try {
+                var client = new Client(Networking.acceptClientSocket(socket));
+                var request = client.receiveRequest();
+                var middlewareResponse = passThroughMiddlewares(request);
 
-            if (middlewareResponse.isPassed()) {
-                client.send(respond(request));
-            } else {
-                client.send(middlewareResponse);
+                if (middlewareResponse.isPassed()) {
+                    client.send(respond(request));
+                } else {
+                    client.send(middlewareResponse);
+                }
+            } catch (NetworkingException exception) {
+                logger.warning(exception.getMessage());
             }
         }
     }
@@ -95,8 +106,9 @@ public final class Server implements Runnable {
      */
     public void stop() {
         try {
-            socket.close();
             this.isRunning = false;
+            socket.close();
+            socket = null;
 
             Quark.fireEvent(new ServerStoppedEvent());
         } catch (IOException exception) {
