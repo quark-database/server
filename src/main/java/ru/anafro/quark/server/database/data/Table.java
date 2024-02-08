@@ -188,7 +188,7 @@ public class Table implements Iterable<TableRecord> {
     }
 
     public void delete() {
-        getDirectory().delete();
+        directory.delete();
     }
 
     public Table copy(String destinationName) {
