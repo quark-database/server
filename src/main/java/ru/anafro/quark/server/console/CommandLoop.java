@@ -6,6 +6,7 @@ import ru.anafro.quark.server.exceptions.QuarkException;
 import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.language.Query;
 import ru.anafro.quark.server.logging.Logger;
+import ru.anafro.quark.server.multithreading.Service;
 import ru.anafro.quark.server.utils.strings.Strings;
 import ru.anafro.quark.server.utils.types.classes.Enums;
 
@@ -24,7 +25,7 @@ import static ru.anafro.quark.server.logging.LoggingLevel.INFO;
  * @version Quark 1.1
  * @since Quark 1.1
  */
-public class CommandLoop implements Runnable {
+public class CommandLoop extends Service {
     /**
      * The parser that handles commands received.
      *
@@ -55,7 +56,7 @@ public class CommandLoop implements Runnable {
      * @since Quark 1.1
      */
     @Override
-    public synchronized void run() {
+    public synchronized void start() {
         while (Quark.server().isClosed()) {
             Thread.yield();
         }
