@@ -2,8 +2,8 @@ package ru.anafro.quark.server.console.commands;
 
 import ru.anafro.quark.server.console.Command;
 import ru.anafro.quark.server.console.CommandArguments;
-import ru.anafro.quark.server.database.data.Table;
 
+import static ru.anafro.quark.server.database.data.Table.systemTable;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 public class ListScheduledTasksCommand extends Command {
@@ -30,8 +30,8 @@ public class ListScheduledTasksCommand extends Command {
 
     @Override
     public void action(CommandArguments arguments) {
-        var queries = Table.byName("Quark.Scheduled Queries").all();
-        var commands = Table.byName("Quark.Scheduled Commands").all();
+        var queries = systemTable("Scheduled Queries").all();
+        var commands = systemTable("Scheduled Commands").all();
 
         queries.forEach(record -> {
             var query = record.getString("query");

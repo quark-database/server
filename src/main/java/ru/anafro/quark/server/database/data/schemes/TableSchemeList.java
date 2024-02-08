@@ -6,7 +6,7 @@ public class TableSchemeList extends NamedObjectsList<TableScheme> {
 
     @Override
     protected String getNameOf(TableScheme scheme) {
-        return scheme.getTableName().toCompoundedString();
+        return scheme.getTableName();
     }
 
     /**
