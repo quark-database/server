@@ -1,6 +1,5 @@
 package ru.anafro.quark.server.language.instructions;
 
-import ru.anafro.quark.server.database.exceptions.DatabaseException;
 import ru.anafro.quark.server.language.Instruction;
 import ru.anafro.quark.server.language.InstructionArguments;
 import ru.anafro.quark.server.language.InstructionResultRecorder;
@@ -28,7 +27,7 @@ import static ru.anafro.quark.server.language.InstructionParameter.*;
  * @version Quark 1.1
  * @since Quark 1.1
  */
-public class AddColumnInstruction extends Instruction {
+public class AddColumnToInstruction extends Instruction {
 
     /**
      * Creates a new instance of the add column instruction
@@ -50,16 +49,16 @@ public class AddColumnInstruction extends Instruction {
      * @author Anatoly Frolov | Анатолий Фролов | <a href="https://anafro.ru">My website</a>
      * @since Quark 1.1
      */
-    public AddColumnInstruction() {
-        super("add column",
+    public AddColumnToInstruction() {
+        super("add column to",
 
                 "Adds a new column to a table",
 
                 "column.add",
 
-                general("definition", "column"),
+                general("table"),
 
-                required("table"),
+                required("definition", "column"),
                 optional("generator", "generator")
         );
     }
@@ -84,10 +83,6 @@ public class AddColumnInstruction extends Instruction {
         var description = arguments.getColumnDescription("definition");
         var generator = arguments.tryGetGenerator("generator").orElse(null);
         var columnName = description.name();
-
-        if (table.hasColumn(columnName)) {
-            throw new DatabaseException(STR."A column with name '\{columnName}' already exists.");
-        }
 
         table.addColumn(description, generator);
         result.ok("A column was added successfully.");
