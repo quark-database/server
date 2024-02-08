@@ -7,7 +7,6 @@ import ru.anafro.quark.server.console.exceptions.CommandSyntaxException;
 import ru.anafro.quark.server.database.data.ColumnModifier;
 import ru.anafro.quark.server.database.data.ColumnModifierList;
 import ru.anafro.quark.server.database.data.Database;
-import ru.anafro.quark.server.database.data.Table;
 import ru.anafro.quark.server.database.data.modifiers.*;
 import ru.anafro.quark.server.database.data.schemes.ScheduledCommandsTableScheme;
 import ru.anafro.quark.server.database.data.schemes.ScheduledQueriesTableScheme;
@@ -38,14 +37,14 @@ import ru.anafro.quark.server.language.instructions.*;
 import ru.anafro.quark.server.language.types.*;
 import ru.anafro.quark.server.logging.Logger;
 import ru.anafro.quark.server.logging.LoggingLevel;
-import ru.anafro.quark.server.multithreading.ParallelServiceRunner;
+import ru.anafro.quark.server.multithreading.ServiceManager;
 import ru.anafro.quark.server.networking.Configuration;
 import ru.anafro.quark.server.networking.Ports;
 import ru.anafro.quark.server.networking.Server;
 import ru.anafro.quark.server.plugins.Plugin;
 import ru.anafro.quark.server.plugins.PluginManager;
 import ru.anafro.quark.server.plugins.events.Event;
-import ru.anafro.quark.server.scheduling.Scheduler;
+import ru.anafro.quark.server.scheduling.ServiceLoader;
 import ru.anafro.quark.server.security.Token;
 import ru.anafro.quark.server.security.TokenPermission;
 import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
@@ -66,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static ru.anafro.quark.server.database.data.Table.systemTable;
+import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 /**
  * Provides the easiest way of communicating with the Quark Server by having
@@ -157,7 +157,7 @@ public final class Quark {
      *
      * @since Quark 1.1
      */
-    private static final Scheduler scheduler = new Scheduler();
+    private static final ServiceLoader serviceLoader = new ServiceLoader();
     /**
      * Contains all the default table schemes of Quark.
      *
@@ -179,7 +179,7 @@ public final class Quark {
      *
      * @since Quark 1.1
      */
-    private static ParallelServiceRunner serviceRunner;
+    private static ServiceManager serviceManager;
     /**
      * Indicates whether {@link Quark#run(String[])} was run or not.
      *
@@ -221,6 +221,7 @@ public final class Quark {
         initializeServer();
         initializeSchemes();
         repairDirectories();
+        initializeServices();
         generateDocumentation();
     }
 
@@ -248,12 +249,11 @@ public final class Quark {
 
         isRun = true;
 
-        initializeParallelServiceRunner();
         loadPlugins();
         enablePlugins();
         clearMavenOutput();
         runArgsCommands(args);
-        runServiceRunner();
+        runServices();
     }
 
     public static void clearMavenOutput() {
@@ -282,10 +282,10 @@ public final class Quark {
         configuration = Configuration.load("Configuration.json");
     }
 
-    private static void initializeParallelServiceRunner() {
-        serviceRunner = new ParallelServiceRunner(server, commandLoop, Application.getJarFile().makeModificationWatcherService(new HotReloadService()));
-        scheduler.load();
-        serviceRunner.addAll(scheduler);
+    private static void initializeServices() {
+        serviceManager = new ServiceManager(server, commandLoop, Application.getJarFile().makeModificationWatcherService(new HotReloadService()));
+        serviceLoader.load();
+        serviceManager.addAll(serviceLoader);
     }
 
     private static void initializeServer() {
@@ -483,7 +483,7 @@ public final class Quark {
 
     private static void initializeInstructions() {
         instructions.add(
-                new AddColumnInstruction(),
+                new AddColumnToInstruction(),
                 new ChangeInInstruction(),
                 new ChangePortToInstruction(),
                 new ClearDatabaseInstruction(),
@@ -614,6 +614,10 @@ public final class Quark {
         deploySchemes();
     }
 
+    public static void runServicesAsynchronously() {
+        serviceManager.runAsynchronously();
+    }
+
     private static void deploySchemes() {
         schemes.up();
     }
@@ -626,8 +630,8 @@ public final class Quark {
         pluginManager.enableAll();
     }
 
-    private static void runServiceRunner() {
-        serviceRunner.run();
+    private static void runServices() {
+        serviceManager.run();
     }
 
     /**
@@ -1088,8 +1092,8 @@ public final class Quark {
      * @author Anatoly Frolov <contact@anafro.ru>
      * @since Quark 2.0
      */
-    public static Scheduler scheduler() {
-        return scheduler;
+    public static ServiceLoader scheduler() {
+        return serviceLoader;
     }
 
     public static HashMap<String, Entity> variables() {
@@ -1140,13 +1144,12 @@ public final class Quark {
 
     public static void install() {
         for (var scheme : schemes) {
-            logger.info(STR."Deploying the '\{scheme.getTableName().getTableName()}' table...");
+            logger.info(STR."Deploying the '\{scheme.getTableName()}' table...");
             scheme.up();
         }
 
         var token = Token.generate();
-
-        Table.byName("Quark.Tokens").insert(token, TokenPermission.ALL_PERMISSIONS);
+        createToken(token, list(TokenPermission.ALL_PERMISSIONS));
         logger.info(STR."The regenerated administrator access token: \{token}");
     }
 
@@ -1177,8 +1180,7 @@ public final class Quark {
 
         configuration.setPort(newPort);
         configuration.save();
-
-        Quark.reload();
+        serviceManager.restart(server);
     }
 
     public static void reload() {
@@ -1241,5 +1243,9 @@ public final class Quark {
 
     public static boolean isNotRun() {
         return !isRun;
+    }
+
+    public static String name() {
+        return Quark.class.getSimpleName();
     }
 }
