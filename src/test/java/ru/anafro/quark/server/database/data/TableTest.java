@@ -1,6 +1,7 @@
 package ru.anafro.quark.server.database.data;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.anafro.quark.server.database.data.exceptions.*;
@@ -23,6 +24,11 @@ import static ru.anafro.quark.server.language.entities.RecordEntity.record;
 import static ru.anafro.quark.server.utils.collections.Collections.list;
 
 class TableTest {
+    @BeforeEach
+    public void setUp() {
+        Database.create("Existing Database");
+    }
+
     @AfterEach
     public void tearDown() {
         database("Existing Database").delete();
@@ -31,9 +37,6 @@ class TableTest {
     @Test
     @DisplayName("Should throw TableNotFoundException on getting not existing table")
     public void shouldThrowTableNotFoundExceptionOnGettingNotExistingTable() {
-        // Given
-        Database.create("Existing Database");
-
         // When
         try {
             table("Existing Database.X");
@@ -57,9 +60,6 @@ class TableTest {
     @Test
     @DisplayName("Should return true for not existing table on doesntExist()")
     public void shouldReturnTrueForNotExistingTableOnDoesntExist() {
-        // Given
-        Database.create("Existing Database");
-
         // When
         var doesntExist = Table.doesntExist("Existing Database.X");
 
@@ -71,7 +71,6 @@ class TableTest {
     @DisplayName("Should return false for existing table on doesntExist()")
     public void shouldReturnFalseForExistingTableOnDoesntExist() {
         // Given
-        Database.create("Existing Database");
         Table.create("Existing Database.A", column("a", "str"));
 
         // When
@@ -84,9 +83,6 @@ class TableTest {
     @Test
     @DisplayName("Should throw TableNotFoundException on ensure exists on not existing table")
     public void shouldThrowTableNotFoundExceptionOnEnsureExistsOnNotExistingTable() {
-        // Given
-        Database.create("Existing Database");
-
         // When
         try {
             Table.ensureExists("Existing Database.X");
@@ -101,7 +97,6 @@ class TableTest {
     @DisplayName("Should delete existing table on deleteIfExists")
     public void shouldDeleteExistingTableOnDeleteIfExists() {
         // Given
-        Database.create("Existing Database");
         Table.create("Existing Database.A", column("a", "str"));
 
         // When
@@ -114,9 +109,6 @@ class TableTest {
     @Test
     @DisplayName("Should do nothing on deleteIfExists on not existing table")
     public void shouldDoNothingOnDeleteIfExistsOnNotExistingTable() {
-        // Given
-        Database.create("Existing Database");
-
         // When
         Table.deleteIfExists("Existing Database.A");
 
@@ -128,7 +120,6 @@ class TableTest {
     @DisplayName("Should throw TableExistsException on creating a table which already exists")
     public void shouldThrowTableExistsExceptionOnCreatingATableWhichAlreadyExists() {
         // Given
-        Database.create("Existing Database");
         Table.create("Existing Database.A", column("a", "str"));
 
         // When
@@ -144,10 +135,6 @@ class TableTest {
     @Test
     @DisplayName("Should create table with records")
     public void shouldCreateTableWithRecords() {
-        // Given
-        Database.create("Existing Database");
-
-
         // When
         Table.create(
                 "Existing Database.A",
@@ -173,7 +160,6 @@ class TableTest {
     @DisplayName("Should return empty list of variables on a freshly created table")
     public void shouldReturnEmptyListOfVariablesOnAFreshlyCreatedTable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -196,7 +182,6 @@ class TableTest {
     @DisplayName("Should return list of variables")
     public void shouldReturnListOfVariables() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -224,7 +209,6 @@ class TableTest {
     @DisplayName("Should rename table")
     public void shouldRenameTable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -254,7 +238,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on rename not-existing column")
     public void shouldThrowColumnNotFoundExceptionOnRenameNotExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -280,7 +263,6 @@ class TableTest {
     @DisplayName("Should throw ColumnExistsException on rename where table already has column with such new name")
     public void shouldThrowColumnExistsExceptionOnRenameWhereTableAlreadyHasColumnWithSuchNewName() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -308,7 +290,6 @@ class TableTest {
     @DisplayName("Should do nothing on ensureExists on existing table")
     public void shouldDoNothingOnEnsureExistsOnExistingTable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -328,7 +309,6 @@ class TableTest {
     @DisplayName("Should select with selector and limiter")
     public void shouldSelectWithSelectorAndLimiter() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -358,7 +338,6 @@ class TableTest {
     @DisplayName("Should create TableViewHeader for a table without columns")
     public void shouldCreateTableViewHeaderForATableWithoutColumns() {
         // Given
-        Database.create("Existing Database");
         Table.create("Existing Database.A");
 
         // When
@@ -372,7 +351,6 @@ class TableTest {
     @DisplayName("Should create TableViewHeader for a table with columns")
     public void shouldCreateTableViewHeaderForATableWithColumns() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -397,7 +375,6 @@ class TableTest {
     @DisplayName("Should copy table")
     public void shouldCopyTable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -429,7 +406,6 @@ class TableTest {
     @DisplayName("Should throw TableExistsException on copy when destination table already exists")
     public void shouldThrowTableExistsExceptionOnCopyWhenDestinationTableAlreadyExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -470,7 +446,6 @@ class TableTest {
     @DisplayName("Should copy table scheme")
     public void shouldCopyTableScheme() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -498,7 +473,6 @@ class TableTest {
     @DisplayName("Should throw TableExistsException on copy scheme when destination table already exists")
     public void shouldThrowTableExistsExceptionOnCopySchemeWhenDestinationTableAlreadyExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -539,7 +513,6 @@ class TableTest {
     @DisplayName("Should return column of table")
     public void shouldReturnColumnOfTable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -564,7 +537,6 @@ class TableTest {
     @DisplayName("Should return empty optional on getting not-existing column")
     public void shouldReturnEmptyOptionalOnGettingNotExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -589,7 +561,6 @@ class TableTest {
     @DisplayName("Should return true on hasColumn when column exists")
     public void shouldReturnTrueOnHasColumnWhenColumnExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -614,7 +585,6 @@ class TableTest {
     @DisplayName("Should return false on hasColumn when column doesn't exists")
     public void shouldReturnFalseOnHasColumnWhenColumnDoesntExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -639,7 +609,6 @@ class TableTest {
     @DisplayName("Should return false on doesntHaveColumn when column exists")
     public void shouldReturnFalseOnDoesntHaveColumnWhenColumnExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -664,7 +633,6 @@ class TableTest {
     @DisplayName("Should return true on doesntHaveColumn when column doesn't exists")
     public void shouldReturnTrueOnDoesntHaveColumnWhenColumnDoesntExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -689,7 +657,6 @@ class TableTest {
     @DisplayName("Should return false on canNotUse when column exists")
     public void shouldReturnFalseOnCanNotUseWhenColumnExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -715,7 +682,6 @@ class TableTest {
     @DisplayName("Should return true on canNotUse when column doesn't exist")
     public void shouldReturnTrueOnCanNotUseWhenColumnDoesntExist() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -741,7 +707,6 @@ class TableTest {
     @DisplayName("Should return same hash code for same tables")
     public void shouldReturnSameHashCodeForSameTables() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -769,7 +734,6 @@ class TableTest {
     @DisplayName("Should return different hash code for different tables")
     public void shouldReturnDifferentHashCodeForDifferentTables() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -809,7 +773,6 @@ class TableTest {
     @DisplayName("Should return iterator of all records")
     public void shouldReturnIteratorOfAllRecords() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -834,7 +797,6 @@ class TableTest {
     @DisplayName("Should add column")
     public void shouldAddColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -869,7 +831,6 @@ class TableTest {
     @DisplayName("Should throw ColumnExistsException on addColumn when column with such name already exists")
     public void shouldThrowColumnExistsExceptionOnAddColumnWhenColumnWithSuchNameAlreadyExists() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -897,7 +858,6 @@ class TableTest {
     @DisplayName("Should add column with generating modifier without generator specified")
     public void shouldAddColumnWithGeneratingModifierWithoutGeneratorSpecified() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -934,7 +894,6 @@ class TableTest {
     @DisplayName("Should throw BadGeneratorException on addColumn with generator that does not return type of the column")
     public void shouldThrowBadGeneratorExceptionOnAddColumnWithGeneratorThatDoesNotReturnTypeOfTheColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -962,7 +921,6 @@ class TableTest {
     @DisplayName("Should add column with generator not returning exact column type, but type that can be casted to column type")
     public void shouldAddColumnWithGeneratorNotReturningExactColumnTypeButTypeThatCanBeCastedToColumnType() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -998,7 +956,6 @@ class TableTest {
     @DisplayName("Should throw NeedGeneratorException on adding column with no generating modifier and not providing a generator")
     public void shouldThrowNeedGeneratorExceptionOnAddingColumnWithNoGeneratingModifierAndNotProvidingAGenerator() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1026,7 +983,6 @@ class TableTest {
     @DisplayName("Should count")
     public void shouldCount() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1053,7 +1009,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on addModifier on not-existing column")
     public void shouldThrowColumnNotFoundExceptionOnAddModifierOnNotExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1083,7 +1038,6 @@ class TableTest {
     @DisplayName("Should add modifier")
     public void shouldAddModifier() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1110,7 +1064,6 @@ class TableTest {
     @DisplayName("Should throw ModifierExistsException on adding modifier to column, which already has a modifier with same name")
     public void shouldThrowModifierExistsExceptionOnAddingModifierToColumnWhichAlreadyHasAModifierWithSameName() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1137,7 +1090,6 @@ class TableTest {
     @DisplayName("Should swap columns")
     public void shouldSwapColumns() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1171,7 +1123,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException when if swapping not existing columns")
     public void shouldThrowColumnNotFoundExceptionWhenIfSwappingNotExistingColumns() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1217,7 +1168,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on table change when column of changer does not exist")
     public void shouldThrowColumnNotFoundExceptionOnTableChangeWhenColumnOfChangerDoesNotExist() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1245,7 +1195,6 @@ class TableTest {
     @DisplayName("Should change records")
     public void shouldChangeRecords() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1274,7 +1223,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on not-existing column deletion")
     public void shouldThrowColumnNotFoundExceptionOnNotExistingColumnDeletion() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1302,7 +1250,6 @@ class TableTest {
     @DisplayName("Should delete existing column")
     public void shouldDeleteExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1335,7 +1282,6 @@ class TableTest {
     @DisplayName("Should delete records")
     public void shouldDeleteRecords() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1363,7 +1309,6 @@ class TableTest {
     @DisplayName("Should delete records with limiter")
     public void shouldDeleteRecordsWithLimiter() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1393,7 +1338,6 @@ class TableTest {
     @DisplayName("Should delete variable")
     public void shouldDeleteVariable() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1420,7 +1364,6 @@ class TableTest {
     @DisplayName("Should rename column")
     public void shouldRenameColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1450,7 +1393,6 @@ class TableTest {
     @DisplayName("Should exclude record by unique field")
     public void shouldExcludeRecordByUniqueField() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1480,7 +1422,6 @@ class TableTest {
     @DisplayName("Should throw BadFinderException on exclude by not unique field")
     public void shouldThrowBadFinderExceptionOnExcludeByNotUniqueField() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1509,7 +1450,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on exclude by not existing column")
     public void shouldThrowColumnNotFoundExceptionOnExcludeByNotExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1538,7 +1478,6 @@ class TableTest {
     @DisplayName("Should find existing record")
     public void shouldFindExistingRecord() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1566,7 +1505,6 @@ class TableTest {
     @DisplayName("Should not find not existing record")
     public void shouldNotFindNotExistingRecord() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1592,7 +1530,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on find by not existing column")
     public void shouldThrowColumnNotFoundExceptionOnFindByNotExistingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1621,7 +1558,6 @@ class TableTest {
     @DisplayName("Should throw BadFinderException on find by not unique field")
     public void shouldThrowBadFinderExceptionOnFindByNotUniqueField() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1650,7 +1586,6 @@ class TableTest {
     @DisplayName("Should throw ColumnNotFoundException on reorderColumns with not-existing columns")
     public void shouldThrowColumnNotFoundExceptionOnReorderColumnsWithNotExistingColumns() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
@@ -1679,7 +1614,6 @@ class TableTest {
     @DisplayName("Should throw IncompleteColumnOrderException on reorderColumns with missing column")
     public void shouldThrowIncompleteColumnOrderExceptionOnReorderColumnsWithMissingColumn() {
         // Given
-        Database.create("Existing Database");
         Table.create(
                 "Existing Database.A",
                 list(
