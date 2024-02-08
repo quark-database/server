@@ -1,5 +1,6 @@
 package ru.anafro.quark.server.multithreading;
 
+import ru.anafro.quark.server.multithreading.exceptions.ThreadInterruptionException;
 import ru.anafro.quark.server.utils.exceptions.UtilityClassInstantiationException;
 import ru.anafro.quark.server.utils.time.TimeSpan;
 
@@ -48,5 +49,24 @@ public final class Threads {
             Threads.sleepFor(interval);
             timeLeft.subtract(interval);
         }
+    }
+
+    public static void join(Thread thread) {
+        try {
+            thread.join();
+        } catch (InterruptedException exception) {
+            throw new ThreadInterruptionException(thread, exception);
+        }
+    }
+
+    public static void spawn(Runnable runnable) {
+        new Thread(runnable).start();
+    }
+
+    public static Thread make(String name, Runnable runnable) {
+        var thread = new Thread(runnable);
+        thread.setName(name);
+
+        return thread;
     }
 }
