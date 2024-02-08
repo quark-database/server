@@ -2,7 +2,6 @@ package ru.anafro.quark.server.database.data;
 
 import ru.anafro.quark.server.database.data.exceptions.DatabaseExistsException;
 import ru.anafro.quark.server.database.data.exceptions.DatabaseNotFoundException;
-import ru.anafro.quark.server.facade.Quark;
 import ru.anafro.quark.server.files.DatabasesDirectory;
 import ru.anafro.quark.server.utils.files.Directory;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Database {
-    private static final String SYSTEM_DATABASE_NAME = Quark.NAME;
+    private static final String SYSTEM_DATABASE_NAME = "System";
     private final Directory directory;
 
     private Database(Directory directory) {
@@ -139,5 +138,9 @@ public class Database {
 
     public boolean isSystem() {
         return getName().equals(SYSTEM_DATABASE_NAME);
+    }
+
+    public boolean hasTable(String tableName) {
+        return directory.hasDirectory(tableName);
     }
 }
