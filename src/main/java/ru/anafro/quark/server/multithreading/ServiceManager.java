@@ -57,7 +57,7 @@ public class ServiceManager {
 
     public void add(Service service) {
         if (services.containsKey(service)) {
-            throw new ServiceExistsException(this, service);
+            throw new ServiceExistsException(service);
         }
 
         this.services.put(service, Threads.make(service.getName(), service::start));
