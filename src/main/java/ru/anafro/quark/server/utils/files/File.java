@@ -1,13 +1,17 @@
 package ru.anafro.quark.server.utils.files;
 
+import ru.anafro.quark.server.multithreading.Service;
 import ru.anafro.quark.server.utils.files.exceptions.*;
+import ru.anafro.quark.server.utils.files.watchers.FileWatcher;
 import ru.anafro.quark.server.utils.strings.Strings;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 
@@ -144,33 +148,8 @@ public class File implements Comparable<File>, Appendable {
         }
     }
 
-    public Runnable makeModificationWatcherService(Runnable eventListener) {
-        try {
-            var watcher = FileSystems.getDefault().newWatchService();
-            path.getParent().register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
-
-            return () -> {
-                WatchKey key;
-
-                try {
-                    while (((key = watcher.take()) != null)) {
-                        for (var event : key.pollEvents()) {
-                            if (((Path) event.context()).toString().endsWith(file.getName())) {
-                                eventListener.run();
-                            }
-                        }
-
-                        if (!key.reset()) {
-                            throw new FileWatcherResetFailureException(this);
-                        }
-                    }
-                } catch (InterruptedException exception) {
-                    throw new FileWatcherInterruptionException(this, exception);
-                }
-            };
-        } catch (IOException exception) {
-            throw new FileCreateWatcherException(this, exception);
-        }
+    public Service makeModificationWatcherService(Runnable eventListener) {
+        return new FileWatcher(this, eventListener);
     }
 
     @Override
