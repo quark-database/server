@@ -13,7 +13,9 @@
 
 ## About Quark Server
 
-*...*
+> [!CAUTION]
+> Quark Server is deprecated. Please, use [Quark Cloud](https://github.com/quark-database/cloud) instead.
+
 
 ## Documentation
 
